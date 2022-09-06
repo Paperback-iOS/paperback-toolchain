@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "oclif",
+    "oclif-typescript"
+  ],
+  "rules": {
+    "object-curly-spacing": ["error", "always"],
+    "unicorn/no-abusive-eslint-disable": "never"
+  }
+}

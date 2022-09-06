@@ -1,0 +1,16 @@
+{
+  "name": "@paperback/types",
+  "version": "0.8.0-alpha.1",
+  "description": "TypeScript Types for Paperback",
+  "keywords": [],
+  "author": "Faizan Durrani",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.8.2"
+  },
+  "scripts": {
+    "build": "rm -rf lib && npx tsc",
+    "prepack": "npm run build"
+  },
+  "types": "lib/_exports.d.ts"
+}

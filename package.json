@@ -1,0 +1,14 @@
+{
+  "name": "paperback-toolchain",
+  "description": "Paperback Toolchain",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "turbo-darwin-arm64": "^1.4.5"
+  },
+  "devDependencies": {
+    "lerna": "^5.5.0"
+  }
+}
