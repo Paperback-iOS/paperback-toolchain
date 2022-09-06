@@ -19,7 +19,7 @@ $ npm install -g paperback-cli
 $ paperback COMMAND
 running command...
 $ paperback (-v|--version|version)
-paperback-cli/2.0.0-alpha.13 darwin-arm64 node-v16.13.0
+paperback-cli/0.8.0-alpha.1 darwin-arm64 node-v16.13.0
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -32,7 +32,6 @@ USAGE
 * [`paperback help [COMMAND]`](#paperback-help-command)
 * [`paperback logcat`](#paperback-logcat)
 * [`paperback serve`](#paperback-serve)
-* [`paperback test [SOURCE]`](#paperback-test-source)
 
 ## `paperback bundle`
 
@@ -47,7 +46,7 @@ OPTIONS
   --folder=folder  Subfolder to output to
 ```
 
-_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v2.0.0-alpha.13/src/commands/bundle.ts)_
+_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.1/src/commands/bundle.ts)_
 
 ## `paperback help [COMMAND]`
 
@@ -64,7 +63,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.3/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.18/src/commands/help.ts)_
 
 ## `paperback logcat`
 
@@ -79,7 +78,7 @@ OPTIONS
   --port=port  [default: 27015]
 ```
 
-_See code: [src/commands/logcat.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v2.0.0-alpha.13/src/commands/logcat.ts)_
+_See code: [src/commands/logcat.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.1/src/commands/logcat.ts)_
 
 ## `paperback serve`
 
@@ -94,23 +93,5 @@ OPTIONS
   -p, --port=port  [default: 8080]
 ```
 
-_See code: [src/commands/serve.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v2.0.0-alpha.13/src/commands/serve.ts)_
-
-## `paperback test [SOURCE]`
-
-describe the command here
-
-```
-USAGE
-  $ paperback test [SOURCE]
-
-ARGUMENTS
-  SOURCE  (optional) The source to test
-
-OPTIONS
-  --ip=ip
-  --port=port  [default: 27015]
-```
-
-_See code: [src/commands/test.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v2.0.0-alpha.13/src/commands/test.ts)_
+_See code: [src/commands/serve.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.1/src/commands/serve.ts)_
 <!-- commandsstop -->
