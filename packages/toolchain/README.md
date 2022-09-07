@@ -19,7 +19,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (-v|--version|version)
-@paperback/toolchain/0.8.0-alpha.8 darwin-arm64 node-v16.13.0
+@paperback/toolchain/0.8.0-alpha.9 darwin-arm64 node-v16.13.0
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -32,7 +32,6 @@ USAGE
 * [`paperback help [COMMAND]`](#paperback-help-command)
 * [`paperback logcat`](#paperback-logcat)
 * [`paperback serve`](#paperback-serve)
-* [`paperback test [SOURCE]`](#paperback-test-source)
 
 ## `paperback bundle`
 
@@ -47,7 +46,7 @@ OPTIONS
   --folder=folder  Subfolder to output to
 ```
 
-_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.8/src/commands/bundle.ts)_
+_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.9/src/commands/bundle.ts)_
 
 ## `paperback help [COMMAND]`
 
@@ -79,7 +78,7 @@ OPTIONS
   --port=port  [default: 27015]
 ```
 
-_See code: [src/commands/logcat.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.8/src/commands/logcat.ts)_
+_See code: [src/commands/logcat.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.9/src/commands/logcat.ts)_
 
 ## `paperback serve`
 
@@ -94,23 +93,5 @@ OPTIONS
   -p, --port=port  [default: 8080]
 ```
 
-_See code: [src/commands/serve.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.8/src/commands/serve.ts)_
-
-## `paperback test [SOURCE]`
-
-describe the command here
-
-```
-USAGE
-  $ paperback test [SOURCE]
-
-ARGUMENTS
-  SOURCE  (optional) The source to test
-
-OPTIONS
-  --ip=ip
-  --port=port  [default: 27015]
-```
-
-_See code: [src/commands/test.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.8/src/commands/test.ts)_
+_See code: [src/commands/serve.ts](https://github.com/FaizanDurrani/paperback-cli/blob/v0.8.0-alpha.9/src/commands/serve.ts)_
 <!-- commandsstop -->

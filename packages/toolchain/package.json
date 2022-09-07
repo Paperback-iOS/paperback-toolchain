@@ -1,7 +1,7 @@
 {
   "name": "@paperback/toolchain",
   "description": "Paperback CLI for common tools",
-  "version": "0.8.0-alpha.8",
+  "version": "0.8.0-alpha.9",
   "author": "Faizan Durrani",
   "bin": {
     "paperback": "bin/run"
@@ -72,6 +72,8 @@
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.0",
+    "@paperback/runtime-polyfills": "^0.8.0-alpha.9",
+    "@paperback/types": "*",
     "@types/listr": "^0.14.2",
     "@types/shelljs": "^0.8.8",
     "@types/update-notifier": "^5.0.0",
@@ -89,9 +91,7 @@
     "tsify": "^5.0.2",
     "tslib": "^1.14.1",
     "update-notifier": "^5.0.1",
-    "vinyl-source-stream": "^2.0.0",
-    "@paperback/runtime-polyfills": "*",
-    "@paperback/types": "*"
+    "vinyl-source-stream": "^2.0.0"
   },
   "gitHead": "d8daad711e336d975d2543f979a362f01e51a7d3"
 }
