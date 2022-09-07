@@ -14,5 +14,5 @@
     "prepack": "npm run build"
   },
   "types": "./lib/index.d.ts",
-  "gitHead": "88ec07350bc86abc10bda5375403255c442db626"
+  "gitHead": "d1fbd70d47702b2da5451660d9982f4f413756fe"
 }
