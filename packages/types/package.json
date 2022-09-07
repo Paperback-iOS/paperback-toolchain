@@ -4,6 +4,7 @@
   "description": "TypeScript Types for Paperback",
   "keywords": [],
   "author": "Faizan Durrani",
+  "private": false,
   "license": "ISC",
   "devDependencies": {
     "typescript": "^4.8.2"
@@ -13,5 +14,5 @@
     "prepack": "npm run build"
   },
   "types": "./lib/index.d.ts",
-  "gitHead": "0cf5de852ee9ed7e41039e80b2b69d7ec08a15d4"
+  "gitHead": "88ec07350bc86abc10bda5375403255c442db626"
 }

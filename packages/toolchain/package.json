@@ -1,5 +1,5 @@
 {
-  "name": "paperback-cli",
+  "name": "@paperback/toolchain",
   "description": "Paperback CLI for common tools",
   "version": "0.8.0-alpha.4",
   "author": "Faizan Durrani",
@@ -89,5 +89,5 @@
     "update-notifier": "^5.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
-  "gitHead": "0cf5de852ee9ed7e41039e80b2b69d7ec08a15d4"
+  "gitHead": "88ec07350bc86abc10bda5375403255c442db626"
 }
