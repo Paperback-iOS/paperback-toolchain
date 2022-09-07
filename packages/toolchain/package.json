@@ -1,7 +1,7 @@
 {
   "name": "@paperback/toolchain",
   "description": "Paperback CLI for common tools",
-  "version": "0.8.0-alpha.6",
+  "version": "0.8.0-alpha.7",
   "author": "Faizan Durrani",
   "private": false,
   "bin": {
