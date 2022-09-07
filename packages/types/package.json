@@ -15,6 +15,7 @@
     "build": "rm -rf lib && npx tsc",
     "prepack": "npm run build"
   },
-  "types": "./lib/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./src/index.ts",
   "gitHead": "d1fbd70d47702b2da5451660d9982f4f413756fe"
 }

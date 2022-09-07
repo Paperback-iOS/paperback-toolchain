@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
-// export * from 'paperback-extensions-common/lib/_impl'
+import '@paperback/runtime-polyfills'
 import { HomeSection, Manga, Source, SourceManga } from '@paperback/types'
 import { SourceTestRequest, SourceTestResponse } from './devtools/generated/typescript/PDTSourceTester_pb'
 import * as path from 'path'
