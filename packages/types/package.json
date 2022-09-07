@@ -17,5 +17,5 @@
   },
   "main": "./lib/index.js",
   "types": "./src/index.ts",
-  "gitHead": "d1fbd70d47702b2da5451660d9982f4f413756fe"
+  "gitHead": "615fa2646f9fc4bee7aa3201620734a32b65c0a9"
 }
