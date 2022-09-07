@@ -1,7 +1,7 @@
 {
   "name": "@paperback/toolchain",
   "description": "Paperback CLI for common tools",
-  "version": "0.8.0-alpha.9",
+  "version": "0.8.0-alpha.10",
   "author": "Faizan Durrani",
   "bin": {
     "paperback": "bin/run"
@@ -72,7 +72,7 @@
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.0",
-    "@paperback/runtime-polyfills": "^0.8.0-alpha.9",
+    "@paperback/runtime-polyfills": "^0.8.0-alpha.10",
     "@paperback/types": "*",
     "@types/listr": "^0.14.2",
     "@types/shelljs": "^0.8.8",
