@@ -1,10 +1,9 @@
-import { PBCanvasProps } from "./../_exports";
 import { PBImage } from "./../_exports";
 import { RawData } from "./../_exports";
 /*
 * Generated from PaperbackExportCompiler
 */
-export interface PBCanvas extends PBCanvasProps {
+export interface PBCanvas {
     /*
     * internalName: setSize
     */

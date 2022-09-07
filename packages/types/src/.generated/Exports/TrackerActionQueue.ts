@@ -1,9 +1,8 @@
-import { TrackerActionQueueProps } from "./../_exports";
 import { TrackedMangaChapterReadAction } from "./../_exports";
 /*
 * Generated from PaperbackExportCompiler
 */
-export interface TrackerActionQueue extends TrackerActionQueueProps {
+export interface TrackerActionQueue {
     /*
     * internalName: JSPromise_queuedChapterReadActions
     */

@@ -12,5 +12,6 @@
     "build": "rm -rf lib && npx tsc",
     "prepack": "npm run build"
   },
-  "types": "lib/_exports.d.ts"
+  "types": "./lib/index.d.ts",
+  "gitHead": "c3ccb6fb32a50997d5c5d1d2fc78563706ad5250"
 }

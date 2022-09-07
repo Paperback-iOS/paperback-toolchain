@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
-export * from 'paperback-extensions-common/lib/_impl'
-import { HomeSection, Manga, Source, SourceManga } from 'paperback-extensions-common'
+// export * from 'paperback-extensions-common/lib/_impl'
+import { HomeSection, Manga, Source, SourceManga } from '@paperback/types'
 import { SourceTestRequest, SourceTestResponse } from './devtools/generated/typescript/PDTSourceTester_pb'
 import * as path from 'path'
 import cheerio from 'cheerio'
@@ -90,14 +90,14 @@ export class SourceTester {
             testData?.setChapterid(chapters[0]!.id)
           }
 
-          chapters.flatMap(chapter => [
+          chapters.flatMap((chapter: any) => [
             expect(chapter.id).toExist().assertWithError('[' + chapter.id + '] Chapter ID is invalid' + chapter.id),
             expect(chapter.chapNum).toNotMatchPredicate(isNaN).assertWithError('[' + chapter.id + '] Chapter number is NaN'),
             expect(chapter.mangaId).toBeEqual(mangaId).assertWithError('[' + chapter.id + '] Chapter does not belong to the same manga'),
             expect(chapter.time).toExist().assertWithError('[' + chapter.id + '] Chapter time is invalid'),
           ])
-          .filter(x => x)
-          .forEach(x => testCase.addFailures(x!))
+          .filter((x: any) => x)
+          .forEach((x: any) => testCase.addFailures(x!))
         } catch (error: any) {
           testCase.addFailures('Unable to get chapter list. Error: ' + error.message)
         }

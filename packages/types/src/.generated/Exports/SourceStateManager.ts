@@ -1,8 +1,7 @@
-import { SourceStateManagerProps } from "./../_exports";
 /*
 * Generated from PaperbackExportCompiler
 */
-export interface SourceStateManager extends SourceStateManagerProps {
+export interface SourceStateManager {
     /*
     * internalName: _store
     */

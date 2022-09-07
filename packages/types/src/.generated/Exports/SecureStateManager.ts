@@ -1,8 +1,7 @@
-import { SecureStateManagerProps } from "./../_exports";
 /*
 * Generated from PaperbackExportCompiler
 */
-export interface SecureStateManager extends SecureStateManagerProps {
+export interface SecureStateManager {
     /*
     * internalName: _store
     */

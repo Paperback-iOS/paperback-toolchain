@@ -1,7 +1,6 @@
-import { RawDataProps } from "./../_exports";
 /*
 * Generated from PaperbackExportCompiler
 */
-export interface RawData extends RawDataProps {
+export interface RawData {
     toString(): string | undefined;
 }
