@@ -171,7 +171,7 @@ export class SourceTester {
           await source.getHomePageSections?.((x: HomeSection) => {
             sections[x.id] = x
             if (x.items && x.items.length > 0 && testData && !testData.hasMangaid()) {
-              testData.setMangaid(x.items[0]!.id)
+              testData.setMangaid(x.items[0]!.mangaId)
             }
           })
         } catch (error: any) {
