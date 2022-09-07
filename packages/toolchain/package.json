@@ -1,10 +1,14 @@
 {
   "name": "@paperback/toolchain",
   "description": "Paperback CLI for common tools",
-  "version": "0.8.0-alpha.5",
+  "version": "0.8.0-alpha.4",
   "author": "Faizan Durrani",
+  "private": false,
   "bin": {
     "paperback": "bin/run"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "bugs": {
     "url": "https://github.com/FaizanDurrani/paperback-cli/issues"
@@ -89,5 +93,5 @@
     "update-notifier": "^5.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
-  "gitHead": "d1fbd70d47702b2da5451660d9982f4f413756fe"
+  "gitHead": "88ec07350bc86abc10bda5375403255c442db626"
 }
