@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
 
 class Expect<T> {
   private predicates: ((value: T) => boolean)[] = []
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private value: T) { }
+  constructor(private value: T) {}
 
   toExist() {
     this.predicates.push(value => Boolean(value))
@@ -86,6 +85,7 @@ class Expect<T> {
       throw new Error('comparison value undefined')
     }
 
+    // eslint-disable-next-line unicorn/no-array-reduce
     return this.predicates.reduce((previousValue, currentValue) => {
       return previousValue && currentValue(this.value)
     }, true) ? undefined : error

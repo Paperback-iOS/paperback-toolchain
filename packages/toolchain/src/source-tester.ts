@@ -1,16 +1,14 @@
-/* eslint-disable no-console */
-/* eslint-disable no-return-await */
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+
 import '@paperback/runtime-polyfills'
-import { HomeSection, Manga, Source, SourceManga } from '@paperback/types'
-import { SourceTestRequest, SourceTestResponse } from './devtools/generated/typescript/PDTSourceTester_pb'
-import * as path from 'path'
+import {HomeSection, Source, SourceManga} from '@paperback/types'
+import {SourceTestRequest, SourceTestResponse} from './devtools/generated/typescript/PDTSourceTester_pb'
+import * as path from 'node:path'
 import cheerio from 'cheerio'
-import { expect } from './expect'
+import {expect} from './expect'
 
 export class SourceTester {
   // eslint-disable-next-line no-useless-constructor
-  constructor(private bundleDir: string) { }
+  constructor(private bundleDir: string) {}
 
   async testSource(request: SourceTestRequest, callback: (response: SourceTestResponse) => Promise<void>) {
     const testData = request.getData()
@@ -53,19 +51,18 @@ export class SourceTester {
         }
 
         try {
-          const chapterDetails = await source.getChapterDetails(mangaId, chapterId);
+          const chapterDetails = await source.getChapterDetails(mangaId, chapterId)
 
-          (await Promise.all([
+          for (const x of (await Promise.all([
             expect(chapterDetails.id).toBeEqual(chapterId).assertWithError('Chapter ID Mismatch'),
             expect(chapterDetails.mangaId).toBeEqual(mangaId).assertWithError('Chapter does not belong to the same manga id'),
             expect(chapterDetails.pages.length).toBeGreaterThan(0).assertWithError('Chapter pages empty'),
           ]))
-          .filter(x => x)
-          .forEach(x => testCase.addFailures(x!))
+          .filter(x => x))  testCase.addFailures(x!)
         } catch (error: any) {
           testCase.addFailures('Unable to get chapter details. Error: ' + error.message)
         }
-      })
+      }),
     )
 
     return testCase
@@ -97,11 +94,12 @@ export class SourceTester {
             expect(chapter.time).toExist().assertWithError('[' + chapter.id + '] Chapter time is invalid'),
           ])
           .filter((x: any) => x)
+          // eslint-disable-next-line unicorn/no-array-for-each
           .forEach((x: any) => testCase.addFailures(x!))
         } catch (error: any) {
           testCase.addFailures('Unable to get chapter list. Error: ' + error.message)
         }
-      })
+      }),
     )
 
     return testCase
@@ -119,29 +117,15 @@ export class SourceTester {
         }
 
         try {
-          // @ts-ignore
-          const mangaDetails_: ({ id: string } & Manga) | SourceManga = await source.getMangaDetails(mangaId)
-
-          // eslint-disable-next-line no-inner-declarations
-          function isSourceManga(mangaDetails: ({ id: string } & Manga) | SourceManga): mangaDetails is SourceManga {
-            return (mangaDetails as SourceManga).mangaInfo !== undefined
-          }
-
-          let mangaDetails: { id: string } & Manga
-          if (isSourceManga(mangaDetails_)) {
-            mangaDetails = { ...mangaDetails_.mangaInfo, id: mangaDetails_.id }
-          } else {
-            mangaDetails = mangaDetails_
-          }
+          const sourceManga: SourceManga = await source.getMangaDetails(mangaId)
+          const mangaDetails = sourceManga.mangaInfo
 
           if (mangaDetails.titles.length === 0) {
             testCase.addFailures('Missing Titles')
           }
 
-          // @ts-ignore
-          if (!mangaDetails.id || mangaDetails.id !== mangaId) {
-            // @ts-ignore
-            testCase.addFailures(`MangaID Mismatch. Expected ${mangaId} got ${mangaDetails.id}`)
+          if (!sourceManga.id || sourceManga.id !== mangaId) {
+            testCase.addFailures(`MangaID Mismatch. Expected ${mangaId} got ${sourceManga.id}`)
           }
 
           if (!mangaDetails.status) {
@@ -154,7 +138,7 @@ export class SourceTester {
         } catch (error: any) {
           testCase.addFailures(`Unable to get MangaDetails for ID ${mangaId}. Error: ` + error.message)
         }
-      })
+      }),
     )
 
     return testCase
@@ -178,14 +162,13 @@ export class SourceTester {
           homePageTestCase.addFailures('Failed to complete Home Page Acquisition, Error: ' + error.message)
         }
 
-        (await Promise.all(
+        for (const x of (await Promise.all(
           Object.values(sections).map(
-            async section => expect(section.items?.length).toExist().toBeGreaterThan(0).assertWithError(`Expected section (${section.id}) to not be empty`)
-          )
+            async section => expect(section.items?.length).toExist().toBeGreaterThan(0).assertWithError(`Expected section (${section.id}) to not be empty`),
+          ),
         ))
-        .filter(x => x)
-        .forEach(x => homePageTestCase.addFailures(x!))
-      })
+        .filter(x => x))  homePageTestCase.addFailures(x!)
+      }),
     )
     return homePageTestCase
   }
@@ -194,6 +177,6 @@ export class SourceTester {
     const startTime = process.hrtime.bigint()
     await closure()
     const endTime = Number(process.hrtime.bigint() - startTime)
-    return (endTime / 1000000)
+    return (endTime / 1_000_000)
   }
 }

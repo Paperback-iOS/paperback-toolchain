@@ -1,21 +1,22 @@
-import { flags } from '@oclif/command'
-import { CLICommand } from '../command'
+import {Flags, CliUx} from '@oclif/core'
+import {CLICommand} from '../command'
 import Bundle from './bundle'
 import Server from '../server'
-import cli from 'cli-ux'
 import Utils from '../utils'
 import chalk from 'chalk'
+
+const cli = CliUx.ux
 
 export default class Serve extends CLICommand {
   static override description = 'Build the sources and start a local server'
 
   static override flags = {
-    help: flags.help({ char: 'h' }),
-    port: flags.integer({ char: 'p', default: 8080 }),
+    help: Flags.help({char: 'h'}),
+    port: Flags.integer({char: 'p', default: 8080}),
   }
 
   async run() {
-    const { flags } = this.parse(Serve)
+    const {flags} = await this.parse(Serve)
 
     // eslint-disable-next-line no-console
     console.clear()
@@ -36,7 +37,7 @@ export default class Serve extends CLICommand {
     let stopServer = false
     while (!stopServer) {
       // eslint-disable-next-line no-await-in-loop
-      const input = (await cli.prompt(Utils.prefixTime(''), { required: false }) as string)?.trim() ?? ''
+      const input = (await cli.prompt(Utils.prefixTime(''), {required: false}) as string)?.trim() ?? ''
 
       if (input === 'h' || input === 'help') {
         this.log(chalk.underline.bold('Help'))
@@ -73,4 +74,3 @@ export default class Serve extends CLICommand {
     process.exit(0)
   }
 }
-'\b\u00127'

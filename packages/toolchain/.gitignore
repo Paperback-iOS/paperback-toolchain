@@ -3,11 +3,8 @@
 /.nyc_output
 /dist
 /lib
+/package-lock.json
 /tmp
 /yarn.lock
 node_modules
-
-# mac stuff
-.DS_Store
-
-generated
+oclif.manifest.json

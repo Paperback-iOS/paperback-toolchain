@@ -1,9 +1,9 @@
-import { RequestManager, RequestManagerInfo, Request, Response } from "@paperback/types"
+import { RequestManager, RequestManagerProps, Request, Response } from "@paperback/types"
 
 //@ts-ignore
 import axios, { Method } from 'axios'
 
-globalThis.createRequestManager = function (info: RequestManagerInfo): RequestManager {
+globalThis.createRequestManager = function (info: RequestManagerProps): RequestManager {
     return {
         ...info,
         schedule: async function (request: Request, retryCount: number) {

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import Command from '@oclif/command'
+import {Command} from '@oclif/core'
 import Utils from './utils'
 
 export abstract class CLICommand extends Command {
@@ -7,11 +7,11 @@ export abstract class CLICommand extends Command {
     Utils.log(message)
   }
 
-  time(label: string, format: string | undefined = undefined) {
+  time(label: string, format?: string | undefined) {
     return Utils.time(label, format)
   }
 
-  async measure(label: string, format: string | undefined = undefined, closure: () => Promise<void>) {
+  async measure(label: string, format: string, closure: () => Promise<void>) {
     const time = Utils.time(label, format)
     await closure()
     time.end()

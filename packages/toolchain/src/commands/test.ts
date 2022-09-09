@@ -1,26 +1,26 @@
-/* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
-import { flags } from '@oclif/command'
-import { CLICommand } from '../command'
+
+import {Flags} from '@oclif/core'
+import {CLICommand} from '../command'
 import Bundle from './bundle'
-import * as path from 'path'
-import * as fs from 'fs'
+import * as path from 'node:path'
+import * as fs from 'node:fs'
 import chalk from 'chalk'
-import { SourceTester } from '../source-tester'
-import { SourceInstallRequest, SourceTestRequest, SourceTestResponse } from '../devtools/generated/typescript/PDTSourceTester_pb'
+import {SourceTester} from '../source-tester'
+import {SourceInstallRequest, SourceTestRequest, SourceTestResponse} from '../devtools/generated/typescript/PDTSourceTester_pb'
 import shelljs from 'shelljs'
 import Utils from '../utils'
 import Server from '../server'
-import { PaperbackSourceTesterClient } from '../devtools/generated/typescript/PDTSourceTester_grpc_pb'
-import { credentials } from '@grpc/grpc-js'
+import {PaperbackSourceTesterClient} from '../devtools/generated/typescript/PDTSourceTester_grpc_pb'
+import {credentials} from '@grpc/grpc-js'
 import ip from 'ip'
 
 export default class Test extends CLICommand {
   static override description = 'describe the command here'
 
   static override flags = {
-    ip: flags.string({ name: 'ip', default: undefined }),
-    port: flags.integer({ name: 'port', default: 27015 }),
+    ip: Flags.string({name: 'ip', default: undefined}),
+    port: Flags.integer({name: 'port', default: 27_015}),
   }
 
   static override args = [
@@ -33,7 +33,7 @@ export default class Test extends CLICommand {
   ]
 
   async run() {
-    const { flags, args } = this.parse(Test)
+    const {flags, args} = await this.parse(Test)
 
     const sourceId = args.source
     const cwd = process.cwd()
@@ -58,13 +58,13 @@ export default class Test extends CLICommand {
         request.setRepobaseurl(`http://${ip.address()}:${server.port}`)
 
         // Make sure the source is installed on the app
-        await new Promise((resolve, reject) =>
+        await new Promise((resolve, reject) => {
           client.installSource(
             request,
             (error, response) =>
-              (error) ? reject(error) : resolve(response)
+              (error) ? reject(error) : resolve(response),
           )
-        )
+        })
       }
 
       server.stop()
@@ -76,12 +76,12 @@ export default class Test extends CLICommand {
         request.setSourceid(source)
         request.setData(new SourceTestRequest.TestData())
 
-        await new Promise((resolve, reject) =>
+        await new Promise((resolve, reject) => {
           client.testSource(request)
           .on('end', resolve)
           .on('error', reject)
           .on('data', this.logSourceTestReponse.bind(this))
-        )
+        })
       }
     } else {
       const buildDir = path.join(cwd, 'tmp')
@@ -102,6 +102,7 @@ export default class Test extends CLICommand {
 
         await tester.testSource(request, this.logSourceTestReponse.bind(this))
       }
+
       this.log()
     }
   }
@@ -110,22 +111,19 @@ export default class Test extends CLICommand {
     this.log(`${chalk.red.bold('#')} ${chalk.bold(response.getTestcase())}: ${chalk.green(response.getCompletetime().toFixed(0) + 'ms')}`)
 
     const failures = response.getFailuresList()
-    failures.forEach(failure => {
+    for (const failure of failures) {
       this.log(`- ${chalk.white.bgRed('[FAILURE]')} ${failure}`)
-    })
+    }
 
     if (failures.length > 0) this.log()
   }
 
   private getSourceIdsToTest(sourceId: string, bundleDir: string) {
     let sourcesToTest = []
-    if (sourceId) {
-      sourcesToTest = fs.readdirSync(bundleDir).filter(file => {
-        return file.toLowerCase() === sourceId.toLowerCase() && fs.statSync(path.join(bundleDir, file)).isDirectory()
-      })
-    } else {
-      sourcesToTest = fs.readdirSync(bundleDir).filter(file => fs.statSync(path.join(bundleDir, file)).isDirectory())
-    }
+    sourcesToTest = sourceId ? fs.readdirSync(bundleDir).filter(file => {
+      return file.toLowerCase() === sourceId.toLowerCase() && fs.statSync(path.join(bundleDir, file)).isDirectory()
+    }) : fs.readdirSync(bundleDir).filter(file => fs.statSync(path.join(bundleDir, file)).isDirectory())
+
     return sourcesToTest
   }
 }

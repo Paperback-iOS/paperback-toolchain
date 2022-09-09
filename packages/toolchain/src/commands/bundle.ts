@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
-import { flags } from '@oclif/command'
-import { CLICommand } from '../command'
-import * as path from 'path'
-import * as fs from 'fs'
+import {Flags} from '@oclif/core'
+import {CLICommand} from '../command'
+import * as path from 'node:path'
+import * as fs from 'node:fs'
 
 import browserify from 'browserify'
 import * as shelljs from 'shelljs'
@@ -19,13 +18,13 @@ export default class Bundle extends CLICommand {
     'Builds all the sources in the repository and generates a versioning file';
 
   static override flags = {
-    help: flags.help({ char: 'h' }),
-    folder: flags.string({ description: 'Subfolder to output to', required: false }),
+    help: Flags.help({char: 'h'}),
+    folder: Flags.string({description: 'Subfolder to output to', required: false}),
   };
 
   async run() {
-    updateNotifier({ pkg, updateCheckInterval: 86000 }).notify()
-    const { flags } = this.parse(Bundle)
+    updateNotifier({pkg, updateCheckInterval: 86_000}).notify()
+    const {flags} = await this.parse(Bundle)
 
     this.log(`Working directory: ${process.cwd()}`)
     this.log()
@@ -80,7 +79,7 @@ export default class Bundle extends CLICommand {
     // Write the JSON payload to file
     fs.writeFileSync(
       path.join(directoryPath, 'versioning.json'),
-      JSON.stringify(jsonObject)
+      JSON.stringify(jsonObject),
     )
   }
 
@@ -142,7 +141,7 @@ export default class Bundle extends CLICommand {
 
     Utils.deleteFolderRecursive(bundlesPath)
 
-    fs.mkdirSync(bundlesPath, { recursive: true })
+    fs.mkdirSync(bundlesPath, {recursive: true})
 
     const directoryPath = path.join(basePath, 'temp_build')
     const promises: Promise<void>[] = fs.readdirSync(directoryPath).map(async file => {
@@ -150,7 +149,7 @@ export default class Bundle extends CLICommand {
 
       Utils.copyFolderRecursive(
         path.join(basePath, 'src', file, 'external'),
-        path.join(directoryPath, file)
+        path.join(directoryPath, file),
       )
 
       await Promise.all([
@@ -162,7 +161,7 @@ export default class Bundle extends CLICommand {
 
       Utils.copyFolderRecursive(
         path.join(basePath, 'src', file, 'includes'),
-        path.join(bundlesPath, file)
+        path.join(bundlesPath, file),
       )
       fileBundleTime.end()
     })
@@ -201,13 +200,13 @@ export default class Bundle extends CLICommand {
     }
 
     return new Promise<void>(res => {
-      browserify([filePath], { standalone: 'Sources' })
+      browserify([filePath], {standalone: 'Sources'})
       .external(['axios', 'fs'])
       .bundle()
       .pipe(
         fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
           res()
-        })
+        }),
       )
     })
   }
@@ -237,14 +236,14 @@ export default class Bundle extends CLICommand {
     }
 
     return new Promise<void>(res => {
-      browserify([filePath], { standalone: 'Sources' })
+      browserify([filePath], {standalone: 'Sources'})
       .ignore('./node_modules/paperback-extensions-common/dist/APIWrapper.js')
       .external(['axios', 'cheerio', 'fs'])
       .bundle()
       .pipe(
         fs.createWriteStream(path.join(outputPath, 'source.js')).on('finish', () => {
           res()
-        })
+        }),
       )
     })
   }
@@ -289,14 +288,14 @@ export default class Bundle extends CLICommand {
       // [{name: sourceName, tags[]: []}]
       const extensionList: { name: any; tags: any }[] = []
 
-      extensionsData.sources.forEach((extension: { name: any; tags: any }) => {
+      for (const extension of extensionsData.sources) {
         extensionList.push(
           {
             name: extension.name,
             tags: extension.tags,
-          }
+          },
         )
-      })
+      }
 
       // To be used by homepage.pug file, repositoryData must by of the format:
       /*
@@ -318,15 +317,15 @@ export default class Bundle extends CLICommand {
 
       // The repository can register a custom base URL. If not, this file will try to deduct one from GITHUB_REPOSITORY
       if (packageData.baseURL === undefined) {
-        const github_repository_environment_variable = process.env.GITHUB_REPOSITORY
-        if (github_repository_environment_variable === undefined) {
+        const githubRepoEnvVar = process.env.GITHUB_REPOSITORY
+        if (githubRepoEnvVar === undefined) {
           // If it's not possible to determine the baseURL, using noAddToPaperbackButton will mask the field from the homepage
           // The repository can force noAddToPaperbackButton to false by adding the field to package.json
           this.log('Both GITHUB_REPOSITORY and baseURL are not defined, setting noAddToPaperbackButton to true')
           repositoryData.baseURL = 'undefined'
           repositoryData.noAddToPaperbackButton = true
         } else {
-          const split = github_repository_environment_variable.toLowerCase().split('/')
+          const split = githubRepoEnvVar.toLowerCase().split('/')
           // The capitalization of folder is important, using folder.toLowerCase() make a non working link
           this.log(`Using base URL deducted from GITHUB_REPOSITORY environment variable: https://${split[0]}.github.io/${split[1]}${(folder === '') ? '' : '/' + folder}`)
           repositoryData.baseURL = `https://${split[0]}.github.io/${split[1]}${(folder === '') ? '' : '/' + folder}`
@@ -340,6 +339,7 @@ export default class Bundle extends CLICommand {
         this.log('Using noAddToPaperbackButton parameter')
         repositoryData.noAddToPaperbackButton = packageData.noAddToPaperbackButton
       }
+
       if (packageData.repositoryLogo !== undefined) {
         this.log('Using repositoryLogo parameter')
         repositoryData.repositoryLogo = packageData.repositoryLogo
@@ -347,12 +347,12 @@ export default class Bundle extends CLICommand {
 
       // Compilation of the pug file which is available in website-generation folder
       const htmlCode = pug.compileFile(pugFilePath)(
-        repositoryData
+        repositoryData,
       )
 
       fs.writeFileSync(
         path.join(directoryPath, 'index.html'),
-        htmlCode
+        htmlCode,
       )
     }
   }

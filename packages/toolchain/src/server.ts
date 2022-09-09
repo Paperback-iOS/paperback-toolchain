@@ -1,6 +1,6 @@
-import * as http from 'http'
-import * as fs from 'fs'
-import * as path from 'path'
+import * as http from 'node:http'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 import * as ip from 'ip'
 import Utils from './utils'
 import chalk from 'chalk'
@@ -59,7 +59,7 @@ export default class Server {
             response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n')
           }
         } else {
-          response.writeHead(200, { 'Content-Type': contentType })
+          response.writeHead(200, {'Content-Type': contentType})
           response.end(content, 'utf-8')
         }
       })
