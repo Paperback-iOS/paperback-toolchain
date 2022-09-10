@@ -3,5 +3,7 @@ export interface IconText {
     text: string;
 }
 declare global {
-    function createIconText(info: IconText): IconText;
+    namespace App {
+        function createIconText(info: IconText): IconText;
+    }
 }

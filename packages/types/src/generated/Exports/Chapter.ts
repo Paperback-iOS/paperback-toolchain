@@ -9,5 +9,7 @@ export interface Chapter {
     sortingIndex: number;
 }
 declare global {
-    function createChapter(info: Chapter): Chapter;
+    namespace App {
+        function createChapter(info: Chapter): Chapter;
+    }
 }

@@ -7,5 +7,7 @@ export interface SourceCookieStore extends SourceCookieStoreProps {
     removeCookie(cookie: Cookie): void;
 }
 declare global {
-    function createSourceCookieStore(info: SourceCookieStoreProps): SourceCookieStore;
+    namespace App {
+        function createSourceCookieStore(info: SourceCookieStoreProps): SourceCookieStore;
+    }
 }

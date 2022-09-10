@@ -8,5 +8,7 @@ export interface PBImage {
     readonly data?: RawData;
 }
 declare global {
-    function createPBImage(info: PBImage): PBImage;
+    namespace App {
+        function createPBImage(info: PBImage): PBImage;
+    }
 }

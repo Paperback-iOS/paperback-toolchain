@@ -7,9 +7,6 @@ import browserify from 'browserify'
 import * as shelljs from 'shelljs'
 import Utils from '../utils'
 
-import updateNotifier from 'update-notifier'
-const pkg = require('../../package.json')
-
 // Homepage generation requirement
 const pug = require('pug')
 
@@ -23,7 +20,6 @@ export default class Bundle extends CLICommand {
   };
 
   async run() {
-    updateNotifier({pkg, updateCheckInterval: 86_000}).notify()
     const {flags} = await this.parse(Bundle)
 
     this.log(`Working directory: ${process.cwd()}`)

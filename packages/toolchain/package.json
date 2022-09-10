@@ -16,24 +16,29 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "dependencies": {
+  "overrides": {
+    "@types/cacheable-request": "^6.0.2",
+    "@types/responselike": "^1.0.0"
+  },
+  "dependencies": { 
     "@grpc/grpc-js": "^1.7.0",
-    "@oclif/core": "^1.13.10",
-    "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^2.0.1",
+    "@oclif/core": "^1.16.1",
+    "@oclif/plugin-help": "^5.1.12",
+    "@oclif/plugin-plugins": "^2.1.0",
     "@paperback/runtime-polyfills": "*",
     "@paperback/types": "*",
     "browserify": "^17.0.0",
     "chalk": "^5.0.1",
+    "google-protobuf": "^3.21.0",
     "ip": "^2.0.0",
     "pug": "^3.0.2",
-    "shelljs": "^0.8.5",
-    "update-notifier": "^6.0.2"
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "@oclif/test": "^2",
     "@types/browserify": "^12.0.37",
     "@types/chai": "^4",
+    "@types/google-protobuf": "^3.15.6",
     "@types/ip": "^1.1.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.4",
@@ -46,12 +51,14 @@
     "eslint-config-oclif-typescript": "^1.0.2",
     "eslint-plugin-node": "^11.1.0",
     "globby": "^11",
+    "grpc_tools_node_protoc_ts": "^5.3.2",
+    "grpc-tools": "^1.11.2",
     "mocha": "^9",
     "oclif": "^3",
     "shx": "^0.3.3",
     "ts-node": "^10.2.1",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.3"
+    "typescript": "~4.7.2"
   },
   "oclif": {
     "bin": "paperback",
@@ -69,7 +76,7 @@
     }
   },
   "scripts": {
-    "build": "shx rm -rf dist && tsc -b",
+    "build": "shx rm -rf dist && ./src/devtools/generate-ts.sh && tsc -b",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",

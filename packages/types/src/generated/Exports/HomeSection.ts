@@ -6,5 +6,7 @@ export interface HomeSection {
     containsMoreItems: boolean;
 }
 declare global {
-    function createHomeSection(info: HomeSection): HomeSection;
+    namespace App {
+        function createHomeSection(info: HomeSection): HomeSection;
+    }
 }

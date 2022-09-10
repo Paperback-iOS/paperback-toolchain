@@ -8,5 +8,7 @@ export interface TrackedMangaChapterReadAction {
     readonly readTime: Date;
 }
 declare global {
-    function createTrackedMangaChapterReadAction(info: TrackedMangaChapterReadAction): TrackedMangaChapterReadAction;
+    namespace App {
+        function createTrackedMangaChapterReadAction(info: TrackedMangaChapterReadAction): TrackedMangaChapterReadAction;
+    }
 }

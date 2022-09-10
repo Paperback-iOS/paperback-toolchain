@@ -14,5 +14,7 @@ export interface SearchRequest {
     readonly parameters: Record<string, any>;
 }
 declare global {
-    function createSearchRequest(info: SearchRequest): SearchRequest;
+    namespace App {
+        function createSearchRequest(info: SearchRequest): SearchRequest;
+    }
 }

@@ -2,5 +2,7 @@ import { DUIFormRow } from "./../../../_exports";
 export interface DUILabel extends DUIFormRow {
 }
 declare global {
-    function createDUILabel(info: DUILabel): DUILabel;
+    namespace App {
+        function createDUILabel(info: DUILabel): DUILabel;
+    }
 }

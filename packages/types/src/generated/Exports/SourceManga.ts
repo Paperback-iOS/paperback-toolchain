@@ -7,5 +7,7 @@ export interface SourceManga {
     mangaInfo: Manga;
 }
 declare global {
-    function createSourceManga(info: SourceManga): SourceManga;
+    namespace App {
+        function createSourceManga(info: SourceManga): SourceManga;
+    }
 }

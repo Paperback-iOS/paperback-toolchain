@@ -7,5 +7,7 @@ export interface TrackedManga {
     mangaInfo: Manga;
 }
 declare global {
-    function createTrackedManga(info: TrackedManga): TrackedManga;
+    namespace App {
+        function createTrackedManga(info: TrackedManga): TrackedManga;
+    }
 }

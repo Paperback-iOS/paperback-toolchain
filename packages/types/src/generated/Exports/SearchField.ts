@@ -4,5 +4,7 @@ export interface SearchField {
     readonly placeholder: string;
 }
 declare global {
-    function createSearchField(info: SearchField): SearchField;
+    namespace App {
+        function createSearchField(info: SearchField): SearchField;
+    }
 }

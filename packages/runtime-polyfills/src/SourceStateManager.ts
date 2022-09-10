@@ -1,6 +1,7 @@
 import { SourceStateManagerProps, SourceStateManager } from "@paperback/types"
+import { PaperbackPolyfills } from "./PaperbackPolyfills"
 
-globalThis.createSourceStateManager = function (info: SourceStateManagerProps): SourceStateManager {
+PaperbackPolyfills.createSourceStateManager = function (info: SourceStateManagerProps): SourceStateManager {
     return {
         ...info,
         store: function (key: string, value: unknown) {

@@ -1,10 +1,11 @@
 import { ByteArray, RawData } from "@paperback/types"
+import { PaperbackPolyfills } from "./PaperbackPolyfills"
 
-globalThis.createByteArray = function (rawData: RawData): ByteArray {
+PaperbackPolyfills.createByteArray = function (rawData: RawData): ByteArray {
     return new Uint8Array(rawData)
 }
 
-globalThis.createRawData = function (byteArray: ByteArray): RawData {
+PaperbackPolyfills.createRawData = function (byteArray: ByteArray): RawData {
     return {
         ...byteArray,
         length: byteArray.length,

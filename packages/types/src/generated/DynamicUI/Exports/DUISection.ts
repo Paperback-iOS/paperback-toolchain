@@ -1,5 +1,7 @@
 export interface DUISection {
 }
 declare global {
-    function createDUISection(info: DUISection): DUISection;
+    namespace App {
+        function createDUISection(info: DUISection): DUISection;
+    }
 }

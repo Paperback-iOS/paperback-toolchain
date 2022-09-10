@@ -23,5 +23,7 @@ export interface PBCanvas extends PBCanvasProps {
     encode(format: string): RawData | undefined;
 }
 declare global {
-    function createPBCanvas(info: PBCanvasProps): PBCanvas;
+    namespace App {
+        function createPBCanvas(info: PBCanvasProps): PBCanvas;
+    }
 }

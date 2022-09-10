@@ -5,5 +5,7 @@ export interface ChapterDetails {
     longStrip: boolean;
 }
 declare global {
-    function createChapterDetails(info: ChapterDetails): ChapterDetails;
+    namespace App {
+        function createChapterDetails(info: ChapterDetails): ChapterDetails;
+    }
 }

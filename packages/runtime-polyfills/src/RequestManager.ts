@@ -1,15 +1,19 @@
 import { RequestManager, RequestManagerProps, Request, Response } from "@paperback/types"
+import { PaperbackPolyfills } from "./PaperbackPolyfills"
 
 //@ts-ignore
 import axios, { Method } from 'axios'
 
-globalThis.createRequestManager = function (info: RequestManagerProps): RequestManager {
+PaperbackPolyfills.createRequestManager = function (info: RequestManagerProps): RequestManager {
     return {
         ...info,
-        schedule: async function (request: Request, retryCount: number) {
+        async getDefaultUserAgent() {
+            return ''
+        },
+        async schedule(request: Request, retryCount: number) {
 
             // Pass this request through the interceptor if one exists
-            if(info.interceptor) {
+            if (info.interceptor) {
                 request = await info.interceptor.interceptRequest(request)
             }
 
@@ -27,11 +31,11 @@ globalThis.createRequestManager = function (info: RequestManagerProps): RequestM
 
             // If we are using a urlencoded form data as a post body, we need to decode the request for Axios
             let decodedData = request.data
-            if(typeof decodedData == 'object') {
-                if(headers['content-type']?.includes('application/x-www-form-urlencoded')) {
+            if (typeof decodedData == 'object') {
+                if (headers['content-type']?.includes('application/x-www-form-urlencoded')) {
                     decodedData = ""
                     Object.keys(request.data).forEach(attribute => {
-                        if(decodedData.length > 0) {
+                        if (decodedData.length > 0) {
                             decodedData += "&"
                         }
                         decodedData += `${attribute}=${request.data[attribute]}`
@@ -41,7 +45,7 @@ globalThis.createRequestManager = function (info: RequestManagerProps): RequestM
 
             // We must first get the response object from Axios, and then transcribe it into our own Response type before returning
             let response = await axios(`${request.url}${request.param ?? ''}`, {
-                method: <Method> request.method,
+                method: <Method>request.method,
                 headers: headers,
                 data: decodedData,
                 timeout: info.requestTimeout || 0,
@@ -49,15 +53,15 @@ globalThis.createRequestManager = function (info: RequestManagerProps): RequestM
             })
 
             let responsePacked: Response = {
-                rawData: createRawData(response.data),
+                rawData: PaperbackPolyfills.createRawData(response.data),
                 data: Buffer.from(response.data, 'binary').toString(),
                 status: response.status,
                 headers: response.headers,
                 request: request
-            } 
+            }
 
             // Pass this through the response interceptor if one exists
-            if(info.interceptor) {
+            if (info.interceptor) {
                 responsePacked = await info.interceptor.interceptResponse(responsePacked)
             }
 

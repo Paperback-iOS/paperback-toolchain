@@ -16,5 +16,7 @@ export interface TrackerActionQueue extends TrackerActionQueueProps {
     discardChapterReadAction(chapterReadAction: TrackedMangaChapterReadAction): any;
 }
 declare global {
-    function createTrackerActionQueue(info: TrackerActionQueueProps): TrackerActionQueue;
+    namespace App {
+        function createTrackerActionQueue(info: TrackerActionQueueProps): TrackerActionQueue;
+    }
 }

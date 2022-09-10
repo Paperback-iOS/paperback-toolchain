@@ -4,5 +4,7 @@ export interface PagedResults {
     metadata?: any;
 }
 declare global {
-    function createPagedResults(info: PagedResults): PagedResults;
+    namespace App {
+        function createPagedResults(info: PagedResults): PagedResults;
+    }
 }

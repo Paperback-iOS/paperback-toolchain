@@ -7,5 +7,7 @@ export interface Cookie {
     expires?: Date;
 }
 declare global {
-    function createCookie(info: Cookie): Cookie;
+    namespace App {
+        function createCookie(info: Cookie): Cookie;
+    }
 }

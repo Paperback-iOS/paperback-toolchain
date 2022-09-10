@@ -8,5 +8,7 @@ export interface Response {
     readonly request: Request;
 }
 declare global {
-    function createResponse(info: Response): Response;
+    namespace App {
+        function createResponse(info: Response): Response;
+    }
 }

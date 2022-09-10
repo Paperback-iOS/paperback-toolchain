@@ -1,5 +1,7 @@
 export interface DUIForm {
 }
 declare global {
-    function createDUIForm(info: DUIForm): DUIForm;
+    namespace App {
+        function createDUIForm(info: DUIForm): DUIForm;
+    }
 }

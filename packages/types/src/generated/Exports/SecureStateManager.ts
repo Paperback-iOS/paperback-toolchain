@@ -11,5 +11,7 @@ export interface SecureStateManager extends SecureStateManagerProps {
     retrieve(key: any): any;
 }
 declare global {
-    function createSecureStateManager(info: SecureStateManagerProps): SecureStateManager;
+    namespace App {
+        function createSecureStateManager(info: SecureStateManagerProps): SecureStateManager;
+    }
 }

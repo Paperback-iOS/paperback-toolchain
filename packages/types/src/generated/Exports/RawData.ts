@@ -1,9 +1,12 @@
 export interface RawDataProps {
     readonly length: number;
+    [index: number]: Byte;
 }
 export interface RawData extends RawDataProps {
     toString(): string | undefined;
 }
 declare global {
-    function createRawData(info: RawDataProps): RawData;
+    namespace App {
+        function createRawData(info: RawDataProps): RawData;
+    }
 }

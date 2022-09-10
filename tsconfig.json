@@ -1,5 +1,6 @@
 {
     "files": [],
+    "exclude": ["node_modules"],
     "references": [
       {
         "path": "./packages/toolchain/tsconfig.ref.json"

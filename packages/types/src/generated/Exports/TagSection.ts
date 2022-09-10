@@ -5,5 +5,7 @@ export interface TagSection {
     tags: Tag[];
 }
 declare global {
-    function createTagSection(info: TagSection): TagSection;
+    namespace App {
+        function createTagSection(info: TagSection): TagSection;
+    }
 }

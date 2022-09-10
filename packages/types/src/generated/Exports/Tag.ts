@@ -3,5 +3,7 @@ export interface Tag {
     label: string;
 }
 declare global {
-    function createTag(info: Tag): Tag;
+    namespace App {
+        function createTag(info: Tag): Tag;
+    }
 }

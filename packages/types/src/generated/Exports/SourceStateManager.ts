@@ -13,5 +13,7 @@ export interface SourceStateManager extends SourceStateManagerProps {
     retrieve(key: any): any;
 }
 declare global {
-    function createSourceStateManager(info: SourceStateManagerProps): SourceStateManager;
+    namespace App {
+        function createSourceStateManager(info: SourceStateManagerProps): SourceStateManager;
+    }
 }

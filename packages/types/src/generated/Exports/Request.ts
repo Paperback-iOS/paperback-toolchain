@@ -9,5 +9,7 @@ export interface Request {
     incognito: boolean;
 }
 declare global {
-    function createRequest(info: Request): Request;
+    namespace App {
+        function createRequest(info: Request): Request;
+    }
 }

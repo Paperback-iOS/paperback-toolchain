@@ -22,5 +22,7 @@ export interface Manga {
     views: number;
 }
 declare global {
-    function createManga(info: Manga): Manga;
+    namespace App {
+        function createManga(info: Manga): Manga;
+    }
 }

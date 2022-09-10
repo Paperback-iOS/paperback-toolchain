@@ -6,5 +6,7 @@ export interface DUISelect extends DUIFormRow {
     readonly labelResolver: (arg0: string) => Promise<string>;
 }
 declare global {
-    function createDUISelect(info: DUISelect): DUISelect;
+    namespace App {
+        function createDUISelect(info: DUISelect): DUISelect;
+    }
 }
