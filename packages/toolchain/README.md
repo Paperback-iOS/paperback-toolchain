@@ -30,7 +30,6 @@ USAGE
 # Commands
 <!-- commands -->
 * [`paperback bundle`](#paperback-bundle)
-* [`paperback hello-world [FILE]`](#paperback-hello-world-file)
 * [`paperback help [COMMAND]`](#paperback-help-command)
 * [`paperback logcat`](#paperback-logcat)
 * [`paperback migrate`](#paperback-migrate)
@@ -63,27 +62,6 @@ DESCRIPTION
 ```
 
 _See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.16/dist/commands/bundle.ts)_
-
-## `paperback hello-world [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ paperback hello-world [FILE] [-n <value>] [-f]
-
-FLAGS
-  -f, --force
-  -n, --name=<value>  name to print
-
-DESCRIPTION
-  describe the command here
-
-EXAMPLES
-  $ paperback hello-world
-```
-
-_See code: [dist/commands/hello-world.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.16/dist/commands/hello-world.ts)_
 
 ## `paperback help [COMMAND]`
 
