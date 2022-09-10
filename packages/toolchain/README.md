@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.0-alpha.11 darwin-arm64 node-v16.13.0
+@paperback/toolchain/0.8.0-alpha.12 darwin-arm64 node-v16.13.0
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -29,7 +29,9 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`paperback hello-world [FILE]`](#paperback-hello-world-file)
 * [`paperback help [COMMAND]`](#paperback-help-command)
+* [`paperback migrate`](#paperback-migrate)
 * [`paperback plugins`](#paperback-plugins)
 * [`paperback plugins:install PLUGIN...`](#paperback-pluginsinstall-plugin)
 * [`paperback plugins:inspect PLUGIN...`](#paperback-pluginsinspect-plugin)
@@ -39,6 +41,27 @@ USAGE
 * [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-1)
 * [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-2)
 * [`paperback plugins update`](#paperback-plugins-update)
+
+## `paperback hello-world [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ paperback hello-world [FILE] [-n <value>] [-f]
+
+FLAGS
+  -f, --force
+  -n, --name=<value>  name to print
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ paperback hello-world
+```
+
+_See code: [dist/commands/hello-world.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.12/dist/commands/hello-world.ts)_
 
 ## `paperback help [COMMAND]`
 
@@ -59,6 +82,23 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
+
+## `paperback migrate`
+
+Migrate 0.7 sources to 0.8
+
+```
+USAGE
+  $ paperback migrate
+
+DESCRIPTION
+  Migrate 0.7 sources to 0.8
+
+EXAMPLES
+  $ paperback migrate
+```
+
+_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.12/dist/commands/migrate.ts)_
 
 ## `paperback plugins`
 
