@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.0-alpha.14 darwin-arm64 node-v16.13.0
+@paperback/toolchain/0.8.0-alpha.15 darwin-arm64 node-v16.13.0
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -32,6 +32,7 @@ USAGE
 * [`paperback bundle`](#paperback-bundle)
 * [`paperback hello-world [FILE]`](#paperback-hello-world-file)
 * [`paperback help [COMMAND]`](#paperback-help-command)
+* [`paperback logcat`](#paperback-logcat)
 * [`paperback migrate`](#paperback-migrate)
 * [`paperback plugins`](#paperback-plugins)
 * [`paperback plugins:install PLUGIN...`](#paperback-pluginsinstall-plugin)
@@ -43,6 +44,7 @@ USAGE
 * [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-2)
 * [`paperback plugins update`](#paperback-plugins-update)
 * [`paperback serve`](#paperback-serve)
+* [`paperback test [SOURCE]`](#paperback-test-source)
 
 ## `paperback bundle`
 
@@ -60,7 +62,7 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.14/dist/commands/bundle.ts)_
+_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.15/dist/commands/bundle.ts)_
 
 ## `paperback hello-world [FILE]`
 
@@ -81,7 +83,7 @@ EXAMPLES
   $ paperback hello-world
 ```
 
-_See code: [dist/commands/hello-world.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.14/dist/commands/hello-world.ts)_
+_See code: [dist/commands/hello-world.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.15/dist/commands/hello-world.ts)_
 
 ## `paperback help [COMMAND]`
 
@@ -103,6 +105,24 @@ DESCRIPTION
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
 
+## `paperback logcat`
+
+describe the command here
+
+```
+USAGE
+  $ paperback logcat [--ip <value>] [--port <value>]
+
+FLAGS
+  --ip=<value>    [default: localhost]
+  --port=<value>  [default: 27015]
+
+DESCRIPTION
+  describe the command here
+```
+
+_See code: [dist/commands/logcat.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.15/dist/commands/logcat.ts)_
+
 ## `paperback migrate`
 
 Migrate 0.7 sources to 0.8
@@ -118,7 +138,7 @@ EXAMPLES
   $ paperback migrate
 ```
 
-_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.14/dist/commands/migrate.ts)_
+_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.15/dist/commands/migrate.ts)_
 
 ## `paperback plugins`
 
@@ -366,5 +386,26 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.14/dist/commands/serve.ts)_
+_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.15/dist/commands/serve.ts)_
+
+## `paperback test [SOURCE]`
+
+describe the command here
+
+```
+USAGE
+  $ paperback test [SOURCE] [--ip <value>] [--port <value>]
+
+ARGUMENTS
+  SOURCE  (optional) The source to test
+
+FLAGS
+  --ip=<value>
+  --port=<value>  [default: 27015]
+
+DESCRIPTION
+  describe the command here
+```
+
+_See code: [dist/commands/test.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.15/dist/commands/test.ts)_
 <!-- commandsstop -->
