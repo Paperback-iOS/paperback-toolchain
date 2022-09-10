@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.0-alpha.12 darwin-arm64 node-v16.13.0
+@paperback/toolchain/0.8.0-alpha.13 darwin-arm64 node-v16.13.0
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -29,6 +29,7 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`paperback bundle`](#paperback-bundle)
 * [`paperback hello-world [FILE]`](#paperback-hello-world-file)
 * [`paperback help [COMMAND]`](#paperback-help-command)
 * [`paperback migrate`](#paperback-migrate)
@@ -41,6 +42,25 @@ USAGE
 * [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-1)
 * [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-2)
 * [`paperback plugins update`](#paperback-plugins-update)
+* [`paperback serve`](#paperback-serve)
+
+## `paperback bundle`
+
+Builds all the sources in the repository and generates a versioning file
+
+```
+USAGE
+  $ paperback bundle [-h] [--folder <value>]
+
+FLAGS
+  -h, --help        Show CLI help.
+  --folder=<value>  Subfolder to output to
+
+DESCRIPTION
+  Builds all the sources in the repository and generates a versioning file
+```
+
+_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.13/dist/commands/bundle.ts)_
 
 ## `paperback hello-world [FILE]`
 
@@ -61,7 +81,7 @@ EXAMPLES
   $ paperback hello-world
 ```
 
-_See code: [dist/commands/hello-world.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.12/dist/commands/hello-world.ts)_
+_See code: [dist/commands/hello-world.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.13/dist/commands/hello-world.ts)_
 
 ## `paperback help [COMMAND]`
 
@@ -98,7 +118,7 @@ EXAMPLES
   $ paperback migrate
 ```
 
-_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.12/dist/commands/migrate.ts)_
+_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.13/dist/commands/migrate.ts)_
 
 ## `paperback plugins`
 
@@ -329,4 +349,22 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
+
+## `paperback serve`
+
+Build the sources and start a local server
+
+```
+USAGE
+  $ paperback serve [-h] [-p <value>]
+
+FLAGS
+  -h, --help          Show CLI help.
+  -p, --port=<value>  [default: 8080]
+
+DESCRIPTION
+  Build the sources and start a local server
+```
+
+_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.13/dist/commands/serve.ts)_
 <!-- commandsstop -->
