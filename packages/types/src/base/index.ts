@@ -1,3 +1,7 @@
 export * from './Source'
 export * from './Tracker'
 export * from './ByteArray'
+export * from './Badge'
+export * from './Requestable'
+export * from './Searchable'
+export * from './SourceInfo'

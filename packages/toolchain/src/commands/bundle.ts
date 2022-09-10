@@ -46,14 +46,14 @@ export default class Bundle extends CLICommand {
     const basePath = process.cwd()
     const directoryPath = path.join(basePath, 'bundles', folder)
     const cliInfo = require('../../package.json')
-    const commonsInfo = require(path.join(basePath, 'node_modules/paperback-extensions-common/package.json'))
+    const commonsInfo = require(path.join(basePath, 'node_modules/@paperback/types/package.json'))
 
     const jsonObject = {
       buildTime: new Date(),
       sources: [] as any[],
       builtWith: {
-        cli: cliInfo.version,
-        commons: commonsInfo.version,
+        toolchain: cliInfo.version,
+        types: commonsInfo.version,
       },
     }
 
@@ -82,13 +82,13 @@ export default class Bundle extends CLICommand {
   async generateSourceInfo(sourceId: string, directoryPath: string) {
     // Files starting with . should be ignored (hidden) - Also ignore the tests directory
     if (sourceId.startsWith('.') || sourceId.startsWith('tests')) {
-      return Promise.resolve()
+      return
     }
 
     // If its a directory
     if (!fs.statSync(path.join(directoryPath, sourceId)).isDirectory()) {
       this.log('not a Directory, skipping ' + sourceId)
-      return Promise.resolve()
+      return
     }
 
     const finalPath = path.join(directoryPath, sourceId, 'index.js')
@@ -174,20 +174,20 @@ export default class Bundle extends CLICommand {
   async bundle(file: string, sourceDir: string, destDir: string) {
     if (file === 'tests') {
       this.log('Tests directory, skipping')
-      return Promise.resolve()
+      return
     }
 
     // If its a directory
     if (!fs.statSync(path.join(sourceDir, file)).isDirectory()) {
       this.log('Not a directory, skipping ' + file)
-      return Promise.resolve()
+      return
     }
 
     const filePath = path.join(sourceDir, file, `/${file}.js`)
 
     if (!fs.existsSync(filePath)) {
       this.log("The file doesn't exist, skipping. " + file)
-      return Promise.resolve()
+      return
     }
 
     const outputPath = path.join(destDir, file)
@@ -195,12 +195,22 @@ export default class Bundle extends CLICommand {
       fs.mkdirSync(outputPath)
     }
 
+    fs.writeFileSync(
+      path.join(outputPath, 'index.js'),
+      `globalThis.App = typeof App === 'undefined' ? new Proxy(globalThis, {
+        get: (target, p) => {
+            console.log('APP_COMPAT: ' + p);
+            return target[p];
+        }
+      }) : App;`,
+    )
+
     return new Promise<void>(res => {
       browserify([filePath], {standalone: 'Sources'})
       .external(['axios', 'fs'])
       .bundle()
       .pipe(
-        fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
+        fs.createWriteStream(path.join(outputPath, 'index.js'), {flags: 'a'}).on('finish', () => {
           res()
         }),
       )
