@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.0-alpha.13 darwin-arm64 node-v16.13.0
+@paperback/toolchain/0.8.0-alpha.14 darwin-arm64 node-v16.13.0
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -60,7 +60,7 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.13/dist/commands/bundle.ts)_
+_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.14/dist/commands/bundle.ts)_
 
 ## `paperback hello-world [FILE]`
 
@@ -81,7 +81,7 @@ EXAMPLES
   $ paperback hello-world
 ```
 
-_See code: [dist/commands/hello-world.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.13/dist/commands/hello-world.ts)_
+_See code: [dist/commands/hello-world.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.14/dist/commands/hello-world.ts)_
 
 ## `paperback help [COMMAND]`
 
@@ -118,7 +118,7 @@ EXAMPLES
   $ paperback migrate
 ```
 
-_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.13/dist/commands/migrate.ts)_
+_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.14/dist/commands/migrate.ts)_
 
 ## `paperback plugins`
 
@@ -366,5 +366,5 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.13/dist/commands/serve.ts)_
+_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.14/dist/commands/serve.ts)_
 <!-- commandsstop -->
