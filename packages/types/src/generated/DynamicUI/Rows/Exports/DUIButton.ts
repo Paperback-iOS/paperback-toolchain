@@ -3,6 +3,10 @@ export interface DUIButton extends DUIFormRow {
 }
 declare global {
     namespace App {
-        function createDUIButton(info: DUIButton): DUIButton;
+        function createDUIButton(info: {
+            id: string
+            label: string
+            onTap: () => Promise<void>
+        }): DUIButton;
     }
 }

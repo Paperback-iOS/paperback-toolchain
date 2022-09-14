@@ -1,14 +1,12 @@
 import { RawData } from "./../_exports";
 import { PBImage } from "./../_exports";
-export interface PBCanvasProps {
+export interface PBCanvas {
     readonly width: number;
     readonly height: number;
     /*
     * internalName: _data
     */
     readonly data?: RawData;
-}
-export interface PBCanvas extends PBCanvasProps {
     /*
     * internalName: setSize
     */
@@ -24,6 +22,6 @@ export interface PBCanvas extends PBCanvasProps {
 }
 declare global {
     namespace App {
-        function createPBCanvas(info: PBCanvasProps): PBCanvas;
+        function createPBCanvas(): PBCanvas;
     }
 }

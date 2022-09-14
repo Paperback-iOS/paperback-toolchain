@@ -5,6 +5,10 @@ export interface SearchField {
 }
 declare global {
     namespace App {
-        function createSearchField(info: SearchField): SearchField;
+        function createSearchField(info: {
+            id: string
+            name: string
+            placeholder: string
+        }): SearchField;
     }
 }

@@ -9,6 +9,8 @@ export interface PBImage {
 }
 declare global {
     namespace App {
-        function createPBImage(info: PBImage): PBImage;
+        function createPBImage(info: {
+            data: RawData
+        }): PBImage;
     }
 }

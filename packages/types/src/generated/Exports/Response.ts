@@ -7,8 +7,3 @@ export interface Response {
     readonly headers: Record<any, any>;
     readonly request: Request;
 }
-declare global {
-    namespace App {
-        function createResponse(info: Response): Response;
-    }
-}

@@ -6,10 +6,16 @@ export interface Request {
     data?: any;
     param?: string;
     cookies: Cookie[];
-    incognito: boolean;
 }
 declare global {
     namespace App {
-        function createRequest(info: Request): Request;
+        function createRequest(info: {
+            url: string
+            method: string
+            headers?: Record<string, string>
+            param?: string
+            data?: any
+            cookies?: Cookie[]
+        }): Request;
     }
 }

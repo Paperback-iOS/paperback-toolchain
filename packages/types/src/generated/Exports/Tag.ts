@@ -1,9 +1,12 @@
 export interface Tag {
-    id: string;
-    label: string;
+    readonly id: string;
+    readonly label: string;
 }
 declare global {
     namespace App {
-        function createTag(info: Tag): Tag;
+        function createTag(info: {
+            id: string
+            label: string
+        }): Tag;
     }
 }

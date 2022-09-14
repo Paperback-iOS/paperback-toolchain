@@ -1,12 +1,13 @@
-export interface RawDataProps {
+import { ByteArray } from "./../_exports";
+export interface RawData {
     readonly length: number;
     [index: number]: Byte;
-}
-export interface RawData extends RawDataProps {
     toString(): string | undefined;
 }
 declare global {
     namespace App {
-        function createRawData(info: RawDataProps): RawData;
+        function createRawData(info: {
+            byteArray: ByteArray
+        }): RawData;
     }
 }

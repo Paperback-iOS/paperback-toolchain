@@ -1,8 +1,6 @@
 import { SecureStateManager } from "./../_exports";
-export interface SourceStateManagerProps {
+export interface SourceStateManager {
     readonly keychain: SecureStateManager;
-}
-export interface SourceStateManager extends SourceStateManagerProps {
     /*
     * internalName: _store
     */
@@ -14,6 +12,6 @@ export interface SourceStateManager extends SourceStateManagerProps {
 }
 declare global {
     namespace App {
-        function createSourceStateManager(info: SourceStateManagerProps): SourceStateManager;
+        function createSourceStateManager(): SourceStateManager;
     }
 }

@@ -13,8 +13,3 @@ export interface SearchRequest {
     readonly excludeOperator?: string;
     readonly parameters: Record<string, any>;
 }
-declare global {
-    namespace App {
-        function createSearchRequest(info: SearchRequest): SearchRequest;
-    }
-}

@@ -5,6 +5,9 @@ export interface PagedResults {
 }
 declare global {
     namespace App {
-        function createPagedResults(info: PagedResults): PagedResults;
+        function createPagedResults(info: {
+            results?: PartialSourceManga[]
+            metadata?: any
+        }): PagedResults;
     }
 }

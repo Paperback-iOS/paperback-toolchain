@@ -6,6 +6,11 @@ export interface PartialSourceManga {
 }
 declare global {
     namespace App {
-        function createPartialSourceManga(info: PartialSourceManga): PartialSourceManga;
+        function createPartialSourceManga(info: {
+            mangaId: string
+            image: string
+            title: string
+            subtitle?: string
+        }): PartialSourceManga;
     }
 }

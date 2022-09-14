@@ -19,7 +19,7 @@ export * from "./Exports/Chapter";
 export * from "./Exports/Cookie";
 export * from "./Exports/HomeSection";
 export * from "./Exports/IconText";
-export * from "./Exports/Manga";
+export * from "./Exports/MangaInfo";
 export * from "./Exports/PartialSourceManga";
 export * from "./Exports/MangaUpdates";
 export * from "./Exports/PBCanvas";

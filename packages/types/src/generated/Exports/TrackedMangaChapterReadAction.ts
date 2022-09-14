@@ -7,8 +7,3 @@ export interface TrackedMangaChapterReadAction {
     readonly volumeNumber: number;
     readonly readTime: Date;
 }
-declare global {
-    namespace App {
-        function createTrackedMangaChapterReadAction(info: TrackedMangaChapterReadAction): TrackedMangaChapterReadAction;
-    }
-}

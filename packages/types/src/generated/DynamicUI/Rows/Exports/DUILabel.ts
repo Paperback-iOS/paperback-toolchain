@@ -3,6 +3,10 @@ export interface DUILabel extends DUIFormRow {
 }
 declare global {
     namespace App {
-        function createDUILabel(info: DUILabel): DUILabel;
+        function createDUILabel(info: {
+            id: string
+            label: string
+            value?: string
+        }): DUILabel;
     }
 }

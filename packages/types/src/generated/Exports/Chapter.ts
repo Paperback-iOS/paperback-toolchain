@@ -10,6 +10,15 @@ export interface Chapter {
 }
 declare global {
     namespace App {
-        function createChapter(info: Chapter): Chapter;
+        function createChapter(info: {
+            id: string
+            chapNum: number
+            volume?: number
+            name?: string
+            group?: string
+            time?: Date
+            langCode?: string
+            sortingIndex?: number
+        }): Chapter;
     }
 }

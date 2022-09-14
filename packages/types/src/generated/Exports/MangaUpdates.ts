@@ -3,6 +3,8 @@ export interface MangaUpdates {
 }
 declare global {
     namespace App {
-        function createMangaUpdates(info: MangaUpdates): MangaUpdates;
+        function createMangaUpdates(info: {
+            ids: string[]
+        }): MangaUpdates;
     }
 }

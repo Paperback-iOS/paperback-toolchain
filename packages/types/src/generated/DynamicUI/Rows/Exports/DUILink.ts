@@ -3,6 +3,10 @@ export interface DUILink extends DUIFormRow {
 }
 declare global {
     namespace App {
-        function createDUILink(info: DUILink): DUILink;
+        function createDUILink(info: {
+            id: string
+            label: string
+            value?: string
+        }): DUILink;
     }
 }

@@ -1,12 +1,18 @@
 import { PartialSourceManga } from "./../_exports";
 export interface HomeSection {
-    id: string;
-    title: string;
+    readonly id: string;
+    readonly title: string;
     items: PartialSourceManga[];
     containsMoreItems: boolean;
 }
 declare global {
     namespace App {
-        function createHomeSection(info: HomeSection): HomeSection;
+        function createHomeSection(info: {
+            id: string
+            title: string
+            type: string
+            items?: PartialSourceManga[]
+            containsMoreItems: boolean
+        }): HomeSection;
     }
 }

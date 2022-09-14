@@ -1,6 +1,4 @@
-export interface SecureStateManagerProps {
-}
-export interface SecureStateManager extends SecureStateManagerProps {
+export interface SecureStateManager {
     /*
     * internalName: _store
     */
@@ -9,9 +7,4 @@ export interface SecureStateManager extends SecureStateManagerProps {
     * internalName: _retrieve
     */
     retrieve(key: any): any;
-}
-declare global {
-    namespace App {
-        function createSecureStateManager(info: SecureStateManagerProps): SecureStateManager;
-    }
 }

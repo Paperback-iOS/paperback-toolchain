@@ -1,11 +1,15 @@
 import { Tag } from "./../_exports";
 export interface TagSection {
-    id: string;
+    readonly id: string;
     label: string;
     tags: Tag[];
 }
 declare global {
     namespace App {
-        function createTagSection(info: TagSection): TagSection;
+        function createTagSection(info: {
+            id: string
+            label: string
+            tags: Tag[]
+        }): TagSection;
     }
 }
