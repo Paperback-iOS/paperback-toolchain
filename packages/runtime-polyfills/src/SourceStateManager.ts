@@ -1,9 +1,8 @@
-import { SourceStateManagerProps, SourceStateManager } from "@paperback/types"
+import { SourceStateManager } from "@paperback/types"
 import { PaperbackPolyfills } from "./PaperbackPolyfills"
 
-PaperbackPolyfills.createSourceStateManager = function (info: SourceStateManagerProps): SourceStateManager {
+PaperbackPolyfills.createSourceStateManager = function (): SourceStateManager {
     return {
-        ...info,
         store: function (key: string, value: unknown) {
             // Fill this in so the test classes don't commit sudoku
             virtualStateStore[key] = value

@@ -1,12 +1,19 @@
-import { RequestManager, RequestManagerProps, Request, Response } from "@paperback/types"
+import { RequestManager, Request, Response, SourceInterceptor } from "@paperback/types"
 import { PaperbackPolyfills } from "./PaperbackPolyfills"
 
 //@ts-ignore
 import axios, { Method } from 'axios'
 
-PaperbackPolyfills.createRequestManager = function (info: RequestManagerProps): RequestManager {
+PaperbackPolyfills.createRequestManager = function (info: {
+    interceptor?: SourceInterceptor
+    requestsPerSecond?: number
+    requestTimeout?: number
+}): RequestManager {
     return {
-        ...info,
+        interceptor: info.interceptor,
+        requestsPerSecond: info.requestsPerSecond ?? 2.5,
+        requestTimeout: info.requestTimeout ?? 20_000,
+        
         async getDefaultUserAgent() {
             return ''
         },

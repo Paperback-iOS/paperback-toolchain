@@ -1,4 +1,4 @@
-import { ByteArray, RawData } from "@paperback/types"
+import { RawData } from "@paperback/types"
 import { PaperbackPolyfills } from "./PaperbackPolyfills"
 
 PaperbackPolyfills.createByteArray = function (rawData: RawData): ByteArray {
