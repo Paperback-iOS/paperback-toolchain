@@ -1,16 +1,16 @@
-import { Manga } from "./../_exports";
+import { MangaInfo } from "./../_exports";
 export interface TrackedManga {
     /*
     * internalName: mangaId
     */
     id: string;
-    mangaInfo: Manga;
+    mangaInfo: MangaInfo;
 }
 declare global {
     namespace App {
         function createTrackedManga(info: {
             mangaId: string
-            mangaInfo: Manga
+            mangaInfo: MangaInfo
         }): TrackedManga;
     }
 }

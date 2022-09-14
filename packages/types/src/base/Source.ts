@@ -4,7 +4,7 @@
  */
 
 import { CheerioAPI } from "cheerio"
-import { Chapter, ChapterDetails, Cookie, DUISection, HomeSection, Manga, MangaUpdates, PagedResults, RequestManager, SearchField, SearchRequest, SourceManga, TagSection } from ".."
+import { Chapter, ChapterDetails, Cookie, DUISection, HomeSection, MangaInfo, MangaUpdates, PagedResults, RequestManager, SearchField, SearchRequest, SourceManga, TagSection } from ".."
 import { Requestable } from "./Requestable"
 import { Searchable } from "./Searchable"
 
@@ -15,7 +15,7 @@ export abstract class Source implements Requestable, Searchable {
 
   /**
    * Given a mangaID, this function should use a {@link Request} object's {@link Request.perform} method
-   * to grab and populate a {@link Manga} object
+   * to grab and populate a {@link MangaInfo} object
    * @param mangaId The ID which this function is expected to grab data for
    */
   abstract getMangaDetails(mangaId: string): Promise<SourceManga>

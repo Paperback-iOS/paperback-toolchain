@@ -1,4 +1,4 @@
-import { ByteArray } from "./../_exports";
+
 export interface RawData {
     readonly length: number;
     [index: number]: Byte;
