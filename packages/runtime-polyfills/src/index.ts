@@ -6,7 +6,9 @@ import './SourceStateManager'
 // @ts-ignore
 globalThis.App = new Proxy(PaperbackPolyfills, {
 	get(target, p) {
+		// @ts-ignore
 		if(target[p]) {
+			// @ts-ignore
 			return target[p]
 		}
 

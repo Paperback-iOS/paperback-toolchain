@@ -5,7 +5,7 @@ PaperbackPolyfills.createByteArray = function (rawData: RawData): ByteArray {
     return new Uint8Array(rawData)
 }
 
-PaperbackPolyfills.createRawData = function (byteArray: ByteArray): RawData {
+PaperbackPolyfills.createRawData = function ({ byteArray }): RawData {
     return {
         ...byteArray,
         length: byteArray.length,

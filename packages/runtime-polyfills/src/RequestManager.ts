@@ -13,7 +13,7 @@ PaperbackPolyfills.createRequestManager = function (info: {
         interceptor: info.interceptor,
         requestsPerSecond: info.requestsPerSecond ?? 2.5,
         requestTimeout: info.requestTimeout ?? 20_000,
-        
+
         async getDefaultUserAgent() {
             return ''
         },
@@ -60,7 +60,7 @@ PaperbackPolyfills.createRequestManager = function (info: {
             })
 
             let responsePacked: Response = {
-                rawData: PaperbackPolyfills.createRawData(response.data),
+                rawData: App.createRawData(response.data),
                 data: Buffer.from(response.data, 'binary').toString(),
                 status: response.status,
                 headers: response.headers,

@@ -1,1 +1,1 @@
-export const PaperbackPolyfills: any = {}
+export const PaperbackPolyfills: Partial<typeof App> = {}
