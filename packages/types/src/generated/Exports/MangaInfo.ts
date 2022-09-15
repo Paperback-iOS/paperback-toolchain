@@ -29,7 +29,7 @@ declare global {
             author?: string
             desc: string
             status: string
-            hentai: boolean
+            hentai?: boolean
             titles: string[]
             banner?: string
             rating?: number
