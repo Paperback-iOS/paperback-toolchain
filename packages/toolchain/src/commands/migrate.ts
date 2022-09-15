@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import fs from 'node:fs'
 import path from 'node:path'
-import ts, {CallExpression, Expression, ImportSpecifier, NamedImports, TypeNode, TypeReferenceNode} from 'typescript'
+import ts, {CallExpression, Expression, ImportSpecifier, NamedImports, TypeReferenceNode} from 'typescript'
 import {CLICommand} from '../command'
 import shell from 'shelljs'
 
