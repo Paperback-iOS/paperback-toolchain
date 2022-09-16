@@ -1,4 +1,4 @@
-import { RequestManager } from ".."
+import { RequestManager } from "../.."
 
 export interface Requestable {
     readonly requestManager: RequestManager

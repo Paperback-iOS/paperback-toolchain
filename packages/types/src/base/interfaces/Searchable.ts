@@ -1,7 +1,7 @@
-import { PagedResults, SearchField, SearchRequest, TagSection } from ".."
-import { Requestable } from "./Requestable"
+import { PagedResults, SearchField, SearchRequest, TagSection } from "../.."
+import { MangaProviding } from "./MangaProviding"
 
-export interface Searchable extends Requestable {
+export interface Searchable extends MangaProviding {
     getSearchResults(query: SearchRequest, metadata: unknown | undefined): Promise<PagedResults>
     
     getSearchTags?(): Promise<TagSection[]>

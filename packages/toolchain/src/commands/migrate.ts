@@ -96,7 +96,30 @@ class FileTransformer {
     this.changes = []
   }
 
-  getRenamedTypeWrapper(callExp: CallExpression): CallExpression {
+  getPropertyAssignmentExpressions<T extends Record<string, Expression | undefined>>(node: ts.Node, obj: T): T {
+    if (!ts.isObjectLiteralExpression(node)) return obj
+
+    const keySet = new Set(Object.keys(obj))
+
+    for (const prop of node.properties) {
+      if (!prop.name || !ts.isIdentifier(prop.name) || !keySet.has(prop.name.text)) continue
+      if (prop && ts.isPropertyAssignment(prop)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        obj[prop.name.text] = prop.initializer
+      }
+
+      if (prop && ts.isShorthandPropertyAssignment(prop)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        obj[prop.name.text] = prop.name
+      }
+    }
+
+    return obj
+  }
+
+  getRenamedTypeWrapper(callExp: CallExpression): ts.Node | undefined {
     const expression = callExp.expression
     if (!ts.isIdentifier(expression) || !expression.text.startsWith('create'))
       return callExp
@@ -104,19 +127,20 @@ class FileTransformer {
     this.changes.push(`Updating creation wrapper call ${expression.text} to use the App namespace`)
 
     switch (expression.text) {
+    case 'createIconText': {
+      const propAssignments = this.getPropertyAssignmentExpressions(
+        callExp.arguments[0],
+        {text: undefined},
+      )
+
+      return propAssignments.text
+    }
+
     case 'createManga': {
-      let mangaIdExpression: Expression | undefined
-      if (callExp.arguments.length > 0 && ts.isObjectLiteralExpression(callExp.arguments[0])) {
-        const exp = callExp.arguments[0].properties.find(x => x.name && ts.isIdentifier(x.name) && x.name.text === 'id')
-
-        if (exp && ts.isPropertyAssignment(exp)) {
-          mangaIdExpression = exp.initializer
-        }
-
-        if (exp && ts.isShorthandPropertyAssignment(exp)) {
-          mangaIdExpression = exp.name
-        }
-      }
+      const propAssignments = this.getPropertyAssignmentExpressions(
+        callExp.arguments[0],
+        {id: undefined},
+      )
 
       return ts.factory.createCallExpression(
         ts.factory.createPropertyAccessExpression(
@@ -127,7 +151,7 @@ class FileTransformer {
         [ts.factory.createObjectLiteralExpression([
           ts.factory.createPropertyAssignment(
             ts.factory.createIdentifier('id'),
-            mangaIdExpression ?? ts.factory.createIdentifier('undefined'),
+            propAssignments.id ?? ts.factory.createIdentifier('undefined'),
           ),
           ts.factory.createPropertyAssignment(
             ts.factory.createIdentifier('mangaInfo'),
@@ -149,6 +173,16 @@ class FileTransformer {
         ts.factory.createPropertyAccessExpression(
           ts.factory.createIdentifier('App'),
           ts.factory.createIdentifier('createPartialSourceManga'),
+        ),
+        callExp.typeArguments,
+        callExp.arguments,
+      )
+
+    case 'createRequestObject':
+      return ts.factory.createCallExpression(
+        ts.factory.createPropertyAccessExpression(
+          ts.factory.createIdentifier('App'),
+          ts.factory.createIdentifier('createRequest'),
         ),
         callExp.typeArguments,
         callExp.arguments,
@@ -209,7 +243,7 @@ class FileTransformer {
     const changes = this.changes
 
     return (rootNode: ts.Node) => {
-      const visitNode = (node: ts.Node): ts.Node => {
+      const visitNode = (node: ts.Node): ts.Node | undefined => {
         // Migrate the import declerations
         if (ts.isImportDeclaration(node)) {
           const moduleSpecifier = node.moduleSpecifier

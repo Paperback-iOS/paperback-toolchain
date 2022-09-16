@@ -5,10 +5,9 @@
 
 import { CheerioAPI } from "cheerio"
 import { Chapter, ChapterDetails, Cookie, DUISection, HomeSection, MangaInfo, MangaUpdates, PagedResults, RequestManager, SearchField, SearchRequest, SourceManga, TagSection } from ".."
-import { Requestable } from "./Requestable"
-import { Searchable } from "./Searchable"
+import { ChapterProviding, Searchable, MangaProviding } from "./interfaces"
 
-export abstract class Source implements Requestable, Searchable {
+export abstract class Source implements Searchable, MangaProviding, ChapterProviding {
   abstract readonly requestManager: RequestManager
 
   constructor(public cheerio: CheerioAPI) {}
@@ -76,16 +75,6 @@ export abstract class Source implements Requestable, Searchable {
   supportsSearchOperators?(): Promise<boolean>
 
   /**
-   * @deprecated Do not use this methods, register an interceptor with {@link RequestManager} instead
-   */
-  globalRequestHeaders?(): Record<string, string>
-
-  /**
-   * @deprecated Do not use this method, register an interceptor with {@link RequestManager} instead
-   */
-  globalRequestCookies?(): Cookie[]
-
-  /**
    * A stateful source may require user input. 
    * By supplying this value to the Source, the app will render your form to the user
    * in the application settings.
@@ -99,25 +88,17 @@ export abstract class Source implements Requestable, Searchable {
   getMangaShareUrl?(mangaId: string): string
 
   /**
+   * @deprecated use {@link Source.getCloudflareBypassRequestAsync} instead
+   */
+  getCloudflareBypassRequest?(): Request
+
+  /**
    * If a source is secured by Cloudflare, this method should be filled out.
    * By returning a request to the website, this source will attempt to create a session
    * so that the source can load correctly.
    * Usually the {@link Request} url can simply be the base URL to the source.
    */
-  getCloudflareBypassRequest?(): Request
-
-  /**
-   * (OPTIONAL METHOD) A function which should scan through the latest updates section of a website, and report back with a list of IDs which have been
-   * updated BEFORE the supplied timeframe. 
-   * This function may have to scan through multiple pages in order to discover the full list of updated manga. 
-   * Because of this, each batch of IDs should be returned with the mangaUpdatesFoundCallback. The IDs which have been reported for
-   * one page, should not be reported again on another page, unless the relevent ID has been detected again. You do not want to persist
-   * this internal list between {@link Request} calls
-   * @param mangaUpdatesFoundCallback A callback which is used to report a list of manga IDs back to the API
-   * @param time This function should find all manga which has been updated between the current time, and this parameter's reported time.
-   *             After this time has been passed, the system should stop parsing and return 
-   */
-  filterUpdatedManga?(mangaUpdatesFoundCallback: (updates: MangaUpdates) => void, time: Date, ids: string[]): Promise<void>
+  getCloudflareBypassRequestAsync?(): Request
 
   /**
    * (OPTIONAL METHOD) A function which should readonly allf the available homepage sections for a given source, and return a {@link HomeSection} object.
@@ -140,17 +121,6 @@ export abstract class Source implements Requestable, Searchable {
    * This is useful for keeping track of which page a user is on, pagnating to other pages as ViewMore is called multiple times.
    */
   getViewMoreItems?(homepageSectionId: string, metadata: any): Promise<PagedResults>
-
-  /**
-   * (OPTIONAL METHOD) This function is to return the entire library of a manga website, page by page.
-   * If there is an additional page which needs to be called, the {@link PagedResults} value should have it's metadata filled out
-   * with information needed to continue pulling information from this website. 
-   * Note that if the metadata value of {@link PagedResults} is undefined, this method will not continue to run when the user
-   * attempts to readonly morenformation
-   * @param metadata Identifying information as to what the source needs to call in order to readonly theext batch of data
-   * of the directory. Usually this is a page counter.
-   */
-  getWebsiteMangaDirectory?(metadata: any): Promise<PagedResults>
 }
 
 // Many sites use '[x] time ago' - Figured it would be good to handle these cases in general
