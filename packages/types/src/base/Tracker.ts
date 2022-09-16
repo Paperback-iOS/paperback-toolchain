@@ -1,9 +1,6 @@
 import { CheerioAPI } from "cheerio"
-import { DUIForm, PagedResults, RequestManager, SearchRequest } from ".."
-import { DUISection, TrackerActionQueue } from ".."
-import { TrackedManga } from ".."
-import { Requestable } from "./Requestable"
-import { Searchable } from "./Searchable"
+import { DUIForm, PagedResults, RequestManager, SearchRequest, SourceManga, DUISection, TrackerActionQueue, TrackedManga } from ".."
+import { Requestable, Searchable } from "./interfaces"
 
 export abstract class Tracker implements Requestable, Searchable {
     /**
@@ -19,6 +16,7 @@ export abstract class Tracker implements Requestable, Searchable {
     /// for async tasks handle them in `sections`.
     abstract getMangaForm(mangaId: string): DUIForm
 
+    abstract getMangaDetails(mangaId: string): Promise<SourceManga>
     abstract getTrackedManga(mangaId: string): Promise<TrackedManga>
     abstract getSourceMenu(): Promise<DUISection>
 
