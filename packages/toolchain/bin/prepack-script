@@ -1,0 +1,11 @@
+
+/*
+ * This script file is intended for post compilation processing
+ * It is run at the end of `prepack` command
+ */
+
+const fs = require('fs')
+
+// Copy website-generation files to the lib folder
+fs.mkdirSync('dist/website-generation')
+fs.copyFileSync('src/website-generation/homepage.pug', 'dist/website-generation/homepage.pug')
