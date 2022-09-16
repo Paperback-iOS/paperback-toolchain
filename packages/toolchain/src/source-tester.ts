@@ -87,10 +87,9 @@ export class SourceTester {
             testData?.setChapterid(chapters[0]!.id)
           }
 
-          chapters.flatMap((chapter: any) => [
+          chapters.flatMap(chapter => [
             expect(chapter.id).toExist().assertWithError('[' + chapter.id + '] Chapter ID is invalid' + chapter.id),
             expect(chapter.chapNum).toNotMatchPredicate(isNaN).assertWithError('[' + chapter.id + '] Chapter number is NaN'),
-            expect(chapter.mangaId).toBeEqual(mangaId).assertWithError('[' + chapter.id + '] Chapter does not belong to the same manga'),
             expect(chapter.time).toExist().assertWithError('[' + chapter.id + '] Chapter time is invalid'),
           ])
           .filter((x: any) => x)
