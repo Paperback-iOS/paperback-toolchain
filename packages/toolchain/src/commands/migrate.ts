@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import fs from 'node:fs'
 import path from 'node:path'
-import ts, {CallExpression, Expression, ImportSpecifier, NamedImports, TypeReferenceNode} from 'typescript'
+import ts, {CallExpression, Expression, ImportSpecifier, NamedImports, ObjectLiteralExpression, PropertyAccessExpression, TypeReferenceNode} from 'typescript'
 import {CLICommand} from '../command'
 import shell from 'shelljs'
 
@@ -67,8 +67,10 @@ export default class Migrate extends CLICommand {
 
     const tsFilesSet = new Set(tsFiles)
     for (const sourceFile of prog.getSourceFiles()) {
-      if (!tsFilesSet.has(sourceFile.fileName)) continue
-      this.log('PROCESSING ' + sourceFile.fileName)
+      const filePath = path.normalize(sourceFile.fileName)
+
+      if (!tsFilesSet.has(filePath)) continue
+      this.log('PROCESSING ' + filePath)
 
       const transformer = new FileTransformer(sourceFile)
       const transformedFiles = transformer.transform().transformed
@@ -77,7 +79,7 @@ export default class Migrate extends CLICommand {
         this.log(' - ' + transformer.changes.join('\n - '))
 
         fs.writeFileSync(
-          sourceFile.fileName,
+          filePath,
           printer.printList(
             ts.ListFormat.MultiLine,
             ts.factory.createNodeArray(transformedFiles),
@@ -127,6 +129,75 @@ class FileTransformer {
     this.changes.push(`Updating creation wrapper call ${expression.text} to use the App namespace`)
 
     switch (expression.text) {
+    case 'createHomeSection': {
+      const propAssignments = this.getPropertyAssignmentExpressions(
+        callExp.arguments[0],
+        {
+          // eslint-disable-next-line camelcase
+          view_more: undefined,
+          type: undefined,
+        },
+      )
+
+      return ts.factory.createCallExpression(
+        ts.factory.createPropertyAccessExpression(
+          ts.factory.createIdentifier('App'),
+          ts.factory.createIdentifier('createHomeSection'),
+        ),
+        callExp.typeArguments,
+        [ts.factory.createObjectLiteralExpression([
+          ...(callExp.arguments[0] as ObjectLiteralExpression).properties.filter(x => {
+            const removedProps = new Set(Object.keys(propAssignments))
+            if (x.name && ts.isIdentifier(x.name) && removedProps.has(x.name.text)) return false
+            return true
+          }),
+
+          ts.factory.createPropertyAssignment(
+            ts.factory.createIdentifier('containsMoreItems'),
+            propAssignments.view_more ?? ts.factory.createIdentifier('false'),
+          ),
+
+          ts.factory.createPropertyAssignment(
+            ts.factory.createIdentifier('type'),
+            propAssignments.type ?? ts.factory.createStringLiteral('singleRowNormal'),
+          ),
+        ], true)],
+      )
+    }
+
+    case 'createChapterDetails':
+      return ts.factory.createCallExpression(
+        ts.factory.createPropertyAccessExpression(
+          ts.factory.createIdentifier('App'),
+          ts.factory.createIdentifier('createChapterDetails'),
+        ),
+        callExp.typeArguments,
+        [ts.factory.createObjectLiteralExpression([
+          ...(callExp.arguments[0] as ObjectLiteralExpression).properties.filter(x => {
+            const removedProps = new Set(['longStrip'])
+            if (x.name && ts.isIdentifier(x.name) && removedProps.has(x.name.text)) return false
+            return true
+          }),
+        ], true)],
+      )
+
+    case 'createChapter': {
+      return ts.factory.createCallExpression(
+        ts.factory.createPropertyAccessExpression(
+          ts.factory.createIdentifier('App'),
+          ts.factory.createIdentifier('createChapter'),
+        ),
+        callExp.typeArguments,
+        [ts.factory.createObjectLiteralExpression([
+          ...(callExp.arguments[0] as ObjectLiteralExpression).properties.filter(x => {
+            const removedProps = new Set(['mangaId'])
+            if (x.name && ts.isIdentifier(x.name) && removedProps.has(x.name.text)) return false
+            return true
+          }),
+        ], true)],
+      )
+    }
+
     case 'createIconText': {
       const propAssignments = this.getPropertyAssignmentExpressions(
         callExp.arguments[0],
@@ -161,22 +232,54 @@ class FileTransformer {
                 ts.factory.createIdentifier('createMangaInfo'),
               ),
               callExp.typeArguments,
-              callExp.arguments,
+              [ts.factory.createObjectLiteralExpression([
+                ...(callExp.arguments[0] as ObjectLiteralExpression).properties.filter(x => {
+                  const removedProps = new Set(Object.keys(propAssignments))
+                  if (x.name && ts.isIdentifier(x.name) && removedProps.has(x.name.text)) return false
+                  return true
+                }),
+              ], true)],
             ),
           ),
         ], true)],
       )
     }
 
-    case 'createMangaTile':
+    case 'createMangaTile': {
+      const propAssignments = this.getPropertyAssignmentExpressions(
+        callExp.arguments[0],
+        {
+          id: undefined,
+          subtitleText: undefined,
+          subtitle: undefined,
+        },
+      )
+
       return ts.factory.createCallExpression(
         ts.factory.createPropertyAccessExpression(
           ts.factory.createIdentifier('App'),
           ts.factory.createIdentifier('createPartialSourceManga'),
         ),
         callExp.typeArguments,
-        callExp.arguments,
+        [ts.factory.createObjectLiteralExpression([
+          ...(callExp.arguments[0] as ObjectLiteralExpression).properties.filter(x => {
+            const removedProps = new Set(Object.keys(propAssignments))
+            if (x.name && ts.isIdentifier(x.name) && removedProps.has(x.name.text)) return false
+            return true
+          }),
+          ts.factory.createPropertyAssignment(
+            ts.factory.createIdentifier('mangaId'),
+            propAssignments.id ?? ts.factory.createIdentifier('undefined'),
+          ),
+          ts.factory.createPropertyAssignment(
+            ts.factory.createIdentifier('subtitle'),
+            propAssignments.subtitle ??
+             propAssignments.subtitleText ??
+              ts.factory.createIdentifier('undefined'),
+          ),
+        ], true)],
       )
+    }
 
     case 'createRequestObject':
       return ts.factory.createCallExpression(
@@ -235,6 +338,21 @@ class FileTransformer {
     return type
   }
 
+  getRenamedPropertyAccessor(property: PropertyAccessExpression): ts.Node | undefined {
+    const expression = property.expression
+    if (!ts.isIdentifier(expression)) return property
+
+    switch (expression.text) {
+    case 'TagType':
+      return ts.factory.createPropertyAccessExpression(
+        ts.factory.createIdentifier('BadgeColor'),
+        property.name,
+      )
+    }
+
+    return property
+  }
+
   transform() {
     return ts.transform(this.sourceFile, [this.transformerFactory.bind(this)])
   }
@@ -280,6 +398,10 @@ class FileTransformer {
 
         if (ts.isTypeReferenceNode(node)) {
           return ts.visitEachChild(this.getRenamedType(node), visitNode.bind(this), context)
+        }
+
+        if (ts.isPropertyAccessExpression(node)) {
+          return ts.visitEachChild(this.getRenamedPropertyAccessor(node), visitNode.bind(this), context)
         }
 
         return ts.visitEachChild(node, visitNode.bind(this), context)
