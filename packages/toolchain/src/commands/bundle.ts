@@ -195,22 +195,22 @@ export default class Bundle extends CLICommand {
       fs.mkdirSync(outputPath)
     }
 
-    fs.writeFileSync(
-      path.join(outputPath, 'index.js'),
-      `globalThis.App = typeof App === 'undefined' ? new Proxy(globalThis, {
-        get: (target, p) => {
-            console.log('APP_COMPAT: ' + p);
-            return target[p];
-        }
-      }) : App;`,
-    )
+    // fs.writeFileSync(
+    //   path.join(outputPath, 'index.js'),
+    //   `globalThis.App = typeof App === 'undefined' ? new Proxy(globalThis, {
+    //     get: (target, p) => {
+    //         console.log('APP_COMPAT: ' + p);
+    //         return target[p];
+    //     }
+    //   }) : App;`,
+    // )
 
     return new Promise<void>(res => {
       browserify([filePath], {standalone: 'Sources'})
       .external(['axios', 'fs'])
       .bundle()
       .pipe(
-        fs.createWriteStream(path.join(outputPath, 'index.js'), {flags: 'a'}).on('finish', () => {
+        fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
           res()
         }),
       )
