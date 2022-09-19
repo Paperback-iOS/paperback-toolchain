@@ -98,7 +98,7 @@ export abstract class Source implements Searchable, MangaProviding, ChapterProvi
    * so that the source can load correctly.
    * Usually the {@link Request} url can simply be the base URL to the source.
    */
-  getCloudflareBypassRequestAsync?(): Request
+  getCloudflareBypassRequestAsync?(): Promise<Request>
 
   /**
    * (OPTIONAL METHOD) A function which should readonly allf the available homepage sections for a given source, and return a {@link HomeSection} object.
