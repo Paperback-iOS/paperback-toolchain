@@ -4,7 +4,7 @@
  */
 
 import { CheerioAPI } from "cheerio"
-import { Chapter, ChapterDetails, Cookie, DUISection, HomeSection, MangaInfo, MangaUpdates, PagedResults, RequestManager, SearchField, SearchRequest, SourceManga, TagSection } from ".."
+import { Chapter, ChapterDetails, Cookie, DUISection, HomeSection, MangaInfo, Request, PagedResults, RequestManager, SearchField, SearchRequest, SourceManga, TagSection } from ".."
 import { ChapterProviding, Searchable, MangaProviding } from "./interfaces"
 
 export abstract class Source implements Searchable, MangaProviding, ChapterProviding {
