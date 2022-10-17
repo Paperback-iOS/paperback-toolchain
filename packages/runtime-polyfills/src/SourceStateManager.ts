@@ -4,12 +4,13 @@ import { PaperbackPolyfills } from "./PaperbackPolyfills"
 class MockSourceStateManager implements SourceStateManager {
     readonly keychain: SecureStateManager = new MockSourceStateManager()
 
-    private objectStore: Record<any, any> = {}
+    private objectStore: Record<string, any> = {}
 
-    store(key: any, value: any) {
+    async store(key: string, value: any) {
         this.objectStore[key] = value
     }
-    retrieve(key: any) {
+
+    async retrieve(key: string) {
         return this.objectStore[key]
     }
 }
