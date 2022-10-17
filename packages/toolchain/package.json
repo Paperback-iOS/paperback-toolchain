@@ -1,6 +1,6 @@
 {
   "name": "@paperback/toolchain",
-  "version": "0.8.0-alpha.31",
+  "version": "0.8.0-alpha.32",
   "description": "The CLI and Build Tools for Paperback sources",
   "author": "Faizan Durrani @FaizanDurrani",
   "bin": {
