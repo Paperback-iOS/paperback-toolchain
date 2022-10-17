@@ -148,12 +148,7 @@ export default class Bundle extends CLICommand {
         path.join(directoryPath, file),
       )
 
-      await Promise.all([
-        this.bundle(file, directoryPath, bundlesPath),
-
-        // For 0.6 support
-        this.bundlev06(file, directoryPath, bundlesPath),
-      ])
+      await this.bundle(file, directoryPath, bundlesPath)
 
       Utils.copyFolderRecursive(
         path.join(basePath, 'src', file, 'includes'),
@@ -195,59 +190,12 @@ export default class Bundle extends CLICommand {
       fs.mkdirSync(outputPath)
     }
 
-    // fs.writeFileSync(
-    //   path.join(outputPath, 'index.js'),
-    //   `globalThis.App = typeof App === 'undefined' ? new Proxy(globalThis, {
-    //     get: (target, p) => {
-    //         console.log('APP_COMPAT: ' + p);
-    //         return target[p];
-    //     }
-    //   }) : App;`,
-    // )
-
     return new Promise<void>(res => {
       browserify([filePath], {standalone: 'Sources'})
       .external(['axios', 'fs'])
       .bundle()
       .pipe(
         fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
-          res()
-        }),
-      )
-    })
-  }
-
-  async bundlev06(file: string, sourceDir: string, destDir: string)  {
-    if (file === 'tests') {
-      this.log('Tests directory, skipping')
-      return Promise.resolve()
-    }
-
-    // If its a directory
-    if (!fs.statSync(path.join(sourceDir, file)).isDirectory()) {
-      this.log('Not a directory, skipping ' + file)
-      return Promise.resolve()
-    }
-
-    const filePath = path.join(sourceDir, file, `/${file}.js`)
-
-    if (!fs.existsSync(filePath)) {
-      this.log("The file doesn't exist, skipping. " + file)
-      return Promise.resolve()
-    }
-
-    const outputPath = path.join(destDir, file)
-    if (!fs.existsSync(outputPath)) {
-      fs.mkdirSync(outputPath)
-    }
-
-    return new Promise<void>(res => {
-      browserify([filePath], {standalone: 'Sources'})
-      .ignore('./node_modules/paperback-extensions-common/dist/APIWrapper.js')
-      .external(['axios', 'cheerio', 'fs'])
-      .bundle()
-      .pipe(
-        fs.createWriteStream(path.join(outputPath, 'source.js')).on('finish', () => {
           res()
         }),
       )

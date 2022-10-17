@@ -4,11 +4,11 @@ export interface SourceStateManager {
     /*
     * internalName: _store
     */
-    store(key: any, value: any | undefined): any;
+    store(key: string, value: any): Promise<void>;
     /*
     * internalName: _retrieve
     */
-    retrieve(key: any): any;
+    retrieve(key: string): Promise<any>;
 }
 declare global {
     namespace App {

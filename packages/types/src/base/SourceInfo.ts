@@ -1,5 +1,14 @@
 import { Badge } from ".."
 
+export enum SourceIntents {
+    MANGA_CHAPTERS = 1<<0,
+    MANGA_TRACKING = 1<<1,
+    HOMEPAGE_SECTIONS = 1<<2,
+    COLLECTION_MANAGEMENT = 1<<3,
+    CLOUDFLARE_BYPASS_REQUIRED = 1<<4,
+    SETTINGS_UI = 1<<5
+}
+
 export interface SourceInfo {
     // Returns the version of the source
     // Ensures that the app is using the most up to date version
@@ -73,6 +82,7 @@ export interface SourceInfo {
      */
     readonly sourceTags?: Badge[]
 
+    readonly intents?: SourceIntents
 }
 
 /**

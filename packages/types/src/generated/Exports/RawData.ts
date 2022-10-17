@@ -1,4 +1,3 @@
-
 export interface RawData {
     readonly length: number;
     [index: number]: Byte;
