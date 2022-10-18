@@ -115,6 +115,7 @@ export default class Bundle extends CLICommand {
         icon: classInstance.icon,
         tags: classInstance.sourceTags,
         websiteBaseURL: classInstance.websiteBaseURL,
+        intents: classInstance.intents,
       })
     })
   }
@@ -166,7 +167,7 @@ export default class Bundle extends CLICommand {
     Utils.deleteFolderRecursive(path.join(basePath, 'temp_build'))
   }
 
-  async bundle(file: string, sourceDir: string, destDir: string) {
+  async bundle(file: string, sourceDir: string, destDir: string): Promise<void> {
     if (file === 'tests') {
       this.log('Tests directory, skipping')
       return
@@ -190,16 +191,31 @@ export default class Bundle extends CLICommand {
       fs.mkdirSync(outputPath)
     }
 
-    return new Promise<void>(res => {
-      browserify([filePath], {standalone: 'Sources'})
-      .external(['axios', 'fs'])
-      .bundle()
-      .pipe(
-        fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
-          res()
-        }),
-      )
-    })
+    await Promise.all([
+      // For 0.9 and above
+      new Promise<void>(res => {
+        browserify([filePath], {standalone: 'Sources'})
+        .external(['axios', 'fs'])
+        .bundle()
+        .pipe(
+          fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
+            res()
+          }),
+        )
+      }),
+
+      // For 0.8; ensures backwards compatibility with 0.7 sources
+      new Promise<void>(res => {
+        browserify([filePath], {standalone: 'Sources'})
+        .external(['axios', 'fs'])
+        .bundle()
+        .pipe(
+          fs.createWriteStream(path.join(outputPath, 'source.js')).on('finish', () => {
+            res()
+          }),
+        )
+      }),
+    ])
   }
 
   async generateHomepage(folder = '')  {
