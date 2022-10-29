@@ -1,4 +1,4 @@
-import { Cookie } from "./../_exports";
+import { Cookie } from "../_exports";
 export interface SourceCookieStore {
     getAllCookies(): Cookie[];
     addCookie(cookies: Cookie): void;

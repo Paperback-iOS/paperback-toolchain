@@ -1,4 +1,4 @@
-import { RawData } from "./../_exports";
+import { RawData } from "../_exports";
 export interface PBImage {
     readonly width: number;
     readonly height: number;

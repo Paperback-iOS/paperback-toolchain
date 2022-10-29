@@ -1,4 +1,4 @@
-import { DUIFormRow } from "./../../../_exports";
+import { DUIFormRow } from "../../../_exports";
 export interface DUIHeader extends DUIFormRow {
 }
 declare global {

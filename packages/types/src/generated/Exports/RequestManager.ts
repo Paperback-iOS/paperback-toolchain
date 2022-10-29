@@ -1,7 +1,7 @@
-import { SourceCookieStore } from "./../_exports";
-import { SourceInterceptor } from "./../_exports";
-import { Request } from "./../_exports";
-import { Response } from "./../_exports";
+import { SourceCookieStore } from "../_exports";
+import { SourceInterceptor } from "../_exports";
+import { Request } from "../_exports";
+import { Response } from "../_exports";
 export interface RequestManager {
     readonly cookieStore?: SourceCookieStore;
     /*

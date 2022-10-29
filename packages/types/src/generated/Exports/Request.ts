@@ -1,4 +1,4 @@
-import { Cookie } from "./../_exports";
+import { Cookie } from "../_exports";
 export interface Request {
     url: string;
     method: string;

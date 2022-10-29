@@ -1,4 +1,4 @@
-import { TagSection } from "./../_exports";
+import { TagSection } from "../_exports";
 export interface MangaInfo {
     image: string;
     artist: string;

@@ -12,7 +12,7 @@ declare global {
     namespace App {
         function createDUIBinding(info: {
             get: () => Promise<any>
-            set?: (arg0: any) => Promise<void>
+            set?: (arg0: any | undefined) => Promise<void>
         }): DUIBinding;
     }
 }

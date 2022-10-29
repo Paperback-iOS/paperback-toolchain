@@ -1,4 +1,4 @@
-import { Tag } from "./../_exports";
+import { Tag } from "../_exports";
 export interface SearchRequest {
     readonly title?: string;
     readonly includedTags: Tag[];

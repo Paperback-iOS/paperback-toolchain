@@ -1,15 +1,15 @@
-import { TrackedMangaChapterReadAction } from "./../_exports";
+import { TrackedMangaChapterReadAction } from "../_exports";
 export interface TrackerActionQueue {
     /*
-    * internalName: JSPromise_queuedChapterReadActions
+    * internalName: _queuedChapterReadActions
     */
-    queuedChapterReadActions(): any;
+    queuedChapterReadActions(): Promise<TrackedMangaChapterReadAction>;
     /*
-    * internalName: JSPromise_retryChapterReadAction
+    * internalName: _retryChapterReadAction
     */
-    retryChapterReadAction(chapterReadAction: TrackedMangaChapterReadAction): any;
+    retryChapterReadAction(chapterReadAction: TrackedMangaChapterReadAction): Promise<void>;
     /*
-    * internalName: JSPromise_discardChapterReadAction
+    * internalName: _discardChapterReadAction
     */
-    discardChapterReadAction(chapterReadAction: TrackedMangaChapterReadAction): any;
+    discardChapterReadAction(chapterReadAction: TrackedMangaChapterReadAction): Promise<void>;
 }
