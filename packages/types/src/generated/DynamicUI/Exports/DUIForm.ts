@@ -1,4 +1,4 @@
-import { DUISection } from "../../_exports";
+import { DUISection } from "./../../_exports";
 export interface DUIForm {
     /*
     * internalName: _onSubmit

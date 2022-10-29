@@ -1,5 +1,5 @@
-import { DUIFormRow } from "../../../_exports";
-import { DUIBinding } from "../../../_exports";
+import { DUIFormRow } from "./../../../_exports";
+import { DUIBinding } from "./../../../_exports";
 export interface DUISecureInputField extends DUIFormRow {
 }
 declare global {

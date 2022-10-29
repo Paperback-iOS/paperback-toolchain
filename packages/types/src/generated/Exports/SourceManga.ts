@@ -1,4 +1,4 @@
-import { MangaInfo } from "../_exports";
+import { MangaInfo } from "./../_exports";
 export interface SourceManga {
     /*
     * internalName: mangaId

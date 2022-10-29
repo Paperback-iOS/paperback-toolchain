@@ -1,4 +1,4 @@
-import { Tag } from "../_exports";
+import { Tag } from "./../_exports";
 export interface TagSection {
     readonly id: string;
     label: string;

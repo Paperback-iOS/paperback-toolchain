@@ -1,4 +1,4 @@
-import { PartialSourceManga } from "../_exports";
+import { PartialSourceManga } from "./../_exports";
 export interface HomeSection {
     readonly id: string;
     readonly title: string;

@@ -1,9 +1,9 @@
-import { TrackedMangaChapterReadAction } from "../_exports";
+import { TrackedMangaChapterReadAction } from "./../_exports";
 export interface TrackerActionQueue {
     /*
     * internalName: _queuedChapterReadActions
     */
-    queuedChapterReadActions(): Promise<TrackedMangaChapterReadAction>;
+    queuedChapterReadActions(): Promise<TrackedMangaChapterReadAction[]>;
     /*
     * internalName: _retryChapterReadAction
     */

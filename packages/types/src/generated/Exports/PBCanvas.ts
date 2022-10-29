@@ -1,5 +1,5 @@
-import { RawData } from "../_exports";
-import { PBImage } from "../_exports";
+import { RawData } from "./../_exports";
+import { PBImage } from "./../_exports";
 export interface PBCanvas {
     readonly width: number;
     readonly height: number;

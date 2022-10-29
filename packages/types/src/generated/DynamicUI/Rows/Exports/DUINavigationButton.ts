@@ -1,5 +1,5 @@
-import { DUIFormRow } from "../../../_exports";
-import { DUIForm } from "../../../_exports";
+import { DUIFormRow } from "./../../../_exports";
+import { DUIForm } from "./../../../_exports";
 export interface DUINavigationButton extends DUIFormRow {
 }
 declare global {

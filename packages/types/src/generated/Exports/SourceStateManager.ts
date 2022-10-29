@@ -1,4 +1,4 @@
-import { SecureStateManager } from "../_exports";
+import { SecureStateManager } from "./../_exports";
 export interface SourceStateManager {
     readonly keychain: SecureStateManager;
     /*
