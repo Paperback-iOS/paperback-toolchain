@@ -7,27 +7,30 @@ import { CheerioAPI } from "cheerio"
 import { Chapter, ChapterDetails, Cookie, DUISection, HomeSection, MangaInfo, Request, PagedResults, RequestManager, SearchField, SearchRequest, SourceManga, TagSection } from ".."
 import { ChapterProviding, Searchable, MangaProviding } from "./interfaces"
 
+/**
+* @deprecated Use {@link PaperbackExtensionBase}
+*/
 export abstract class Source implements Searchable, MangaProviding, ChapterProviding {
   abstract readonly requestManager: RequestManager
 
   constructor(public cheerio: CheerioAPI) {}
 
   /**
-   * Given a mangaID, this function should use a {@link Request} object's {@link Request.perform} method
+   * Given a mangaID, this function should use a {@link RequestManager} object's {@link RequestManager.schedule} method
    * to grab and populate a {@link MangaInfo} object
    * @param mangaId The ID which this function is expected to grab data for
    */
   abstract getMangaDetails(mangaId: string): Promise<SourceManga>
 
   /**
-   * Given a mangaID, this function should use a {@link Request} object's {@link Request.perform} method
+   * Given a mangaID, this function should use a {@link RequestManager} object's {@link RequestManager.schedule} method
    * to grab and populate a {@link Chapter} array.
    * @param mangaId The ID which this function is expected to grab data for
    */
   abstract getChapters(mangaId: string): Promise<Chapter[]>
 
   /**
-  * Given a mangaID, this function should use a {@link Request} object's {@link Request.perform} method
+  * Given a mangaID, this function should use a {@link RequestManager} object's {@link RequestManager.schedule} method
   * to grab and populate a {@link ChapterDetails} object
   * @param mangaId The ID which this function is expected to grab data for
   */
