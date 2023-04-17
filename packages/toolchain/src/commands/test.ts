@@ -100,6 +100,10 @@ export default class Test extends CLICommand {
   }
 
   private async installSources(sources: string[], client: ISourceTester) {
+    if (!client.installSource) {
+      return
+    }
+
     await Bundle.run([])
     const server = new Server(8000)
     server.start()
@@ -109,9 +113,7 @@ export default class Test extends CLICommand {
       this.log(`\n${chalk.bold.underline.bgBlue.white(`Installing ${source}`)}`)
 
       // Make sure the source is installed on the app
-      await client.installSource?.(
-        {sourceId: source, repoBaseUrl: `http://${ip.address()}:${server.port}`},
-      )
+      await client.installSource({sourceId: source, repoBaseUrl: `http://${ip.address()}:${server.port}`})
     }
 
     server.stop()
