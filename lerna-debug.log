@@ -1,8 +1,10 @@
-15 error Error: Command failed with exit code 1: git remote update
-15 error fatal: unable to access 'https://github.com/Paperback-iOS/paperback-toolchain.git/': Could not resolve host: github.com
-15 error     at makeError (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/execa/lib/error.js:60:11)
-15 error     at Function.module.exports.sync (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/execa/index.js:194:17)
-15 error     at Object.execSync (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/@lerna/child-process/index.js:39:16)
-15 error     at updateRemote (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/@lerna/version/lib/is-behind-upstream.js:34:16)
-15 error     at isBehindUpstream (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/@lerna/version/lib/is-behind-upstream.js:16:3)
-15 error     at VersionCommand.initialize (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/@lerna/version/index.js:156:9)
+38 error Error: Command failed with exit code 1: git add -- packages/runtime-polyfills/package.json packages/types/package.json packages/types/package-lock.json packages/toolchain/package.json packages/toolchain/package-lock.json lerna.json package-lock.json
+38 error The following paths are ignored by one of your .gitignore files:
+38 error packages/toolchain/package-lock.json
+38 error hint: Use -f if you really want to add them.
+38 error hint: Turn this message off by running
+38 error hint: "git config advice.addIgnoredFile false"
+38 error     at makeError (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/execa/lib/error.js:60:11)
+38 error     at handlePromise (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/execa/index.js:118:26)
+38 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+38 error     at async Promise.all (index 0)

@@ -1,6 +1,6 @@
 {
   "name": "@paperback/toolchain",
-  "version": "0.8.0-alpha.38",
+  "version": "0.8.0-alpha.39",
   "description": "The CLI and Build Tools for Paperback sources",
   "author": "Faizan Durrani @FaizanDurrani",
   "bin": {
@@ -27,20 +27,20 @@
     "@paperback/runtime-polyfills": "*",
     "@paperback/types": "*",
     "browserify": "^17.0.0",
+    "chai": "^4.3.7",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
     "ip": "^2.0.0",
     "pug": "^3.0.2",
-    "shelljs": "^0.8.5",
-    "chai":"^4.3.7"
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
-    "@types/chai":"^4.3.4",
     "@grpc/grpc-js": "^1.8.14",
     "@oclif/test": "^2",
     "@protobuf-ts/plugin": "^2.8.3",
     "@protobuf-ts/protoc": "^2.8.3",
     "@types/browserify": "^12.0.37",
+    "@types/chai": "^4.3.4",
     "@types/google-protobuf": "^3.15.6",
     "@types/ip": "^1.1.0",
     "@types/node": "^16.9.4",
