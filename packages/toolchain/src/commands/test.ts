@@ -35,11 +35,9 @@ export default class Test extends CLICommand {
   async run() {
     const {flags, args} = await this.parse(Test)
 
-    const sourceId = args.source
     const cwd = process.cwd()
-    const buildDir = path.join(cwd, 'tmp')
-    const sourcesToTest = this.getSourceIdsToTest(sourceId, buildDir)
-
+    const sourceId = args.source
+    let sourcesDirPath: string
     let client: ISourceTester
     if (flags.ip) {
       const grpcClient = new PaperbackSourceTesterClient(
@@ -47,18 +45,21 @@ export default class Test extends CLICommand {
         credentials.createInsecure(),
       )
 
+      sourcesDirPath = path.join(cwd, 'bundles')
       client = new OnDeviceSourceTester(grpcClient)
     } else {
       this.log(`\n${chalk.bold.underline.bgBlue.white('Transpiling Sources')}`)
 
+      sourcesDirPath = path.join(cwd, 'tmp')
       await this.measure('Time', Utils.headingFormat, async () => {
-        Utils.deleteFolderRecursive(buildDir)
+        Utils.deleteFolderRecursive(sourcesDirPath)
         shelljs.exec('npx tsc --outDir tmp')
       })
 
-      client = new SourceTester(buildDir)
+      client = new SourceTester(sourcesDirPath)
     }
 
+    const sourcesToTest = this.getSourceIdsToTest(sourceId, sourcesDirPath)
     await this.installSources(sourcesToTest, client)
     await this.testSources(sourcesToTest, client)
   }

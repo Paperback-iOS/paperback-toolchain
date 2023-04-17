@@ -21,6 +21,8 @@
     "@types/responselike": "^1.0.0"
   },
   "dependencies": {
+    "@protobuf-ts/runtime-rpc": "^2.8.3",
+    "@grpc/grpc-js": "^1.8.14",
     "@oclif/core": "^1.16.1",
     "@oclif/plugin-help": "^5.1.12",
     "@oclif/plugin-plugins": "^2.1.0",
@@ -35,7 +37,6 @@
     "shelljs": "^0.8.5"
   },
   "devDependencies": {
-    "@grpc/grpc-js": "^1.8.14",
     "@oclif/test": "^2",
     "@protobuf-ts/plugin": "^2.8.3",
     "@protobuf-ts/protoc": "^2.8.3",
