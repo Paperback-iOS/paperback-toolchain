@@ -141,7 +141,7 @@ export class SourceTester implements ISourceTester {
     const startTime = process.hrtime.bigint()
     await closure()
     const endTime = Number(process.hrtime.bigint() - startTime)
-    return (endTime / 1_000_000)
+    return Math.ceil(endTime / 1_000_000)
   }
 }
 
