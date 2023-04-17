@@ -1,7 +1,12 @@
 import { PagedResults, SearchField, SearchRequest, TagSection } from "../.."
 import { MangaProviding } from "./MangaProviding"
 
-export interface Searchable extends MangaProviding {
+/**
+* @deprecated Use {@link SearchResultsProviding}
+*/
+export type Searchable = SearchResultsProviding
+
+export interface SearchResultsProviding extends MangaProviding {
     getSearchResults(query: SearchRequest, metadata: unknown | undefined): Promise<PagedResults>
     
     getSearchTags?(): Promise<TagSection[]>

@@ -1,9 +1,9 @@
 
 class Expect<T> {
-  private predicates: ((value: T) => boolean)[] = []
+  protected predicates: ((value: T) => boolean)[] = []
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private value: T) {}
+  constructor(protected value: T) {}
 
   toExist() {
     this.predicates.push(value => Boolean(value))
@@ -89,6 +89,12 @@ class Expect<T> {
     return this.predicates.reduce((previousValue, currentValue) => {
       return previousValue && currentValue(this.value)
     }, true) ? undefined : error
+  }
+}
+
+class NamedExpect<T> extends Expect<T> {
+  constructor(private variableName: string, value: T) {
+    super(value)
   }
 }
 

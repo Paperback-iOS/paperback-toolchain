@@ -5,7 +5,7 @@ rm -rf generated/swift
 mkdir -p generated/swift
 
 echo "Generating Swift Files"
-protoc ./protobuf/*.proto \
+npx protoc ./protobuf/*.proto \
 --proto_path=./protobuf \
 --plugin=./plugins/protoc-gen-swift \
 --plugin=./plugins/protoc-gen-grpc-swift \

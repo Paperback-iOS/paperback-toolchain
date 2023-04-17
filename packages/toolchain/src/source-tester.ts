@@ -1,175 +1,140 @@
 
 import '@paperback/runtime-polyfills'
-import {HomeSection, Source, SourceManga} from '@paperback/types'
-import {SourceTestRequest, SourceTestResponse} from './devtools/generated/typescript/PDTSourceTester_pb'
+import {HomeSection, HomePageSectionsProviding, ChapterProviding, MangaProviding, SearchResultsProviding} from '@paperback/types'
+import {SourceInstallRequest, SourceTestRequest, SourceTestResponse} from './devtools/generated/typescript/PDTSourceTester'
 import * as path from 'node:path'
 import cheerio from 'cheerio'
-import {expect} from './expect'
+import {TestData} from './devtools/generated/typescript/PDTSourceTester'
+import {PaperbackSourceTesterClient} from './devtools/generated/typescript/PDTSourceTester.grpc-client'
+import fs from 'node:fs'
+import {expect} from 'chai'
 
-export class SourceTester {
+export interface ISourceTester {
+  installSource?(request: SourceInstallRequest): Promise<void>
+  testSource(request: SourceTestRequest, callback: (response: SourceTestResponse) => Promise<void>): Promise<void>
+}
+
+declare type TestCase = (testCase: string, runner: () => Promise<void>) => Promise<void>
+
+export class SourceTester implements ISourceTester {
   // eslint-disable-next-line no-useless-constructor
   constructor(private bundleDir: string) {}
 
-  async testSource(request: SourceTestRequest, callback: (response: SourceTestResponse) => Promise<void>) {
-    const testData = request.getData()
+  async testSource(request: SourceTestRequest, callback: (response: SourceTestResponse) => Promise<void>): Promise<void> {
+    const testData = request.data ?? {}
 
-    const sourceFile = require(path.join(this.bundleDir, request.getSourceid(), request.getSourceid()))
-    const SourceClass = sourceFile[request.getSourceid()]
-    const source: Source = new SourceClass(cheerio)
+    const sourceFilePath = path.join(this.bundleDir, request.sourceId, request.sourceId)
+    const sourceFile = require(sourceFilePath)
+    const source: unknown = new sourceFile[request.sourceId](cheerio)
 
-    // Test Homepage Sections
-    await callback(await this.testHomePageAcquisition(source, testData))
-    await callback(await this.testGetMangaDetails(source, testData))
-    await callback(await this.testGetChapters(source, testData))
-    await callback(await this.testGetChapterDetails(source, testData))
-    // await callback(await this.testSearch(source, testData))
+    const testCase: TestCase = async (testCase: string, runner) => {
+      try {
+        callback({
+          testCase,
+          failures: [],
+          completeTime: BigInt(await this.measureTime(async () => {
+            await runner()
+          })),
+        })
+      } catch (error: any) {
+        if (typeof error === 'string') {
+          callback({testCase, completeTime: 0n, failures: [error]})
+        } else if (typeof error === 'object' && error.message) {
+          callback({testCase, completeTime: 0n, failures: [error.message]})
+        }
+      }
+    }
+
+    const customRunnerPath = path.join(process.cwd(), 'src', request.sourceId, `${request.sourceId}.test.js`)
+    if (fs.existsSync(customRunnerPath)) {
+      const customRunner = require(customRunnerPath)
+      if (customRunner.runTests) {
+        await customRunner.runTests(testCase, testData, source)
+        return
+      }
+    }
+
+    this.runTests(testCase, testData, source)
   }
 
-  // private async testSearch(source: Source, testData: SourceTestRequest.TestData | undefined) {
-  //   const testCase = new SourceTestResponse()
-  //   const searchData = testData?.getSearchdata()
-  //   testCase.setTestcase(`Search (${searchData?.getQuery()})`)
-
-  //   return testCase
-  // }
-
-  private async testGetChapterDetails(source: Source, testData: SourceTestRequest.TestData | undefined) {
-    const testCase = new SourceTestResponse()
-    const chapterId = testData?.getChapterid()
-    const mangaId = testData?.getMangaid()
-    testCase.setTestcase(`Get Chapter Details (${mangaId}, ${chapterId})`)
-    testCase.setCompletetime(
-      await this.measureTime(async () => {
-        if (!mangaId) {
-          testCase.addFailures('MangaID not provided; Unable to get MangaId from Home Page Sections')
-          return
-        }
-
-        if (!chapterId) {
-          testCase.addFailures('ChapterID not provided; Unable to get chapter id from chapter list')
-          return
-        }
-
-        try {
-          const chapterDetails = await source.getChapterDetails(mangaId, chapterId)
-
-          for (const x of (await Promise.all([
-            expect(chapterDetails.id).toBeEqual(chapterId).assertWithError('Chapter ID Mismatch'),
-            expect(chapterDetails.mangaId).toBeEqual(mangaId).assertWithError('Chapter does not belong to the same manga id'),
-            expect(chapterDetails.pages.length).toBeGreaterThan(0).assertWithError('Chapter pages empty'),
-          ]))
-          .filter(x => x))  testCase.addFailures(x!)
-        } catch (error: any) {
-          testCase.addFailures('Unable to get chapter details. Error: ' + error.message)
-        }
-      }),
-    )
-
-    return testCase
-  }
-
-  private async testGetChapters(source: Source, testData: SourceTestRequest.TestData | undefined) {
-    const testCase = new SourceTestResponse()
-    const mangaId = testData?.getMangaid()
-    testCase.setTestcase(`Get Chapters (${mangaId})`)
-    testCase.setCompletetime(
-      await this.measureTime(async () => {
-        if (!mangaId) {
-          testCase.addFailures('MangaID not provided; Unable to get MangaId from Home Page Sections')
-          return
-        }
-
-        try {
-          const chapters = await source.getChapters(mangaId)
-          if (chapters.length === 0) {
-            testCase.addFailures('Missing Chapters')
-          } else if (testData?.hasChapterid() !== true) {
-            testData?.setChapterid(chapters[0]!.id)
-          }
-
-          chapters.flatMap(chapter => [
-            expect(chapter.id).toExist().assertWithError('[' + chapter.id + '] Chapter ID is invalid' + chapter.id),
-            expect(chapter.chapNum).toNotMatchPredicate(isNaN).assertWithError('[' + chapter.id + '] Chapter number is NaN'),
-            expect(chapter.time).toExist().assertWithError('[' + chapter.id + '] Chapter time is invalid'),
-          ])
-          .filter((x: any) => x)
-          // eslint-disable-next-line unicorn/no-array-for-each
-          .forEach((x: any) => testCase.addFailures(x!))
-        } catch (error: any) {
-          testCase.addFailures('Unable to get chapter list. Error: ' + error.message)
-        }
-      }),
-    )
-
-    return testCase
-  }
-
-  private async testGetMangaDetails(source: Source, testData: SourceTestRequest.TestData | undefined) {
-    const testCase = new SourceTestResponse()
-    const mangaId = testData?.getMangaid()
-    testCase.setTestcase(`Get Manga Details (${mangaId})`)
-    testCase.setCompletetime(
-      await this.measureTime(async () => {
-        if (!mangaId) {
-          testCase.addFailures('MangaID not provided; Unable to get MangaID from Home Page Sections')
-          return
-        }
-
-        try {
-          const sourceManga: SourceManga = await source.getMangaDetails(mangaId)
-          const mangaDetails = sourceManga.mangaInfo
-
-          if (mangaDetails.titles.length === 0) {
-            testCase.addFailures('Missing Titles')
-          }
-
-          if (!sourceManga.id || sourceManga.id !== mangaId) {
-            testCase.addFailures(`MangaID Mismatch. Expected ${mangaId} got ${sourceManga.id}`)
-          }
-
-          if (!mangaDetails.status) {
-            testCase.addFailures('Missing Status')
-          }
-
-          if (!mangaDetails.image) {
-            testCase.addFailures('Missing Image')
-          }
-        } catch (error: any) {
-          testCase.addFailures(`Unable to get MangaDetails for ID ${mangaId}. Error: ` + error.message)
-        }
-      }),
-    )
-
-    return testCase
-  }
-
-  private async testHomePageAcquisition(source: Source, testData: SourceTestRequest.TestData | undefined) {
-    const homePageTestCase = new SourceTestResponse()
-    homePageTestCase.setTestcase('Home Page Acquisition')
-    homePageTestCase.setCompletetime(
-      await this.measureTime(async () => {
+  async runTests(testCase: TestCase, testData: TestData, source: unknown) {
+    const homepageProvider = source as (HomePageSectionsProviding | undefined)
+    if (homepageProvider?.getHomePageSections) {
+      await testCase('source should return homepage sections containing items', async () => {
         const sections: Record<string, HomeSection> = {}
+        await homepageProvider.getHomePageSections(section => {
+          sections[section.id] = section
+        })
 
-        try {
-          await source.getHomePageSections?.((x: HomeSection) => {
-            sections[x.id] = x
-            if (x.items && x.items.length > 0 && testData && !testData.hasMangaid()) {
-              testData.setMangaid(x.items[0]!.mangaId)
+        const sectionKeys = Object.keys(sections)
+        for (const key of sectionKeys) {
+          expect(sections[key].items, `section[${key}] has no items`).to.not.be.empty
+
+          if (!testData.mangaId) {
+            testData.mangaId = sections[key].items[0].mangaId
+          }
+
+          if (!testData.searchData) {
+            testData.searchData = {
+              query: sections[key].items[0].title,
+              excludedTags: [],
+              includedTags: [],
             }
-          })
-        } catch (error: any) {
-          homePageTestCase.addFailures('Failed to complete Home Page Acquisition, Error: ' + error.message)
+          }
         }
+      })
+    }
 
-        for (const x of (await Promise.all(
-          Object.values(sections).map(
-            async section => expect(section.items?.length).toExist().toBeGreaterThan(0).assertWithError(`Expected section (${section.id}) to not be empty`),
-          ),
-        ))
-        .filter(x => x))  homePageTestCase.addFailures(x!)
-      }),
-    )
-    return homePageTestCase
+    const mangaProvider = source as (MangaProviding | undefined)
+    if (mangaProvider?.getMangaDetails) {
+      await testCase('source should return valid SourceManga definition', async () => {
+        expect(testData.mangaId, 'no mangaId provided and could not infer it from homepage').to.exist
+
+        const sourceManga = await mangaProvider.getMangaDetails(testData.mangaId!)
+        expect(sourceManga.id, 'returned manga id does not match the queried manga id').to.equal(testData.mangaId)
+        expect(sourceManga.mangaInfo, 'MangaInfo does not exist').to.exist
+      })
+    }
+
+    const chapterProvider = source as (ChapterProviding | undefined)
+    if (chapterProvider?.getChapters) {
+      await testCase('source should return some chapters', async () => {
+        expect(testData.mangaId, 'no mangaId provided and could not infer it from homepage').to.exist
+
+        const chapters = await chapterProvider.getChapters(testData.mangaId!)
+        expect(chapters, `one or more chapters should be returned for manga '${testData.mangaId}'`).to.not.be.empty
+        if (!testData.chapterId) {
+          testData.chapterId = chapters[0].id
+        }
+      })
+    }
+
+    if (chapterProvider?.getChapterDetails) {
+      await testCase('source should return chapter details with some pages', async () => {
+        expect(testData.mangaId, 'no mangaId provided and could not infer it from homepage').to.exist
+        expect(testData.chapterId, 'no chapterId provided and could not infer it from chapter list').to.exist
+
+        const chapterDetails = await chapterProvider.getChapterDetails(testData.mangaId!, testData.chapterId!)
+        expect(chapterDetails.id, 'returned chapter id does not match the queried chapter id').to.equal(testData.chapterId)
+        expect(chapterDetails.mangaId, 'returned manga id does not match the queried manga id').to.equal(testData.mangaId)
+        expect(chapterDetails.pages, 'chapter must have pages').to.not.be.empty
+      })
+    }
+
+    const searchResultsProvider = source as (SearchResultsProviding | undefined)
+    if (searchResultsProvider?.getSearchResults) {
+      await testCase('source should return some search results', async () => {
+        expect(testData.searchData, 'no searchData provided and could not infer it from homepage').to.exist
+
+        const searchResults = await searchResultsProvider?.getSearchResults({
+          title: testData.searchData!.query ?? '',
+          excludedTags: testData.searchData!.excludedTags?.map(x => ({id: x, label: x})) ?? [],
+          includedTags: testData.searchData!.includedTags?.map(x => ({id: x, label: x})) ?? [],
+          parameters: {},
+        }, {})
+        expect(searchResults.results, `one or more search results should be returned for ${JSON.stringify(testData.searchData)}`).to.not.be.empty
+      })
+    }
   }
 
   async measureTime(closure: () => Promise<void>): Promise<number> {
@@ -177,5 +142,30 @@ export class SourceTester {
     await closure()
     const endTime = Number(process.hrtime.bigint() - startTime)
     return (endTime / 1_000_000)
+  }
+}
+
+export class OnDeviceSourceTester implements ISourceTester {
+  // eslint-disable-next-line no-useless-constructor
+  constructor(private grpcClient: PaperbackSourceTesterClient) {}
+
+  async installSources(request: SourceInstallRequest): Promise<void> {
+    await new Promise((resolve, reject) => {
+      this.grpcClient.installSource(
+        request,
+        (error, response) => (error) ?
+          reject(error) :
+          resolve(response),
+      )
+    })
+  }
+
+  async testSource(request: SourceTestRequest, callback: (response: SourceTestResponse) => Promise<void>): Promise<void> {
+    await new Promise((resolve, reject) => {
+      this.grpcClient.testSource(request)
+      .on('end', resolve)
+      .on('error', reject)
+      .on('data', callback)
+    })
   }
 }

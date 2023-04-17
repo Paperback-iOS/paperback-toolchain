@@ -121,40 +121,36 @@ export default class Bundle extends CLICommand {
   }
 
   async bundleSources(folder = '') {
-    const basePath = process.cwd()
-
-    // Make sure there isn't a built folder already
-    Utils.deleteFolderRecursive(path.join(basePath, 'temp_build'))
+    const cwd = process.cwd()
+    const tmpTranspilePath = path.join(cwd, 'tmp')
+    const bundlesDirPath = path.join(cwd, 'bundles', folder)
 
     const transpileTime = this.time('Transpiling project', Utils.headingFormat)
-    shelljs.exec('npx tsc --outDir temp_build')
+    Utils.deleteFolderRecursive(tmpTranspilePath)
+    shelljs.exec('npx tsc --outDir tmp')
     transpileTime.end()
 
     this.log()
 
     const bundleTime = this.time('Bundle time', Utils.headingFormat)
-    const baseBundlesPath = path.join(basePath, 'bundles')
-    const bundlesPath = path.join(baseBundlesPath, folder)
+    Utils.deleteFolderRecursive(bundlesDirPath)
+    fs.mkdirSync(bundlesDirPath, {recursive: true})
 
-    Utils.deleteFolderRecursive(bundlesPath)
-
-    fs.mkdirSync(bundlesPath, {recursive: true})
-
-    const directoryPath = path.join(basePath, 'temp_build')
-    const promises: Promise<void>[] = fs.readdirSync(directoryPath).map(async file => {
+    const promises: Promise<void>[] = fs.readdirSync(tmpTranspilePath).map(async file => {
       const fileBundleTime = this.time(`- Building ${file}`)
 
       Utils.copyFolderRecursive(
-        path.join(basePath, 'src', file, 'external'),
-        path.join(directoryPath, file),
+        path.join(cwd, 'src', file, 'external'),
+        path.join(tmpTranspilePath, file),
       )
 
-      await this.bundle(file, directoryPath, bundlesPath)
+      await this.bundle(file, tmpTranspilePath, bundlesDirPath)
 
       Utils.copyFolderRecursive(
-        path.join(basePath, 'src', file, 'includes'),
-        path.join(bundlesPath, file),
+        path.join(cwd, 'src', file, 'includes'),
+        path.join(bundlesDirPath, file),
       )
+
       fileBundleTime.end()
     })
 
@@ -164,7 +160,7 @@ export default class Bundle extends CLICommand {
 
     this.log()
     // Remove the build folder
-    Utils.deleteFolderRecursive(path.join(basePath, 'temp_build'))
+    Utils.deleteFolderRecursive(path.join(cwd, 'tmp'))
   }
 
   async bundle(file: string, sourceDir: string, destDir: string): Promise<void> {

@@ -6,12 +6,13 @@ service PaperbackLogger {
     rpc streamLogs(LogFilter) returns (stream LogLine) {}
 }
 
+enum LogLevel {
+    INFO = 0;
+    WARN = 1;
+    ERROR = 2;
+}
+
 message LogLine {
-    enum LogLevel {
-        INFO = 0;
-        WARN = 1;
-        ERROR = 2;
-    }
     LogLevel level = 1;
     repeated string tags = 2;
     string message = 3;

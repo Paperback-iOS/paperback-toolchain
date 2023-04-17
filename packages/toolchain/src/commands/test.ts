@@ -6,12 +6,12 @@ import Bundle from './bundle'
 import * as path from 'node:path'
 import * as fs from 'node:fs'
 import chalk from 'chalk'
-import {SourceTester} from '../source-tester'
-import {SourceInstallRequest, SourceTestRequest, SourceTestResponse} from '../devtools/generated/typescript/PDTSourceTester_pb'
+import {ISourceTester, OnDeviceSourceTester, SourceTester} from '../source-tester'
+import {SourceTestRequest, TestData, SourceTestResponse} from '../devtools/generated/typescript/PDTSourceTester'
 import shelljs from 'shelljs'
 import Utils from '../utils'
 import Server from '../server'
-import {PaperbackSourceTesterClient} from '../devtools/generated/typescript/PDTSourceTester_grpc_pb'
+import {PaperbackSourceTesterClient} from '../devtools/generated/typescript/PDTSourceTester.grpc-client'
 import {credentials} from '@grpc/grpc-js'
 import ip from 'ip'
 
@@ -37,80 +37,36 @@ export default class Test extends CLICommand {
 
     const sourceId = args.source
     const cwd = process.cwd()
+    const buildDir = path.join(cwd, 'tmp')
+    const sourcesToTest = this.getSourceIdsToTest(sourceId, buildDir)
 
+    let client: ISourceTester
     if (flags.ip) {
-      const bundleDir = path.join(cwd, 'bundles')
+      const grpcClient = new PaperbackSourceTesterClient(
+        `${flags.ip}:${flags.port}`,
+        credentials.createInsecure(),
+      )
 
-      await Bundle.run([])
-
-      const server = new Server(8000)
-      server.start()
-
-      const client = new PaperbackSourceTesterClient(`${flags.ip}:${flags.port}`, credentials.createInsecure())
-      const sourcesToTest = this.getSourceIdsToTest(sourceId, bundleDir)
-
-      // Install the sources that we need to test on the App
-      for (const source of sourcesToTest) {
-        this.log()
-        this.log(chalk.bold.underline.bgBlue.white(`Installing ${source}`))
-        const request = new SourceInstallRequest()
-        request.setSourceid(source)
-        request.setRepobaseurl(`http://${ip.address()}:${server.port}`)
-
-        // Make sure the source is installed on the app
-        await new Promise((resolve, reject) => {
-          client.installSource(
-            request,
-            (error, response) =>
-              (error) ? reject(error) : resolve(response),
-          )
-        })
-      }
-
-      server.stop()
-
-      for (const source of sourcesToTest) {
-        this.log()
-        this.log(chalk.bold.underline.bgBlue.white(`Testing ${source}`))
-        const request = new SourceTestRequest()
-        request.setSourceid(source)
-        request.setData(new SourceTestRequest.TestData())
-
-        await new Promise((resolve, reject) => {
-          client.testSource(request)
-          .on('end', resolve)
-          .on('error', reject)
-          .on('data', this.logSourceTestReponse.bind(this))
-        })
-      }
+      client = new OnDeviceSourceTester(grpcClient)
     } else {
-      const buildDir = path.join(cwd, 'tmp')
-      this.log()
-      this.log(chalk.bold.underline.bgBlue.white('Transpiling Sources'))
+      this.log(`\n${chalk.bold.underline.bgBlue.white('Transpiling Sources')}`)
+
       await this.measure('Time', Utils.headingFormat, async () => {
         Utils.deleteFolderRecursive(buildDir)
         shelljs.exec('npx tsc --outDir tmp')
       })
 
-      const tester = new SourceTester(buildDir)
-      for (const source of this.getSourceIdsToTest(sourceId, buildDir)) {
-        this.log()
-        this.log(chalk.bold.underline.bgBlue.white(`Testing ${source}`))
-        const request = new SourceTestRequest()
-        request.setSourceid(source)
-        request.setData(new SourceTestRequest.TestData())
-
-        await tester.testSource(request, this.logSourceTestReponse.bind(this))
-      }
-
-      this.log()
+      client = new SourceTester(buildDir)
     }
+
+    await this.installSources(sourcesToTest, client)
+    await this.testSources(sourcesToTest, client)
   }
 
   private async logSourceTestReponse(response: SourceTestResponse) {
-    this.log(`${chalk.red.bold('#')} ${chalk.bold(response.getTestcase())}: ${chalk.green(response.getCompletetime().toFixed(0) + 'ms')}`)
+    this.log(`${chalk.red.bold('#')} ${chalk.bold(response.testCase)}: ${chalk.green(response.completeTime + 'ms')}`)
 
-    const failures = response.getFailuresList()
+    const failures = response.failures
     for (const failure of failures) {
       this.log(`- ${chalk.white.bgRed('[FAILURE]')} ${failure}`)
     }
@@ -125,5 +81,38 @@ export default class Test extends CLICommand {
     }) : fs.readdirSync(bundleDir).filter(file => fs.statSync(path.join(bundleDir, file)).isDirectory())
 
     return sourcesToTest
+  }
+
+  private async testSources(sources: string[], client: ISourceTester) {
+    for (const sourceId of sources) {
+      this.log(`\n${chalk.bold.underline.bgBlue.white(`Testing ${sourceId}`)}`)
+
+      const request: SourceTestRequest = {sourceId}
+
+      const dataPath = path.join(process.cwd(), 'src', sourceId, `${sourceId}.test.json`)
+      if (fs.existsSync(dataPath)) {
+        request.data = JSON.parse(fs.readFileSync(dataPath, {encoding: 'utf8'}))
+      }
+
+      await client.testSource(request, this.logSourceTestReponse.bind(this))
+    }
+  }
+
+  private async installSources(sources: string[], client: ISourceTester) {
+    await Bundle.run([])
+    const server = new Server(8000)
+    server.start()
+
+    // Install the sources that we need to test on the App
+    for (const source of sources) {
+      this.log(`\n${chalk.bold.underline.bgBlue.white(`Installing ${source}`)}`)
+
+      // Make sure the source is installed on the app
+      await client.installSource?.(
+        {sourceId: source, repoBaseUrl: `http://${ip.address()}:${server.port}`},
+      )
+    }
+
+    server.stop()
   }
 }

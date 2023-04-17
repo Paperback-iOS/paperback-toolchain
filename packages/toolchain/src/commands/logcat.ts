@@ -1,7 +1,7 @@
 import {credentials} from '@grpc/grpc-js'
 import {Flags} from '@oclif/core'
-import {PaperbackLoggerClient} from '../devtools/generated/typescript/PDTLogger_grpc_pb'
-import {LogFilter, LogLine} from '../devtools/generated/typescript/PDTLogger_pb'
+import {PaperbackLoggerClient} from '../devtools/generated/typescript/PDTLogger.grpc-client'
+import {LogLevel, LogLine} from '../devtools/generated/typescript/PDTLogger'
 import chalk from 'chalk'
 import {CLICommand} from '../command'
 
@@ -18,19 +18,19 @@ export default class Logcat extends CLICommand {
 
     await new Promise((resolve, reject) => {
       const test = new PaperbackLoggerClient(`${flags.ip}:${flags.port}`, credentials.createInsecure())
-      test.streamLogs(new LogFilter()).on('data', (response: unknown) => {
+      test.streamLogs({}).on('data', (response: unknown) => {
         const logLine = response as LogLine
 
         let level
 
-        switch (logLine.getLevel()) {
-        case LogLine.LogLevel.INFO:
+        switch (logLine.level) {
+        case LogLevel.INFO:
           level = chalk.bold.bgGreenBright`[DEBUG]`
           break
-        case LogLine.LogLevel.ERROR:
+        case LogLevel.ERROR:
           level = chalk.bold.bgRed`[ERROR]`
           break
-        case LogLine.LogLevel.WARN:
+        case LogLevel.WARN:
           level = chalk.bold.bgYellow`[WARN]`
           break
         default:
@@ -39,7 +39,7 @@ export default class Logcat extends CLICommand {
         }
 
         // eslint-disable-next-line no-console
-        console.log(`${level} [${logLine.getDate()?.toDate().getTime()}] ${logLine.getTagsList().map(x => `[${x}]`).join(' ')} ${logLine.getMessage()}`)
+        console.log(`${level} [${logLine.date?.seconds}] ${logLine.tags.map(x => `[${x}]`).join(' ')} ${logLine.message}`)
       })
       .on('error', reject)
       .on('close', resolve)
