@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.0-alpha.45 darwin-arm64 node-v16.13.0
+@paperback/toolchain/0.8.0-alpha.46 darwin-arm64 node-v16.13.0
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -30,7 +30,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`paperback bundle`](#paperback-bundle)
-* [`paperback help [COMMAND]`](#paperback-help-command)
+* [`paperback help [COMMANDS]`](#paperback-help-commands)
 * [`paperback logcat`](#paperback-logcat)
 * [`paperback migrate`](#paperback-migrate)
 * [`paperback plugins`](#paperback-plugins)
@@ -61,18 +61,18 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.45/dist/commands/bundle.ts)_
+_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.46/dist/commands/bundle.ts)_
 
-## `paperback help [COMMAND]`
+## `paperback help [COMMANDS]`
 
 Display help for paperback.
 
 ```
 USAGE
-  $ paperback help [COMMAND] [-n]
+  $ paperback help [COMMANDS] [-n]
 
 ARGUMENTS
-  COMMAND  Command to show help for.
+  COMMANDS  Command to show help for.
 
 FLAGS
   -n, --nested-commands  Include all nested commands in the output.
@@ -81,7 +81,7 @@ DESCRIPTION
   Display help for paperback.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.9/src/commands/help.ts)_
 
 ## `paperback logcat`
 
@@ -99,7 +99,7 @@ DESCRIPTION
   describe the command here
 ```
 
-_See code: [dist/commands/logcat.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.45/dist/commands/logcat.ts)_
+_See code: [dist/commands/logcat.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.46/dist/commands/logcat.ts)_
 
 ## `paperback migrate`
 
@@ -116,7 +116,7 @@ EXAMPLES
   $ paperback migrate
 ```
 
-_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.45/dist/commands/migrate.ts)_
+_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.46/dist/commands/migrate.ts)_
 
 ## `paperback plugins`
 
@@ -136,7 +136,7 @@ EXAMPLES
   $ paperback plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.0/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.4.6/src/commands/plugins/index.ts)_
 
 ## `paperback plugins:install PLUGIN...`
 
@@ -156,7 +156,6 @@ FLAGS
 
 DESCRIPTION
   Installs a plugin into the CLI.
-
   Can be installed from npm or a git url.
 
   Installation of a user-installed plugin will override a core plugin.
@@ -164,6 +163,7 @@ DESCRIPTION
   e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
   will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
   the CLI without the need to patch and update the whole CLI.
+
 
 ALIASES
   $ paperback plugins add
@@ -191,6 +191,9 @@ FLAGS
   -h, --help     Show CLI help.
   -v, --verbose
 
+GLOBAL FLAGS
+  --json  Format output as json.
+
 DESCRIPTION
   Displays installation properties of a plugin.
 
@@ -216,7 +219,6 @@ FLAGS
 
 DESCRIPTION
   Installs a plugin into the CLI.
-
   Can be installed from npm or a git url.
 
   Installation of a user-installed plugin will override a core plugin.
@@ -224,6 +226,7 @@ DESCRIPTION
   e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
   will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
   the CLI without the need to patch and update the whole CLI.
+
 
 ALIASES
   $ paperback plugins add
@@ -253,11 +256,11 @@ FLAGS
 
 DESCRIPTION
   Links a plugin into the CLI for development.
-
   Installation of a linked plugin will override a user-installed or core plugin.
 
   e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
   command will override the user-installed or core plugin implementation. This is useful for development work.
+
 
 EXAMPLES
   $ paperback plugins:link myplugin
@@ -364,7 +367,7 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.45/dist/commands/serve.ts)_
+_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.46/dist/commands/serve.ts)_
 
 ## `paperback test [SOURCE]`
 
@@ -385,5 +388,5 @@ DESCRIPTION
   describe the command here
 ```
 
-_See code: [dist/commands/test.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.45/dist/commands/test.ts)_
+_See code: [dist/commands/test.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.46/dist/commands/test.ts)_
 <!-- commandsstop -->
