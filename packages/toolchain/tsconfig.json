@@ -8,7 +8,9 @@
     "rootDir": "./src",
     "strict": true,
     "target": "ES2020",
-    "allowJs": true
+    "allowJs": true,
+    "declarationMap": true,
+    "sourceMap": true,
   },
   "include": [
     "src/**/*"
