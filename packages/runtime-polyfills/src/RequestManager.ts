@@ -62,7 +62,7 @@ class MockRequestManager implements RequestManager {
         })
 
         let responsePacked: Response = {
-            rawData: App.createRawData(response.data),
+            rawData: App.createRawData({byteArray: (response.data as Buffer)}),
             data: Buffer.from(response.data, 'binary').toString(),
             status: response.status,
             headers: response.headers,
