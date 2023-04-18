@@ -49,7 +49,7 @@ export class SourceTester implements ISourceTester {
     if (fs.existsSync(customRunnerPath)) {
       const customRunner = require(customRunnerPath)
       if (customRunner.runTests) {
-        await customRunner.runTests(testCase, testData, source)
+        await customRunner.runTests(testCase, testData, source, this.runTests.bind(this))
         return
       }
     }
