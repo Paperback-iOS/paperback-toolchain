@@ -3,7 +3,6 @@
  * This allows us to to use a generic api to make the calls against any source
  */
 
-import { CheerioAPI } from "cheerio"
 import { Chapter, ChapterDetails, Cookie, DUISection, HomeSection, MangaInfo, Request, PagedResults, RequestManager, SearchField, SearchRequest, SourceManga, TagSection } from ".."
 import { ChapterProviding, Searchable, MangaProviding } from "./interfaces"
 
@@ -13,7 +12,7 @@ import { ChapterProviding, Searchable, MangaProviding } from "./interfaces"
 export abstract class Source implements Searchable, MangaProviding, ChapterProviding {
   abstract readonly requestManager: RequestManager
 
-  constructor(public cheerio: CheerioAPI) {}
+  constructor(public cheerio: cheerio.CheerioAPI) {}
 
   /**
    * Given a mangaID, this function should use a {@link RequestManager} object's {@link RequestManager.schedule} method
