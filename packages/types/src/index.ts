@@ -1,3 +1,3 @@
-export * from './generated/_exports'
-export * from './base/index'
-export * from './compat/DyamicUI'
+export * from "./generated/_exports"
+export * from "./base/index"
+export * from "./compat/DyamicUI"

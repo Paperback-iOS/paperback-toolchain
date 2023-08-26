@@ -1,4 +1,8 @@
-import { DUIForm, MangaProgress, TrackerActionQueue } from "../../generated/_exports";
+import {
+	DUIForm,
+	MangaProgress,
+	TrackerActionQueue,
+} from "../../generated/_exports"
 
 export interface MangaProgressProviding {
 	getMangaProgressManagementForm(mangaId: string): Promise<DUIForm>

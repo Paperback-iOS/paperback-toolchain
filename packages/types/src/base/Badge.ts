@@ -4,9 +4,9 @@ export interface Badge {
 }
 
 export enum BadgeColor {
-	BLUE = 'default',
-	GREEN = 'success',
-	GREY = 'info',
-	YELLOW = 'warning',
-	RED = 'danger'
+	BLUE = "default",
+	GREEN = "success",
+	GREY = "info",
+	YELLOW = "warning",
+	RED = "danger",
 }

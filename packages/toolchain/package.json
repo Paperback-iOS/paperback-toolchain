@@ -28,10 +28,13 @@
     "@paperback/runtime-polyfills": "*",
     "@paperback/types": "*",
     "@protobuf-ts/runtime-rpc": "^2.8.3",
+    "@types/pug": "^2.0.6",
     "browserify": "^17.0.0",
     "chai": "^4.3.7",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
+    "esbuild": "^0.19.0",
+    "fs-extra": "^11.1.1",
     "ip": "^2.0.0",
     "pug": "^3.0.2",
     "shelljs": "^0.8.5"
@@ -42,15 +45,12 @@
     "@protobuf-ts/protoc": "^2.8.3",
     "@types/browserify": "^12.0.37",
     "@types/chai": "^4.3.4",
+    "@types/fs-extra": "^11.0.1",
     "@types/google-protobuf": "^3.15.6",
     "@types/ip": "^1.1.0",
     "@types/node": "^16.9.4",
     "@types/shelljs": "^0.8.11",
     "@types/update-notifier": "^6.0.1",
-    "eslint": "^7.32.0",
-    "eslint-config-oclif": "^4",
-    "eslint-config-oclif-typescript": "^1.0.2",
-    "eslint-plugin-node": "^11.1.0",
     "globby": "^11",
     "grpc-tools": "^1.11.2",
     "oclif": "^3",
@@ -66,20 +66,15 @@
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-plugins"
-    ],
-    "topicSeparator": " ",
-    "topics": {
-      "hello": {
-        "description": "Say hello to the world and others"
-      }
-    }
+    ]
   },
   "scripts": {
+    "fix": "npx rome format ./src --write && npx rome check ./src --apply",
     "build": "shx rm -rf dist && ./src/devtools/generate-ts.sh && tsc -b",
-    "lint": "eslint . --ext .ts --config .eslintrc",
+    "lint": "npx rome check ./src",
     "postpack": "shx rm -f oclif.manifest.json",
-    "posttest": "yarn lint",
-    "prepack": "yarn build && oclif manifest && oclif readme && node ./bin/prepack-script",
+    "posttest": "npm run lint",
+    "prepack": "npm run build && oclif manifest && oclif readme && node ./bin/prepack-script",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md"
   },

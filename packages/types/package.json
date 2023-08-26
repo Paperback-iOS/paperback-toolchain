@@ -1,6 +1,6 @@
 {
   "name": "@paperback/types",
-  "version": "0.8.0-alpha.47",
+  "version": "0.9.0-alpha.1",
   "description": "TypeScript Types for Paperback",
   "keywords": [],
   "author": "Faizan Durrani",
@@ -21,6 +21,7 @@
     "typescript": "^4.8.3"
   },
   "scripts": {
+    "fix": "npx rome format ./src --write && npx rome check ./src --apply",
     "build": "rm -rf lib && npx tsc",
     "prepack": "npm run build"
   },

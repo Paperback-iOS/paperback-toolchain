@@ -1,7 +1,6 @@
-
 export enum HomeSectionType {
-  singleRowNormal = "singleRowNormal",
-  singleRowLarge = "singleRowLarge",
-  doubleRow = "doubleRow",
-  featured = "featured"
+	singleRowNormal = "singleRowNormal",
+	singleRowLarge = "singleRowLarge",
+	doubleRow = "doubleRow",
+	featured = "featured",
 }

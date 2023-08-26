@@ -1,13 +1,12 @@
-import { DUIFormRow } from "./../../../_exports";
-import { DUIForm } from "./../../../_exports";
-export interface DUINavigationButton extends DUIFormRow {
-}
+import { DUIFormRow } from "./../../../_exports"
+import { DUIForm } from "./../../../_exports"
+export type DUINavigationButton = DUIFormRow
 declare global {
-    namespace App {
-        function createDUINavigationButton(info: {
-            id: string
-            label: string
-            form: DUIForm
-        }): DUINavigationButton;
-    }
+	namespace App {
+		function createDUINavigationButton(info: {
+			id: string
+			label: string
+			form: DUIForm
+		}): DUINavigationButton
+	}
 }

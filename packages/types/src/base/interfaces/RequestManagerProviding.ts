@@ -6,5 +6,5 @@ import { RequestManager } from "../.."
 export type Requestable = RequestManagerProviding
 
 export interface RequestManagerProviding {
-    readonly requestManager: RequestManager
+	readonly requestManager: RequestManager
 }

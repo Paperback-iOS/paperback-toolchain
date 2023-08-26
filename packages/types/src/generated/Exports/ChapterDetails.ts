@@ -1,14 +1,14 @@
 export interface ChapterDetails {
-    id: string;
-    mangaId: string;
-    pages: string[];
+	id: string
+	mangaId: string
+	pages: string[]
 }
 declare global {
-    namespace App {
-        function createChapterDetails(info: {
-            id: string
-            mangaId: string
-            pages: string[]
-        }): ChapterDetails;
-    }
+	namespace App {
+		function createChapterDetails(info: {
+			id: string
+			mangaId: string
+			pages: string[]
+		}): ChapterDetails
+	}
 }
