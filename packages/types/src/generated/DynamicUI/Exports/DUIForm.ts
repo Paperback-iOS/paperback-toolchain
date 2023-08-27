@@ -10,7 +10,7 @@ export interface DUIForm {
 	sections(): Promise<DUISection[]>
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createDUIForm(info: {
 			sections: () => Promise<DUISection[]>
 			onSubmit?: (arg0: Record<any, any>) => Promise<void>

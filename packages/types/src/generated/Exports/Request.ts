@@ -8,7 +8,7 @@ export interface Request {
 	cookies: Cookie[]
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createRequest(info: {
 			url: string
 			method: string

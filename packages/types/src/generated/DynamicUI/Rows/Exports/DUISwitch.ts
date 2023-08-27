@@ -2,7 +2,7 @@ import { DUIFormRow } from "./../../../_exports"
 import { DUIBinding } from "./../../../_exports"
 export type DUISwitch = DUIFormRow
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createDUISwitch(info: {
 			id: string
 			label: string

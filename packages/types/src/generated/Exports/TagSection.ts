@@ -5,7 +5,7 @@ export interface TagSection {
 	tags: Tag[]
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createTagSection(info: {
 			id: string
 			label: string

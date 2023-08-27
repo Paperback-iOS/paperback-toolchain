@@ -4,7 +4,7 @@ export interface PagedResults {
 	metadata?: any
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createPagedResults(info: {
 			results?: PartialSourceManga[]
 			metadata?: any

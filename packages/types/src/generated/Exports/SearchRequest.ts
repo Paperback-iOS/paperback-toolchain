@@ -1,5 +1,5 @@
 import { Tag } from "./../_exports"
-export interface SearchRequest {
+export interface SearchQuery {
 	readonly title?: string
 	readonly includedTags: Tag[]
 	readonly excludedTags: Tag[]

@@ -4,7 +4,7 @@ import './RequestManager'
 import './SourceStateManager'
 
 // @ts-ignore
-globalThis.App = new Proxy(PaperbackPolyfills, {
+globalThis.Paperback = new Proxy(PaperbackPolyfills, {
 	get(target, p) {
 		// @ts-ignore
 		if(target[p]) {

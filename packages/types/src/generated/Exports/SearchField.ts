@@ -4,7 +4,7 @@ export interface SearchField {
 	readonly placeholder: string
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createSearchField(info: {
 			id: string
 			name: string

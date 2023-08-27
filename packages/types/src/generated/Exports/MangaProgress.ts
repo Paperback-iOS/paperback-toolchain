@@ -14,7 +14,7 @@ export interface MangaProgress {
 	userRating?: number
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createMangaProgress(info: {
 			mangaId: string
 			lastReadChapterNumber: number

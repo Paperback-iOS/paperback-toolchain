@@ -6,7 +6,7 @@ export interface HomeSection {
 	containsMoreItems: boolean
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createHomeSection(info: {
 			id: string
 			title: string
@@ -14,5 +14,9 @@ declare global {
 			items?: PartialSourceManga[]
 			containsMoreItems: boolean
 		}): HomeSection
+	}
+
+	namespace Paperback {
+
 	}
 }

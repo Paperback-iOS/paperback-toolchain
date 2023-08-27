@@ -4,9 +4,7 @@ export interface RawData {
 	toString(): string | undefined
 }
 declare global {
-	namespace App {
-		function createRawData(info: {
-			byteArray: ByteArray
-		}): RawData
+	namespace Paperback {
+		function createRawData(byteArray: ByteArray): RawData
 	}
 }

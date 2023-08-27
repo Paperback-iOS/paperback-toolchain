@@ -9,7 +9,7 @@ export interface DUIBinding {
 	set(newValue: any): Promise<void>
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createDUIBinding(info: {
 			get: () => Promise<any>
 			set?: (arg0: any | undefined) => Promise<void>

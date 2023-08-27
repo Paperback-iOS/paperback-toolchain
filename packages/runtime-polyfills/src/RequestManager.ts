@@ -19,7 +19,8 @@ class MockRequestManager implements RequestManager {
         return ''
     }
 
-    async schedule(request: Request, retryCount: number) {
+    async schedule(_request: Request, retryCount: number) {
+        let request = _request
 
         // Pass this request through the interceptor if one exists
         if (this.interceptor) {
@@ -27,20 +28,20 @@ class MockRequestManager implements RequestManager {
         }
 
         // Append any cookies into the header properly
-        let headers: any = request.headers ?? {}
+        const headers: Record<string, string> = request.headers ?? {}
 
         let cookieData = ''
-        for (let cookie of request.cookies ?? [])
+        for (const cookie of request.cookies ?? [])
             cookieData += `${cookie.name}=${cookie.value};`
 
-        headers['cookie'] = cookieData
+        headers.cookie = cookieData
 
         // If no user agent has been supplied, default to a basic Paperback-iOS agent
         headers['user-agent'] = headers["user-agent"] ?? 'Paperback-iOS'
 
         // If we are using a urlencoded form data as a post body, we need to decode the request for Axios
         let decodedData = request.data
-        if (typeof decodedData == 'object') {
+        if (typeof decodedData === 'object') {
             if (headers['content-type']?.includes('application/x-www-form-urlencoded')) {
                 decodedData = ""
                 Object.keys(request.data).forEach(attribute => {
@@ -53,7 +54,7 @@ class MockRequestManager implements RequestManager {
         }
 
         // We must first get the response object from Axios, and then transcribe it into our own Response type before returning
-        let response = await axios(`${request.url}${request.param ?? ''}`, {
+        const response = await axios(`${request.url}${request.param ?? ''}`, {
             method: <Method>request.method,
             headers: headers,
             data: decodedData,
@@ -62,7 +63,7 @@ class MockRequestManager implements RequestManager {
         })
 
         let responsePacked: Response = {
-            rawData: App.createRawData({byteArray: (response.data as Buffer)}),
+            rawData: Paperback.createRawData(response.data as Buffer),
             data: Buffer.from(response.data, 'binary').toString(),
             status: response.status,
             headers: response.headers,

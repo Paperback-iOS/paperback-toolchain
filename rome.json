@@ -1,7 +1,17 @@
 {
   "javascript": {
     "formatter": {
-      "semicolons": "asNeeded"
+      "semicolons": "always"
+    }
+  },
+
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
     }
   }
 }

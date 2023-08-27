@@ -17,7 +17,7 @@ export interface RequestManager {
 	schedule(request: Request, retry: number): Promise<Response>
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createRequestManager(info: {
 			interceptor?: SourceInterceptor
 			requestsPerSecond?: number

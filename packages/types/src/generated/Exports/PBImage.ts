@@ -8,7 +8,7 @@ export interface PBImage {
 	readonly data?: RawData
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createPBImage(info: {
 			data: RawData
 		}): PBImage

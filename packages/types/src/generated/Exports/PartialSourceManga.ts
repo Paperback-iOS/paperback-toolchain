@@ -5,7 +5,7 @@ export interface PartialSourceManga {
 	subtitle?: string
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createPartialSourceManga(info: {
 			mangaId: string
 			image: string

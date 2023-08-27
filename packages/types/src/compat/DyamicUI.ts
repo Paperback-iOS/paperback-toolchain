@@ -15,7 +15,7 @@ import {
 } from ".."
 
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createSection(info: DUISection): DUISection
 		function createButton(info: DUIButton): DUIButton
 		function createHeader(info: DUIHeader): DUIHeader

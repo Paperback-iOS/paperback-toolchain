@@ -1,7 +1,7 @@
 import { DUIFormRow } from "./../../../_exports"
 export type DUIOAuthButton = DUIFormRow
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createDUIOAuthButton(info: {
 			id: string
 			label: string

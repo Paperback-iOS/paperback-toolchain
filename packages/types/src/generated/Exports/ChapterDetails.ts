@@ -4,7 +4,7 @@ export interface ChapterDetails {
 	pages: string[]
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createChapterDetails(info: {
 			id: string
 			mangaId: string

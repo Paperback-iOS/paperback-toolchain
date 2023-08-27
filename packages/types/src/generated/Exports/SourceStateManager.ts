@@ -4,14 +4,16 @@ export interface SourceStateManager {
 	/*
 	 * internalName: _store
 	 */
+	
 	store(key: string, value: any): Promise<void>
 	/*
 	 * internalName: _retrieve
 	 */
+	
 	retrieve(key: string): Promise<any>
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createSourceStateManager(): SourceStateManager
 	}
 }

@@ -7,7 +7,7 @@ export interface Cookie {
 	expires?: Date
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createCookie(info: {
 			name: string
 			value: string

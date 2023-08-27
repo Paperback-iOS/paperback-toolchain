@@ -2,7 +2,7 @@ import { DUIFormRow } from "./../../../_exports"
 import { DUIForm } from "./../../../_exports"
 export type DUINavigationButton = DUIFormRow
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createDUINavigationButton(info: {
 			id: string
 			label: string

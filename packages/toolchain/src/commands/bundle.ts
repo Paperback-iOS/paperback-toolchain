@@ -235,7 +235,6 @@ export default class Bundle extends CLICommand {
 
 			// Creation of the list of available extensions
 			// [{name: sourceName, tags[]: []}]
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 			const extensionList = extensionsData.sources.map((extension: any) => ({
 				name: extension.name,
 				badges: extension.badges,

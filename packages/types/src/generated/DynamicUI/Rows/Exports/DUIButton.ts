@@ -1,7 +1,7 @@
 import { DUIFormRow } from "./../../../_exports"
 export type DUIButton = DUIFormRow
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createDUIButton(info: {
 			id: string
 			label: string

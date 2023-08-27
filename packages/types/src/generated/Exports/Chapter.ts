@@ -9,7 +9,7 @@ export interface Chapter {
 	sortingIndex: number
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createChapter(info: {
 			id: string
 			chapNum: number

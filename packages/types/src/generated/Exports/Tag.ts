@@ -3,7 +3,7 @@ export interface Tag {
 	readonly label: string
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createTag(info: {
 			id: string
 			label: string

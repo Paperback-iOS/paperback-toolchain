@@ -7,7 +7,7 @@ export interface SourceManga {
 	mangaInfo: MangaInfo
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createSourceManga(info: {
 			id: string
 			mangaInfo: MangaInfo

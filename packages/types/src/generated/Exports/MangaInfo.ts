@@ -22,7 +22,7 @@ export interface MangaInfo {
 	views: number
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createMangaInfo(info: {
 			image: string
 			artist?: string

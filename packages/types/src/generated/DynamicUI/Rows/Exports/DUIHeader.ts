@@ -1,7 +1,7 @@
 import { DUIFormRow } from "./../../../_exports"
 export type DUIHeader = DUIFormRow
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createDUIHeader(info: {
 			id: string
 			imageUrl: string

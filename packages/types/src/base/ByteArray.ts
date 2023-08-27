@@ -261,7 +261,7 @@ declare global {
 		| 254
 	type ByteArray = Uint8Array
 
-	namespace App {
+	namespace Paperback {
 		function createByteArray(info: RawData): ByteArray
 	}
 }

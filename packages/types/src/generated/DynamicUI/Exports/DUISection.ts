@@ -3,7 +3,7 @@ export interface DUISection {
 	_rows(): Promise<DUIFormRow[]>
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createDUISection(info: {
 			id: string
 			header?: string

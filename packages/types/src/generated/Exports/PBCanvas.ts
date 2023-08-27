@@ -29,7 +29,7 @@ export interface PBCanvas {
 	encode(format: string): RawData | undefined
 }
 declare global {
-	namespace App {
+	namespace Paperback {
 		function createPBCanvas(): PBCanvas
 	}
 }
