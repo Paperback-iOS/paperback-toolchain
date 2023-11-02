@@ -1,6 +1,6 @@
 {
   "name": "@paperback/toolchain",
-  "version": "0.8.0-alpha.47",
+  "version": "0.8.1-alpha.48",
   "description": "The CLI and Build Tools for Paperback sources",
   "author": "Faizan Durrani @FaizanDurrani",
   "bin": {
@@ -75,7 +75,7 @@
     }
   },
   "scripts": {
-    "build": "shx rm -rf dist && ./src/devtools/generate-ts.sh && tsc -b",
+    "build": "shx rm -rf dist && node ./src/devtools/generate.js && tsc -b",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",
