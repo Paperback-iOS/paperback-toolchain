@@ -4,6 +4,7 @@ import Bundle from './bundle'
 import Server from '../server'
 import Utils from '../utils'
 import chalk from 'chalk'
+import {watch} from 'node:fs'
 
 const cli = CliUx.ux
 
@@ -13,6 +14,13 @@ export default class Serve extends CLICommand {
   static override flags = {
     help: Flags.help({char: 'h'}),
     port: Flags.integer({char: 'p', default: 8080}),
+    watch: Flags.boolean({char: 'w', default: false}),
+  }
+
+  async _rebuildSources() {
+    this.log(chalk.underline.blue('Building Sources'))
+    await Bundle.run([])
+    this.log(chalk.underline.blue('Sources Rebuilt'))
   }
 
   async run() {
@@ -34,6 +42,18 @@ export default class Serve extends CLICommand {
     this.log()
     this.log(chalk`For a list of commands do {green h} or {green help}`)
 
+    let isRebuildingSources = false
+    let watcher = undefined
+    if (flags.watch) {
+      watcher = watch('./src', {recursive: true}, async (_eventType, filename) => {
+        if (isRebuildingSources === false && filename?.endsWith('.ts')) {
+          isRebuildingSources = true
+          await this._rebuildSources()
+          isRebuildingSources = false
+        }
+      })
+    }
+
     let stopServer = false
     while (!stopServer) {
       // eslint-disable-next-line no-await-in-loop
@@ -41,9 +61,10 @@ export default class Serve extends CLICommand {
 
       if (input === 'h' || input === 'help') {
         this.log(chalk.underline.bold('Help'))
-        this.log('  h, help - Display this message')
-        this.log('  s, stop - Stop the server')
-        this.log('  r, restart - Restart the server, also rebuilds the sources')
+        this.log('  h,  help - Display this message')
+        this.log('  s,  stop - Stop the server')
+        this.log('  r,  restart - Restart the server, also rebuilds the sources')
+        this.log('  rb, rebuild - Rebuild the sources')
       }
 
       if (input === 's' || input === 'stop') {
@@ -67,6 +88,12 @@ export default class Serve extends CLICommand {
         server.start()
         this.log()
         this.log(chalk`For a list of commands do {green h} or {green help}`)
+      }
+
+      if ((input === 'rb' || input === 'rebuild') && isRebuildingSources === false) {
+        isRebuildingSources = true
+        this._rebuildSources()
+        isRebuildingSources = false
       }
     }
 
