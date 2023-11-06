@@ -60,7 +60,7 @@ async function main() {
   } else {
     console.warn('Warning: This script is only supported on Windows, Mac and some Linux distros. Bash scripts will be executed as substitute (no Windows detected as OS)')
 
-    exec('sh ./packages/toolchain/src/devtools/generate.sh', (err, stdout, _stderr) => {
+    exec(`sh ${path.join(dirname, '/generate.sh')}`, (err, stdout, _stderr) => {
       if (err) {
         console.error(err)
         return
