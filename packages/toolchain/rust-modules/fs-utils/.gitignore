@@ -1,5 +1,6 @@
 target
-index.node
+# uncomment to ignore pre-built binaries (enforces to self-build the DDL for machine-specific optimizations)
+#index.node
 **/node_modules
 **/.DS_Store
 npm-debug.log*
