@@ -17,10 +17,15 @@ export default class Bundle extends CLICommand {
   static override flags = {
     help: Flags.help({char: 'h'}),
     folder: Flags.string({description: 'Subfolder to output to', required: false}),
+    useNodeFS: Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
   };
+
+  utils: Utils = undefined as any
 
   async run() {
     const {flags} = await this.parse(Bundle)
+
+    this.utils = flags.useNodeFS ? new Utils(false) : new Utils(true)
 
     this.log(`Working directory: ${process.cwd()}`)
     this.log()
@@ -126,27 +131,27 @@ export default class Bundle extends CLICommand {
     const bundlesDirPath = path.join(cwd, 'bundles', folder)
 
     const transpileTime = this.time('Transpiling project', Utils.headingFormat)
-    Utils.deleteFolderRecursive(tmpTranspilePath)
+    this.utils.deleteFolderRecursive(tmpTranspilePath)
     shelljs.exec('npx tsc --outDir tmp')
     transpileTime.end()
 
     this.log()
 
     const bundleTime = this.time('Bundle time', Utils.headingFormat)
-    Utils.deleteFolderRecursive(bundlesDirPath)
+    this.utils.deleteFolderRecursive(bundlesDirPath)
     fs.mkdirSync(bundlesDirPath, {recursive: true})
 
     const promises: Promise<void>[] = fs.readdirSync(tmpTranspilePath).map(async file => {
       const fileBundleTime = this.time(`- Building ${file}`)
 
-      Utils.copyFolderRecursive(
+      this.utils.copyFolderRecursive(
         path.join(cwd, 'src', file, 'external'),
         path.join(tmpTranspilePath, file),
       )
 
       await this.bundle(file, tmpTranspilePath, bundlesDirPath)
 
-      Utils.copyFolderRecursive(
+      this.utils.copyFolderRecursive(
         path.join(cwd, 'src', file, 'includes'),
         path.join(bundlesDirPath, file),
       )
@@ -160,7 +165,7 @@ export default class Bundle extends CLICommand {
 
     this.log()
     // Remove the build folder
-    Utils.deleteFolderRecursive(path.join(cwd, 'tmp'))
+    this.utils.deleteFolderRecursive(path.join(cwd, 'tmp'))
   }
 
   async bundle(file: string, sourceDir: string, destDir: string): Promise<void> {

@@ -21,6 +21,7 @@ export default class Test extends CLICommand {
   static override flags = {
     ip: Flags.string({name: 'ip', default: undefined}),
     port: Flags.integer({name: 'port', default: 27_015}),
+    useNodeFS: Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
   }
 
   static override args = [
@@ -32,8 +33,12 @@ export default class Test extends CLICommand {
     },
   ]
 
+  utils: Utils = undefined as any
+
   async run() {
     const {flags, args} = await this.parse(Test)
+
+    this.utils = flags.useNodeFS ? new Utils(false) : new Utils(true)
 
     const cwd = process.cwd()
     const sourceId = args.source
@@ -52,7 +57,7 @@ export default class Test extends CLICommand {
 
       sourcesDirPath = path.join(cwd, 'tmp')
       await this.measure('Time', Utils.headingFormat, async () => {
-        Utils.deleteFolderRecursive(sourcesDirPath)
+        this.utils.deleteFolderRecursive(sourcesDirPath)
         shelljs.exec('npx tsc --outDir tmp')
       })
 
@@ -60,7 +65,7 @@ export default class Test extends CLICommand {
     }
 
     const sourcesToTest = this.getSourceIdsToTest(sourceId, sourcesDirPath)
-    await this.installSources(sourcesToTest, client)
+    await this.installSources(sourcesToTest, client, flags.useNodeFS)
     await this.testSources(sourcesToTest, client)
   }
 
@@ -99,12 +104,15 @@ export default class Test extends CLICommand {
     }
   }
 
-  private async installSources(sources: string[], client: ISourceTester) {
+  private async installSources(sources: string[], client: ISourceTester, useNodeFS: boolean) {
     if (!client.installSource) {
       return
     }
 
-    await Bundle.run([])
+    await Bundle.run([
+      '--useNodeFS',
+      useNodeFS ? 'true' : 'false',
+    ])
     const server = new Server(8000)
     server.start()
 

@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/prefer-module */
-const { exec } = require('node:child_process')
+const {exec} = require('node:child_process')
 const os = require('node:os')
 const fs = require('node:fs')
 const path = require('node:path')
@@ -17,11 +17,11 @@ async function main() {
   if (platform === 'win32') {
     console.log('Detected Windows.')
 
-    const protobufPath = path.join(dirname, '/protobuf')
-    const protobufWildcardPath = path.join(dirname, '/protobuf/*.proto')
+    const protobufPath = path.join(dirname, 'protobuf')
+    const protobufWildcardPath = path.join(dirname, 'protobuf', '*.proto')
 
     // TS generation
-    const tsGenerationPath = path.join(dirname, '/generated/typescript')
+    const tsGenerationPath = path.join(dirname, 'generated', 'typescript')
     await fs.rmSync(tsGenerationPath, {recursive: true, force: true})
     await fs.mkdirSync(tsGenerationPath)
 
@@ -60,7 +60,7 @@ async function main() {
   } else {
     console.warn('Warning: This script is only supported on Windows, Mac and some Linux distros. Bash scripts will be executed as substitute (no Windows detected as OS)')
 
-    exec(`sh ${path.join(dirname, '/generate.sh')}`, (err, stdout, _stderr) => {
+    exec(`sh ${path.join(dirname, 'generate.sh')}`, (err, stdout, _stderr) => {
       if (err) {
         console.error(err)
         return
