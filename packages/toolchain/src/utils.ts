@@ -10,18 +10,17 @@ export default class Utils {
 
   constructor(useFSUtils = true) {
     let canUseFSUtils = false
+    const platform = require('node:os').platform()
 
-    if (useFSUtils) {
-      const platform = require('node:os').platform()
+    if (useFSUtils && platform === 'win32') {
+      canUseFSUtils = true
 
-      if (platform === 'win32') {
-        canUseFSUtils = true
-
-        this.fsutils = require(this.path.join(__dirname, '..', 'rust-modules', 'fs-utils'))
-      }
+      this.fsutils = require(this.path.join(__dirname, '..', 'rust-modules', 'fs-utils'))
     }
 
     if (!canUseFSUtils) {
+      Utils.log(chalk`{yellow WARNING:} {gray (rust) fs-utils} is not available for your platform '${platform}', falling back to {gray node fs}!`)
+
       this.fs = require('node:fs')
     }
   }
