@@ -51,12 +51,12 @@ Builds all the sources in the repository and generates a versioning file
 
 ```
 USAGE
-  $ paperback bundle [-h] [--folder <value>] [--useNodeFS]
+  $ paperback bundle [-h] [--folder <value>] [--use-node-fs]
 
 FLAGS
   -h, --help        Show CLI help.
   --folder=<value>  Subfolder to output to
-  --useNodeFS       For more info, check
+  --use-node-fs     For more info, check
                     https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
 
 DESCRIPTION
@@ -359,13 +359,13 @@ Build the sources and start a local server
 
 ```
 USAGE
-  $ paperback serve [-h] [-p <value>] [-w] [--useNodeFS]
+  $ paperback serve [-h] [-p <value>] [-w] [--use-node-fs]
 
 FLAGS
   -h, --help          Show CLI help.
   -p, --port=<value>  [default: 8080]
   -w, --watch         Rebuild sources on typescript file changes within directory
-  --useNodeFS         For more info, check
+  --use-node-fs       For more info, check
                       https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
 
 DESCRIPTION
@@ -380,7 +380,7 @@ describe the command here
 
 ```
 USAGE
-  $ paperback test [SOURCE] [--ip <value>] [--port <value>] [--useNodeFS]
+  $ paperback test [SOURCE] [--ip <value>] [--port <value>] [--use-node-fs]
 
 ARGUMENTS
   SOURCE  (optional) The source to test
@@ -388,7 +388,7 @@ ARGUMENTS
 FLAGS
   --ip=<value>
   --port=<value>  [default: 27015]
-  --useNodeFS     For more info, check
+  --use-node-fs   For more info, check
                   https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
 
 DESCRIPTION

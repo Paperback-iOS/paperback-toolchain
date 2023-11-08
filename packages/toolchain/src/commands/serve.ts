@@ -15,19 +15,12 @@ export default class Serve extends CLICommand {
     help: Flags.help({char: 'h'}),
     port: Flags.integer({char: 'p', default: 8080}),
     watch: Flags.boolean({char: 'w', description: 'Rebuild sources on typescript file changes within directory', default: false}),
-    useNodeFS: Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
-
+    'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
   }
 
-  // Bundle class' flags
-  // static override flags = {
-  //   help: Flags.help({char: 'h'}),
-  //   folder: Flags.string({description: 'Subfolder to output to', required: false}),
-  //   useNodeFS: Flags.boolean({description: 'Use node\'s filesystem implementation instead of custom tailored fs-utils', required: false}),
-  // };
   async _bundleRun(useNodeFS: boolean) {
     return Bundle.run([
-      '--useNodeFS',
+      '--use-node-fs',
       useNodeFS ? 'true' : 'false',
     ])
   }
@@ -47,7 +40,7 @@ export default class Serve extends CLICommand {
     this.log(chalk.underline.blue('Building Sources'))
 
     // Make sure the repo is bundled
-    this._bundleRun(flags.useNodeFS)
+    this._bundleRun(flags['use-node-fs'])
     this.log()
     this.log(chalk.underline.blue('Starting Server on port ' + flags.port))
 
@@ -63,7 +56,7 @@ export default class Serve extends CLICommand {
       watcher = watch('./src', {recursive: true}, async (_eventType, filename) => {
         if (isRebuildingSources === false && filename?.endsWith('.ts')) {
           isRebuildingSources = true
-          await this._rebuildSources(flags.useNodeFS)
+          await this._rebuildSources(flags['use-node-fs'])
           isRebuildingSources = false
         }
       })
@@ -98,7 +91,7 @@ export default class Serve extends CLICommand {
 
         // Make sure the repo is bundled
         // eslint-disable-next-line no-await-in-loop
-        this._bundleRun(flags.useNodeFS)
+        this._bundleRun(flags['use-node-fs'])
         this.log()
         this.log(chalk.underline.blue('Starting Server on port ' + flags.port))
 
@@ -109,7 +102,7 @@ export default class Serve extends CLICommand {
 
       if ((input === 'rb' || input === 'rebuild') && isRebuildingSources === false) {
         isRebuildingSources = true
-        this._rebuildSources(flags.useNodeFS)
+        this._rebuildSources(flags['use-node-fs'])
         isRebuildingSources = false
       }
     }

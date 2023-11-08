@@ -17,7 +17,7 @@ export default class Bundle extends CLICommand {
   static override flags = {
     help: Flags.help({char: 'h'}),
     folder: Flags.string({description: 'Subfolder to output to', required: false}),
-    useNodeFS: Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
+    'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
   };
 
   utils: Utils = undefined as any
@@ -25,7 +25,7 @@ export default class Bundle extends CLICommand {
   async run() {
     const {flags} = await this.parse(Bundle)
 
-    this.utils = flags.useNodeFS ? new Utils(false) : new Utils(true)
+    this.utils = flags['use-node-fs'] ? new Utils(false) : new Utils(true)
 
     this.log(`Working directory: ${process.cwd()}`)
     this.log()

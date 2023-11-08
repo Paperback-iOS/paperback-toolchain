@@ -21,7 +21,7 @@ export default class Test extends CLICommand {
   static override flags = {
     ip: Flags.string({name: 'ip', default: undefined}),
     port: Flags.integer({name: 'port', default: 27_015}),
-    useNodeFS: Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
+    'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
   }
 
   static override args = [
@@ -38,7 +38,7 @@ export default class Test extends CLICommand {
   async run() {
     const {flags, args} = await this.parse(Test)
 
-    this.utils = flags.useNodeFS ? new Utils(false) : new Utils(true)
+    this.utils = flags['use-node-fs'] ? new Utils(false) : new Utils(true)
 
     const cwd = process.cwd()
     const sourceId = args.source
@@ -65,7 +65,7 @@ export default class Test extends CLICommand {
     }
 
     const sourcesToTest = this.getSourceIdsToTest(sourceId, sourcesDirPath)
-    await this.installSources(sourcesToTest, client, flags.useNodeFS)
+    await this.installSources(sourcesToTest, client, flags['use-node-fs'])
     await this.testSources(sourcesToTest, client)
   }
 
@@ -110,7 +110,7 @@ export default class Test extends CLICommand {
     }
 
     await Bundle.run([
-      '--useNodeFS',
+      '--use-node-fs',
       useNodeFS ? 'true' : 'false',
     ])
     const server = new Server(8000)
