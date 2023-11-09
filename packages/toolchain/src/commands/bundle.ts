@@ -17,16 +17,22 @@ export default class Bundle extends CLICommand {
   static override flags = {
     help: Flags.help({char: 'h'}),
     folder: Flags.string({description: 'Subfolder to output to', required: false}),
+    'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
+    'with-typechecking': Flags.boolean({aliases: ['tsc'], description: 'Enable typechecking when transpiling typescript files', required: false, default: false}),
   };
+
+  utils: Utils = undefined as any
 
   async run() {
     const {flags} = await this.parse(Bundle)
+
+    this.utils = flags['use-node-fs'] ? new Utils(false) : new Utils(true)
 
     this.log(`Working directory: ${process.cwd()}`)
     this.log()
 
     const execTime = this.time('Execution time', Utils.headingFormat)
-    await this.bundleSources(flags.folder)
+    await this.bundleSources(flags.folder, flags['with-typechecking'])
 
     const versionTime = this.time('Versioning File', Utils.headingFormat)
     await this.generateVersioningFile(flags.folder)
@@ -63,6 +69,7 @@ export default class Bundle extends CLICommand {
       try {
         const time = this.time(`- Generating ${file} Info`)
         const sourceInfo = await this.generateSourceInfo(file, directoryPath)
+
         jsonObject.sources.push(sourceInfo)
         time.end()
       } catch (error) {
@@ -120,33 +127,39 @@ export default class Bundle extends CLICommand {
     })
   }
 
-  async bundleSources(folder = '') {
+  async bundleSources(folder = '', useTypeChecking = false) {
     const cwd = process.cwd()
     const tmpTranspilePath = path.join(cwd, 'tmp')
     const bundlesDirPath = path.join(cwd, 'bundles', folder)
 
     const transpileTime = this.time('Transpiling project', Utils.headingFormat)
-    Utils.deleteFolderRecursive(tmpTranspilePath)
-    shelljs.exec('npx tsc --outDir tmp')
+    this.utils.deleteFolderRecursive(tmpTranspilePath)
+
+    if (useTypeChecking) {
+      shelljs.exec('npx tsc --outDir tmp')
+    } else {
+      shelljs.exec('npx swc src -C module.type=commonjs --out-dir tmp --source-maps')
+    }
+
     transpileTime.end()
 
     this.log()
 
     const bundleTime = this.time('Bundle time', Utils.headingFormat)
-    Utils.deleteFolderRecursive(bundlesDirPath)
+    this.utils.deleteFolderRecursive(bundlesDirPath)
     fs.mkdirSync(bundlesDirPath, {recursive: true})
 
     const promises: Promise<void>[] = fs.readdirSync(tmpTranspilePath).map(async file => {
       const fileBundleTime = this.time(`- Building ${file}`)
 
-      Utils.copyFolderRecursive(
+      this.utils.copyFolderRecursive(
         path.join(cwd, 'src', file, 'external'),
         path.join(tmpTranspilePath, file),
       )
 
       await this.bundle(file, tmpTranspilePath, bundlesDirPath)
 
-      Utils.copyFolderRecursive(
+      this.utils.copyFolderRecursive(
         path.join(cwd, 'src', file, 'includes'),
         path.join(bundlesDirPath, file),
       )
@@ -160,7 +173,7 @@ export default class Bundle extends CLICommand {
 
     this.log()
     // Remove the build folder
-    Utils.deleteFolderRecursive(path.join(cwd, 'tmp'))
+    this.utils.deleteFolderRecursive(path.join(cwd, 'tmp'))
   }
 
   async bundle(file: string, sourceDir: string, destDir: string): Promise<void> {

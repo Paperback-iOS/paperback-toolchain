@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.0-alpha.47 darwin-arm64 node-v16.13.0
+@paperback/toolchain/0.8.1-alpha.48 win32-x64 node-v19.4.0
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -51,17 +51,20 @@ Builds all the sources in the repository and generates a versioning file
 
 ```
 USAGE
-  $ paperback bundle [-h] [--folder <value>]
+  $ paperback bundle [-h] [--folder <value>] [--use-node-fs] [--with-typechecking]
 
 FLAGS
-  -h, --help        Show CLI help.
-  --folder=<value>  Subfolder to output to
+  -h, --help           Show CLI help.
+  --folder=<value>     Subfolder to output to
+  --use-node-fs        For more info, check
+                       https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
+  --with-typechecking  Enable typechecking when transpiling typescript files
 
 DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/bundle.ts)_
+_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.1-alpha.48/dist/commands/bundle.ts)_
 
 ## `paperback help [COMMANDS]`
 
@@ -99,7 +102,7 @@ DESCRIPTION
   describe the command here
 ```
 
-_See code: [dist/commands/logcat.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/logcat.ts)_
+_See code: [dist/commands/logcat.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.1-alpha.48/dist/commands/logcat.ts)_
 
 ## `paperback migrate`
 
@@ -116,7 +119,7 @@ EXAMPLES
   $ paperback migrate
 ```
 
-_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/migrate.ts)_
+_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.1-alpha.48/dist/commands/migrate.ts)_
 
 ## `paperback plugins`
 
@@ -357,17 +360,21 @@ Build the sources and start a local server
 
 ```
 USAGE
-  $ paperback serve [-h] [-p <value>]
+  $ paperback serve [-h] [-p <value>] [-w] [--use-node-fs] [--with-typechecking]
 
 FLAGS
-  -h, --help          Show CLI help.
-  -p, --port=<value>  [default: 8080]
+  -h, --help           Show CLI help.
+  -p, --port=<value>   [default: 8080]
+  -w, --watch          Rebuild sources on typescript file changes within directory
+  --use-node-fs        For more info, check
+                       https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
+  --with-typechecking  Enable typechecking when transpiling typescript files
 
 DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/serve.ts)_
+_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.1-alpha.48/dist/commands/serve.ts)_
 
 ## `paperback test [SOURCE]`
 
@@ -375,18 +382,21 @@ describe the command here
 
 ```
 USAGE
-  $ paperback test [SOURCE] [--ip <value>] [--port <value>]
+  $ paperback test [SOURCE] [--ip <value>] [--port <value>] [--use-node-fs] [--with-typechecking]
 
 ARGUMENTS
   SOURCE  (optional) The source to test
 
 FLAGS
   --ip=<value>
-  --port=<value>  [default: 27015]
+  --port=<value>       [default: 27015]
+  --use-node-fs        For more info, check
+                       https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
+  --with-typechecking  Enable typechecking when transpiling typescript files
 
 DESCRIPTION
   describe the command here
 ```
 
-_See code: [dist/commands/test.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/test.ts)_
+_See code: [dist/commands/test.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.1-alpha.48/dist/commands/test.ts)_
 <!-- commandsstop -->

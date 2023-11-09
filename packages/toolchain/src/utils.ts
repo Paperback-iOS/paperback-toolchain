@@ -1,35 +1,57 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
+/* eslint-disable unicorn/prefer-module */
 import chalk from 'chalk'
 
-export default {
-  headingFormat: chalk`{bold {red #} $1}`,
+export default class Utils {
+  static headingFormat = chalk`{bold {red #} $1}`
 
-  fixedWidth(number: number, width: number) {
+  fs: any
+  fsutils: any
+  path: any = require('node:path')
+
+  constructor(useFSUtils = true) {
+    let canUseFSUtils = false
+    const platform = require('node:os').platform()
+
+    if (useFSUtils && platform === 'win32') {
+      canUseFSUtils = true
+
+      this.fsutils = require(this.path.join(__dirname, '..', 'rust-modules', 'fs-utils'))
+    }
+
+    if (!canUseFSUtils) {
+      if (useFSUtils) {
+        Utils.log(chalk`{yellow WARNING:} {gray (rust) fs-utils} is not available for your platform '${platform}', falling back to {gray node fs}!`)
+      }
+
+      this.fs = require('node:fs')
+    }
+  }
+
+  static fixedWidth(number: number, width: number) {
     return (Array.from({length: width}).join('0') + number).slice(-width)
-  },
+  }
 
-  prefixTime(message = '') {
+  static prefixTime(message = '') {
     const date = new Date()
 
     const time = `${this.fixedWidth(date.getHours(), 2)}:${this.fixedWidth(date.getMinutes(), 2)}:${this.fixedWidth(date.getSeconds(), 2)}:${this.fixedWidth(date.getMilliseconds(), 4)}`
     return chalk`[{gray ${time}}] ${message}`
-  },
+  }
 
-  log(message = '') {
+  static log(message = '') {
     const cursorTo = (process.stdout as any).cursorTo
     if (cursorTo) {
       cursorTo(0)
     }
 
     process.stdout.write(this.prefixTime(message) + '\n')
-  },
+  }
 
-  error(message = '') {
+  static error(message = '') {
     this.log(chalk`{red ${message}}`)
-  },
+  }
 
-  time(label: string, template = '$1') {
+  static time(label: string, template = '$1') {
     const startTime = process.hrtime.bigint()
 
     return {
@@ -39,25 +61,28 @@ export default {
         this.log(`${template.replace('$1', label)}: ${chalk.green((hrend / BigInt(1_000_000)) + 'ms')}`)
       },
     }
-  },
+  }
 
   deleteFolderRecursive(folderPath: string) {
     folderPath = folderPath.trim()
     if (folderPath.length === 0 || folderPath === '/') return
 
-    if (fs.existsSync(folderPath)) {
-      for (const file of fs.readdirSync(folderPath)) {
-        const curPath = path.join(folderPath, file)
-        if (fs.lstatSync(curPath).isDirectory()) { // recurse
+    if (this.fsutils) {
+      this.fsutils.deleteFolderRecursive(folderPath)
+    } else if (this.fs.existsSync(folderPath)) {
+      for (const file of this.fs.readdirSync(folderPath)) {
+        const curPath = this.path.join(folderPath, file)
+
+        if (this.fs.lstatSync(curPath).isDirectory()) { // recurse
           this.deleteFolderRecursive(curPath)
         } else { // delete file
-          fs.unlinkSync(curPath)
+          this.fs.unlinkSync(curPath)
         }
       }
 
-      fs.rmdirSync(folderPath)
+      this.fs.rmdirSync(folderPath)
     }
-  },
+  }
 
   copyFolderRecursive(source: string, target: string) {
     source = source.trim()
@@ -66,26 +91,30 @@ export default {
     target = target.trim()
     if (target.length === 0 || target === '/') return
 
-    if (!fs.existsSync(source)) return
+    if (this.fsutils) {
+      this.fsutils.copyFolderRecursive(source, target)
+    } else {
+      if (!this.fs.existsSync(source)) return
 
-    let files = []
-    // check if folder needs to be created or integrated
-    const targetFolder = path.join(target, path.basename(source))
-    if (!fs.existsSync(targetFolder)) {
-      fs.mkdirSync(targetFolder)
-    }
+      let files = []
+      // check if folder needs to be created or integrated
+      const targetFolder = this.path.join(target, this.path.basename(source))
+      if (!this.fs.existsSync(targetFolder)) {
+        this.fs.mkdirSync(targetFolder)
+      }
 
-    // copy
-    if (fs.lstatSync(source).isDirectory()) {
-      files = fs.readdirSync(source)
-      for (const file of files) {
-        const curSource = path.join(source, file)
-        if (fs.lstatSync(curSource).isDirectory()) {
-          this.copyFolderRecursive(curSource, targetFolder)
-        } else {
-          fs.copyFileSync(curSource, path.join(targetFolder, file))
+      // copy
+      if (this.fs.lstatSync(source).isDirectory()) {
+        files = this.fs.readdirSync(source)
+        for (const file of files) {
+          const curSource = this.path.join(source, file)
+          if (this.fs.lstatSync(curSource).isDirectory()) {
+            this.copyFolderRecursive(curSource, targetFolder)
+          } else {
+            this.fs.copyFileSync(curSource, this.path.join(targetFolder, file))
+          }
         }
       }
     }
-  },
+  }
 }
