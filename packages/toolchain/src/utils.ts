@@ -19,14 +19,16 @@ export default class Utils {
     }
 
     if (!canUseFSUtils) {
-      Utils.log(chalk`{yellow WARNING:} {gray (rust) fs-utils} is not available for your platform '${platform}', falling back to {gray node fs}!`)
+      if (useFSUtils) {
+        Utils.log(chalk`{yellow WARNING:} {gray (rust) fs-utils} is not available for your platform '${platform}', falling back to {gray node fs}!`)
+      }
 
       this.fs = require('node:fs')
     }
   }
 
   static fixedWidth(number: number, width: number) {
-    return (Array.from({ length: width }).join('0') + number).slice(-width)
+    return (Array.from({length: width}).join('0') + number).slice(-width)
   }
 
   static prefixTime(message = '') {

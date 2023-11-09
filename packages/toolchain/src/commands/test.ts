@@ -22,6 +22,7 @@ export default class Test extends CLICommand {
     ip: Flags.string({name: 'ip', default: undefined}),
     port: Flags.integer({name: 'port', default: 27_015}),
     'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
+    'with-typechecking': Flags.boolean({aliases: ['tsc'], description: 'Enable typechecking when transpiling typescript files', required: false, default: false}),
   }
 
   static override args = [
@@ -65,7 +66,7 @@ export default class Test extends CLICommand {
     }
 
     const sourcesToTest = this.getSourceIdsToTest(sourceId, sourcesDirPath)
-    await this.installSources(sourcesToTest, client, flags['use-node-fs'])
+    await this.installSources(sourcesToTest, client, flags['use-node-fs'], flags['with-typechecking'])
     await this.testSources(sourcesToTest, client)
   }
 
@@ -104,14 +105,14 @@ export default class Test extends CLICommand {
     }
   }
 
-  private async installSources(sources: string[], client: ISourceTester, useNodeFS: boolean) {
+  private async installSources(sources: string[], client: ISourceTester, useNodeFS: boolean, withTypechecking: boolean) {
     if (!client.installSource) {
       return
     }
 
     await Bundle.run([
-      '--use-node-fs',
-      useNodeFS ? 'true' : 'false',
+      ...(useNodeFS ? ['--use-node-fs'] : []),
+      ...(withTypechecking ? ['--with-typechecking'] : []),
     ])
     const server = new Server(8000)
     server.start()
