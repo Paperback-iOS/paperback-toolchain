@@ -6,7 +6,7 @@ import Bundle from './bundle'
 import * as path from 'node:path'
 import * as fs from 'node:fs'
 import chalk from 'chalk'
-import {ISourceTester, OnDeviceSourceTester, SourceTester} from '../source-tester'
+import {ISourceTester, ISourceInstaller, OnDeviceSourceTester, SourceTester} from '../source-tester'
 import {SourceTestRequest, TestData, SourceTestResponse} from '../devtools/generated/typescript/PDTSourceTester'
 import shelljs from 'shelljs'
 import Utils from '../utils'
@@ -38,7 +38,8 @@ export default class Test extends CLICommand {
     const cwd = process.cwd()
     const sourceId = args.source
     let sourcesDirPath: string
-    let client: ISourceTester
+    let testClient: ISourceTester
+    let installClient: ISourceInstaller | undefined = undefined
     if (flags.ip) {
       const grpcClient = new PaperbackSourceTesterClient(
         `${flags.ip}:${flags.port}`,
@@ -46,7 +47,9 @@ export default class Test extends CLICommand {
       )
 
       sourcesDirPath = path.join(cwd, 'bundles')
-      client = new OnDeviceSourceTester(grpcClient)
+      const tester = new OnDeviceSourceTester(grpcClient)
+      testClient = tester
+      installClient = tester
     } else {
       this.log(`\n${chalk.bold.underline.bgBlue.white('Transpiling Sources')}`)
 
@@ -56,12 +59,14 @@ export default class Test extends CLICommand {
         shelljs.exec('npx tsc --outDir tmp')
       })
 
-      client = new SourceTester(sourcesDirPath)
+      testClient = new SourceTester(sourcesDirPath)
     }
 
     const sourcesToTest = this.getSourceIdsToTest(sourceId, sourcesDirPath)
-    await this.installSources(sourcesToTest, client)
-    await this.testSources(sourcesToTest, client)
+    if (installClient) {
+      await this.installSources(sourcesToTest, installClient)
+    }
+    await this.testSources(sourcesToTest, testClient)
   }
 
   private async logSourceTestReponse(response: SourceTestResponse) {
@@ -99,11 +104,7 @@ export default class Test extends CLICommand {
     }
   }
 
-  private async installSources(sources: string[], client: ISourceTester) {
-    if (!client.installSource) {
-      return
-    }
-
+  private async installSources(sources: string[], client: ISourceInstaller) {
     await Bundle.run([])
     const server = new Server(8000)
     server.start()
@@ -116,6 +117,13 @@ export default class Test extends CLICommand {
       await client.installSource({sourceId: source, repoBaseUrl: `http://${ip.address()}:${server.port}`})
     }
 
+    // Sleep before stopping the server because the installSource returns
+    // immediately because the install is queued and processed asynchronously by the app.
+    await sleep(3000)
     server.stop()
   }
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
