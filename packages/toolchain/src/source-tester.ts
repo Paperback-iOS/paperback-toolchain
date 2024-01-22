@@ -10,8 +10,11 @@ import fs from 'node:fs'
 import {expect} from 'chai'
 
 export interface ISourceTester {
-  installSource?(request: SourceInstallRequest): Promise<void>
   testSource(request: SourceTestRequest, callback: (response: SourceTestResponse) => Promise<void>): Promise<void>
+}
+
+export interface ISourceInstaller {
+  installSource(request: SourceInstallRequest): Promise<void>
 }
 
 declare type TestCase = (testCase: string, runner: () => Promise<void>) => Promise<void>
@@ -145,11 +148,11 @@ export class SourceTester implements ISourceTester {
   }
 }
 
-export class OnDeviceSourceTester implements ISourceTester {
+export class OnDeviceSourceTester implements ISourceTester, ISourceInstaller {
   // eslint-disable-next-line no-useless-constructor
   constructor(private grpcClient: PaperbackSourceTesterClient) {}
 
-  async installSources(request: SourceInstallRequest): Promise<void> {
+  async installSource(request: SourceInstallRequest): Promise<void> {
     await new Promise((resolve, reject) => {
       this.grpcClient.installSource(
         request,
