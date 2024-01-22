@@ -1,22 +1,8 @@
-import { PartialSourceManga } from "./../_exports"
-export interface HomeSection {
+import { DiscoverSectionType } from "../../DiscoverSectionType"
+
+export interface DiscoverSection {
 	readonly id: string
 	readonly title: string
-	items: PartialSourceManga[]
-	containsMoreItems: boolean
-}
-declare global {
-	namespace Paperback {
-		function createHomeSection(info: {
-			id: string
-			title: string
-			type: string
-			items?: PartialSourceManga[]
-			containsMoreItems: boolean
-		}): HomeSection
-	}
-
-	namespace Paperback {
-
-	}
+	readonly subtitle?: string
+	readonly type: DiscoverSectionType
 }

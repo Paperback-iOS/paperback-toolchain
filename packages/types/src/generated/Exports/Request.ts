@@ -2,20 +2,7 @@ import { Cookie } from "./../_exports"
 export interface Request {
 	url: string
 	method: string
-	headers: Record<string, string>
-	data?: any
-	param?: string
-	cookies: Cookie[]
-}
-declare global {
-	namespace Paperback {
-		function createRequest(info: {
-			url: string
-			method: string
-			headers?: Record<string, string>
-			param?: string
-			data?: any
-			cookies?: Cookie[]
-		}): Request
-	}
+	headers?: Record<string, string>
+	body?: ArrayBuffer | Object | String
+	cookies?: Cookie[]
 }

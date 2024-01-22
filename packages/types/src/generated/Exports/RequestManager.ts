@@ -2,6 +2,7 @@ import { SourceCookieStore } from "./../_exports"
 import { SourceInterceptor } from "./../_exports"
 import { Request } from "./../_exports"
 import { Response } from "./../_exports"
+
 export interface RequestManager {
 	readonly cookieStore?: SourceCookieStore
 	/*
@@ -16,6 +17,7 @@ export interface RequestManager {
 	 */
 	schedule(request: Request, retry: number): Promise<Response>
 }
+
 declare global {
 	namespace Paperback {
 		function createRequestManager(info: {

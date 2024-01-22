@@ -5,11 +5,11 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-    "turbo-darwin-arm64": "^1.4.5"
-  },
   "devDependencies": {
     "@types/eslint": "^8.4.6",
     "lerna": "^5.5.0"
+  },
+  "dependencies": {
+    "prettier": "^3.2.4"
   }
 }

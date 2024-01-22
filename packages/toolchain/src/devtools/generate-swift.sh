@@ -1,8 +1,8 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-rm -rf generated/swift
-mkdir -p generated/swift
+rm -rf .generated/swift
+mkdir -p .generated/swift
 
 echo "Generating Swift Files"
 npx protoc ./protobuf/*.proto \
@@ -10,7 +10,7 @@ npx protoc ./protobuf/*.proto \
 --plugin=./plugins/protoc-gen-swift \
 --plugin=./plugins/protoc-gen-grpc-swift \
 --swift_opt=Visibility=Public \
---swift_out=./generated/swift \
+--swift_out=./.generated/swift \
 --grpc-swift_opt=Visibility=Public \
---grpc-swift_out=./generated/swift 
+--grpc-swift_out=./.generated/swift 
 echo "DONE"

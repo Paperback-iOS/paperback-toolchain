@@ -1,14 +1,15 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-rm -rf generated/typescript
-mkdir -p generated/typescript
+rm -rf .generated/typescript
+mkdir -p .generated/typescript
 
 echo "Generating TS Files"
+
 npx protoc \
---ts_out ./generated/typescript \
+--ts_out $PWD/.generated/typescript \
 --ts_opt client_grpc1 \
---proto_path ./protobuf protobuf/*.proto
+--proto_path $PWD/protobuf $PWD/protobuf/*.proto
 
 # npx grpc_tools_node_protoc \
 # --js_out=import_style=commonjs,binary:./generated/typescript \

@@ -1,306 +1,235 @@
-import { Flags } from "@oclif/core"
-import { CLICommand } from "../command"
-import * as path from "node:path"
-import * as fs from "fs-extra"
+import {Command, Flags} from '@oclif/core'
+import {Listr, color} from 'listr2'
 
-import * as esbuild from "esbuild"
-import Utils from "../utils"
+import esbuild = require('esbuild')
+// import * as fs from 'node:fs'
+import fs = require('fs-extra')
+import path = require('path')
 
-// Homepage generation requirement
-import pug from "pug"
+export default class Bundle extends Command {
+  static override description = 'Builds all the sources in the repository and generates a versioning file'
 
-export default class Bundle extends CLICommand {
-	static override description =
-		"Builds all the sources in the repository and generates a versioning file"
+  static override flags = {
+    folder: Flags.string({
+      description: 'Subfolder to output to',
+      required: false,
+    }),
+    help: Flags.help({char: 'h'}),
+  }
 
-	static override flags = {
-		help: Flags.help({ char: "h" }),
-		folder: Flags.string({
-			description: "Subfolder to output to",
-			required: false,
-		}),
-	}
+  async bundleExtension(directoryName: string, sourceDirectory: string, destinationDirectory: string): Promise<void> {
+    const directoryContainsExtensionDefinition = fs.existsSync(path.join(sourceDirectory, 'pbconfig.js'))
+    if (!directoryContainsExtensionDefinition) return
 
-	async run() {
-		const { flags } = await this.parse(Bundle)
+    const result = await esbuild.build({
+      bundle: true,
+      entryPoints: [path.join(sourceDirectory, 'main.js')],
+      format: 'iife',
+      globalName: 'source',
+      metafile: true,
+      minify: true,
+      outfile: path.join(destinationDirectory, 'index.js'),
+    })
 
-		this.log(`Working directory: ${process.cwd()}\n`)
+    fs.writeFileSync(path.join(destinationDirectory, 'metafile.json'), JSON.stringify(result.metafile))
+  }
 
-		await this.measure("Execution time", Utils.headingFormat, async () => {
-			await this.bundleSources(flags.folder)
+  async bundleSources(folder = '') {
+    const cwd = process.cwd()
 
-			await this.measure("Versioning File", Utils.headingFormat, async () => {
-				await this.generateVersioningFile(flags.folder)
-			})
+    const srcDir = path.join(cwd, 'src')
+    // const tmpDir = path.join(cwd, 'tmp')
+    const bundlesDirPath = path.join(cwd, 'bundles', folder)
 
-			await this.measure(
-				"Homepage Generation",
-				Utils.headingFormat,
-				async () => {
-					await this.generateHomepage(flags.folder)
-				},
-			)
-		})
-	}
+    return new Listr([
+      {
+        async task() {
+          // await fs.remove(tmpDir)
+          await fs.remove(bundlesDirPath)
 
-	async generateVersioningFile(folder = "") {
-		// joining path of directory
-		const basePath = process.cwd()
-		const directoryPath = path.join(basePath, "bundles", folder)
-		const cliInfo = require("../../package.json")
-		const commonsInfo = require(path.join(
-			basePath,
-			"node_modules/@paperback/types/package.json",
-		))
+          const files = fs
+            .readdirSync(srcDir)
+            .filter(
+              (file) =>
+                fs.existsSync(path.join(srcDir, file, 'pbconfig.ts')) &&
+                fs.existsSync(path.join(srcDir, file, 'main.ts')),
+            )
+            .flatMap((file) => [
+              {
+                in: path.join(srcDir, file, 'main.ts'),
+                out: path.join(file, 'index'),
+              },
+            ])
 
-		const jsonObject = {
-			buildTime: new Date(),
-			sources: [] as any[],
-			builtWith: {
-				toolchain: cliInfo.version,
-				types: commonsInfo.version,
-			},
-		}
+          const result = await esbuild.build({
+            bundle: true,
+            entryPoints: files,
+            format: 'iife',
+            globalName: 'source',
+            jsx: 'transform',
+            jsxFactory: 'Paperback.createFormElement',
+            metafile: true,
+            outdir: bundlesDirPath,
+            // minify: true,
+            // sourcemap: "inline"
+          })
 
-		for (const file of fs.readdirSync(directoryPath)) {
-			const infoJsonPath = path.join(directoryPath, file, "info.json")
-			const directoryContainsExtensionDefinition = fs.existsSync(infoJsonPath)
-			if (!directoryContainsExtensionDefinition) continue
+          fs.writeFileSync(path.join(bundlesDirPath, 'metafile.json'), JSON.stringify(result.metafile))
+        },
+        title: 'Transpiling Project',
+      },
+      {
+        task: () =>
+          new Listr(
+            fs
+              .readdirSync(bundlesDirPath)
+              .filter((file) => fs.existsSync(path.join(bundlesDirPath, file, 'index.js')))
+              .map((file) => {
+                const sourceDir = path.join(srcDir, file)
+                const bundleDestinationDir = path.join(bundlesDirPath, file)
 
-			jsonObject.sources.push(require(infoJsonPath))
-		}
+                return {
+                  task: async () => {
+                    await fs.copy(path.join(srcDir, file, 'static'), path.join(bundleDestinationDir, 'static'))
 
-		// Write the JSON payload to file
-		fs.writeFileSync(
-			path.join(directoryPath, "versioning.json"),
-			JSON.stringify(jsonObject),
-		)
-	}
+                    // await this.bundleExtension(file, sourceDir, bundleDestinationDir)
+                    await this.generateSourceInfo(file, sourceDir, bundleDestinationDir)
+                  },
+                  title: file,
+                }
+              }),
+            {concurrent: true},
+          ),
+        title: 'Bundling Extensions',
+      },
+      {
+        task() {
+          // fs.remove(path.join(cwd, 'tmp'))
+        },
+        title: 'Cleaning up',
+      },
+    ])
+  }
 
-	async generateSourceInfo(
-		sourceId: string,
-		sourceDirectory: string,
-		directoryPath: string,
-	) {
-		const directoryContainsExtensionDefinition = fs.existsSync(
-			path.join(sourceDirectory, "pbconfig.js"),
-		)
-		if (!directoryContainsExtensionDefinition) return
+  async generateHomepage(folder = '') {
+    const indexPath = path.join(__dirname, '../homepage/index.html')
 
-		const configPath = path.join(sourceDirectory, "pbconfig.js")
+    const basePath = process.cwd()
+    const directoryPath = path.join(basePath, 'bundles', folder, 'index.html')
+    fs.copyFile(indexPath, directoryPath)
+  }
 
-		const configBundle = esbuild.buildSync({
-			format: "cjs",
-			write: false,
-			bundle: true,
-			entryPoints: [configPath],
-		})
+  async generateSourceInfo(sourceId: string, sourceDirectory: string, directoryPath: string) {
+    const directoryContainsExtensionDefinition = fs.existsSync(path.join(sourceDirectory, 'pbconfig.ts'))
+    if (!directoryContainsExtensionDefinition) return
 
-		if (configBundle.errors.length > 0) {
-			for (const error of configBundle.errors) {
-				this.log(`[ERROR] ${error.text}`)
-			}
+    const configPath = path.join(sourceDirectory, 'pbconfig.ts')
 
-			return
-		}
+    const configBundle = esbuild.buildSync({
+      bundle: true,
+      entryPoints: [configPath],
+      format: 'cjs',
+      write: false,
+    })
 
-		// eslint-disable-next-line no-eval
-		const config = eval(configBundle.outputFiles[0].text).default
+    if (configBundle.errors.length > 0) {
+      for (const error of configBundle.errors) {
+        this.log(`[ERROR] ${error.text}`)
+      }
 
-		// Write the JSON payload to file
-		fs.writeFileSync(
-			path.join(directoryPath, "info.json"),
-			JSON.stringify(config),
-		)
-	}
+      return
+    }
 
-	async bundleSources(folder = "") {
-		const cwd = process.cwd()
+    // eslint-disable-next-line no-eval
+    const config = eval(configBundle.outputFiles[0].text).default
+    
+    // Write the JSON payload to file
+    fs.writeFileSync(path.join(directoryPath, 'info.json'), JSON.stringify(config))
+  }
 
-		const srcDir = path.join(cwd, "src")
-		const tmpDir = path.join(cwd, "tmp")
-		const bundlesDirPath = path.join(cwd, "bundles", folder)
+  async generateVersioningFile(folder = '') {
+    // joining path of directory
+    const basePath = process.cwd()
+    const directoryPath = path.join(basePath, 'bundles', folder)
+    const cliInfo = require('../../package.json')
+    const commonsInfo = require(path.join(basePath, 'node_modules/@paperback/types/package.json'))
+    const projectInfo = require(path.join(basePath, 'package.json'))
 
-		await this.measure("Transpiling Project", Utils.headingFormat, async () => {
-			await fs.remove(tmpDir)
+    const jsonObject = {
+      buildTime: new Date(),
+      builtWith: {
+        toolchain: cliInfo.version,
+        types: commonsInfo.version,
+      },
+      repository: {
+        description: projectInfo.paperback?.repositoryDescription ?? 'An extension repository for Paperback',
+        name: projectInfo.paperback?.repositoryName ?? 'Paperback Extension Repository',
+      },
+      sources: [] as any[],
+    }
 
-			const files = Utils.filesInPath(srcDir, (_, filename) =>
-				/(\.ts|\.js)x?/gi.test(filename),
-			).map((file) => {
-				return {
-					out: path.join(
-						".",
-						file.slice(srcDir.length).replace(/(\.ts|\.js)x?$/gi, ""),
-					),
-					in: file,
-				}
-			})
+    for (const file of fs.readdirSync(directoryPath)) {
+      const infoJsonPath = path.join(directoryPath, file, 'info.json')
+      const directoryContainsExtensionDefinition = fs.existsSync(infoJsonPath)
+      if (!directoryContainsExtensionDefinition) continue
 
-			await esbuild.build({
-				jsx: "transform",
-				jsxFactory: "Paperback.createFormElement",
-				entryPoints: files,
-				bundle: false,
-				outdir: tmpDir,
-			})
-		})
+      jsonObject.sources.push(require(infoJsonPath))
+    }
 
-		await this.measure("Bundle time", Utils.headingFormat, async () => {
-			Utils.deleteFolderRecursive(bundlesDirPath)
-			fs.mkdirSync(bundlesDirPath, { recursive: true })
+    // Write the JSON payload to file
+    fs.writeFileSync(path.join(directoryPath, 'versioning.json'), JSON.stringify(jsonObject))
+  }
 
-			const promises: Promise<void>[] = fs
-				.readdirSync(tmpDir)
-				.map(async (file) => {
-					const sourceDir = path.join(tmpDir, file)
-					const bundleDestinationDir = path.join(bundlesDirPath, file)
+  async run() {
+    const {flags} = await this.parse(Bundle)
 
-					await this.measure(`- Building ${file}`, undefined, async () => {
-						await fs.copy(
-							path.join(srcDir, file, "static"),
-							path.join(bundleDestinationDir, "static"),
-						)
+    this.log(`Working directory: ${process.cwd()}\n`)
 
-						await this.bundleExtension(file, sourceDir, bundleDestinationDir)
-						await this.generateSourceInfo(file, sourceDir, bundleDestinationDir)
-					})
-				})
-
-			await Promise.all(promises)
-		})
-
-		// Remove the build folder
-		Utils.deleteFolderRecursive(path.join(cwd, "tmp"))
-	}
-
-	async bundleExtension(
-		directoryName: string,
-		sourceDirectory: string,
-		destinationDirectory: string,
-	): Promise<void> {
-		const directoryContainsExtensionDefinition = fs.existsSync(
-			path.join(sourceDirectory, "pbconfig.js"),
-		)
-		if (!directoryContainsExtensionDefinition) return
-
-		await esbuild.build({
-			entryPoints: [path.join(sourceDirectory, "main.js")],
-			outfile: path.join(destinationDirectory, "index.js"),
-			bundle: true,
-			globalName: "source",
-			format: "iife",
-		})
-	}
-
-	async generateHomepage(folder = "") {
-		/*
-		 * Generate a homepage for the repository based on the package.json file and the generated versioning.json
-		 *
-		 * Following fields must be registered in package.json:
-		 * {
-		 *    repositoryName: "The repository name"
-		 *    description: "The repository description"
-		 * }
-		 * The following fields can be used:
-		 * {
-		 *    noAddToPaperbackButton: A boolean used to not generate the AddToPaperback button
-		 *    repositoryLogo: "Custom logo path or URL"
-		 *    baseURL: "Custom base URL for the repository"
-		 * }
-		 * The default baseURL will be deducted form GITHUB_REPOSITORY environment variable.
-		 *
-		 * See website-generation/homepage.pug file for more information on the generated homepage
-		 */
-
-		// joining path of directory
-		const basePath = process.cwd()
-		const directoryPath = path.join(basePath, "bundles", folder)
-		const packageFilePath = path.join(basePath, "package.json")
-		// homepage.pug file is added to the package during the prepack process
-		const pugFilePath = path.join(
-			__dirname,
-			"../website-generation/homepage.pug",
-		)
-		const versioningFilePath = path.join(directoryPath, "versioning.json")
-
-		// The homepage should only be generated if a package.json file exist at the root of the repo
-		if (fs.existsSync(packageFilePath)) {
-			this.log("- Generating the repository homepage")
-
-			// We need data from package.json and versioning.json created previously
-			const packageData = JSON.parse(fs.readFileSync(packageFilePath, "utf8"))
-			const extensionsData = JSON.parse(
-				fs.readFileSync(versioningFilePath, "utf8"),
-			)
-
-			// Creation of the list of available extensions
-			// [{name: sourceName, tags[]: []}]
-			const extensionList = extensionsData.sources.map((extension: any) => ({
-				name: extension.name,
-				badges: extension.badges,
-			}))
-
-			// To be used by homepage.pug file, repositoryData must by of the format:
-			/*
+    const tasks = new Listr(
+      [
         {
-          repositoryName: "",
-          repositoryDescription: "",
-          baseURL: "https://yourlinkhere",
-          sources: [{name: sourceName, tags[]: []}]
+          task: () => this.bundleSources(flags.folder),
+          title: 'Bundle Sources',
+        },
+        {
+          task: () => this.generateVersioningFile(flags.folder),
+          title: 'Generate Versioning File',
+        },
+        {
+          task: () => this.generateHomepage(flags.folder),
+          title: 'Generate Homepage',
+        },
+      ],
+      {
+        rendererOptions: {
+          collapseSubtasks: false,
+          timer: {
+            condition: true,
+            field(duration) {
+              const seconds = Math.floor(duration / 1e3)
+              const minutes = Math.floor(seconds / 60)
+              let parsedTime
+              if (seconds === 0 && minutes === 0) {
+                parsedTime = `${Math.floor(duration)}ms`
+              }
 
-          repositoryLogo: "url",
-          noAddToPaperbackButton: true,
-        }
-      */
-			const repositoryData: { [id: string]: unknown } = {}
+              if (seconds > 0) {
+                parsedTime = `${seconds % 60}s`
+              }
 
-			repositoryData.repositoryName = packageData.repositoryName
-			repositoryData.repositoryDescription = packageData.description
-			repositoryData.sources = extensionList
+              if (minutes > 0) {
+                parsedTime = `${minutes}m${parsedTime}`
+              }
 
-			// The repository can register a custom base URL. If not, this file will try to deduct one from GITHUB_REPOSITORY
-			if (packageData.baseURL === undefined) {
-				const githubRepoEnvVar = process.env.GITHUB_REPOSITORY
-				if (githubRepoEnvVar === undefined) {
-					// If it's not possible to determine the baseURL, using noAddToPaperbackButton will mask the field from the homepage
-					// The repository can force noAddToPaperbackButton to false by adding the field to package.json
-					this.log(
-						"Both GITHUB_REPOSITORY and baseURL are not defined, setting noAddToPaperbackButton to true",
-					)
-					repositoryData.baseURL = "undefined"
-					repositoryData.noAddToPaperbackButton = true
-				} else {
-					const split = githubRepoEnvVar.toLowerCase().split("/")
-					// The capitalization of folder is important, using folder.toLowerCase() make a non working link
-					this.log(
-						`Using base URL deducted from GITHUB_REPOSITORY environment variable: https://${
-							split[0]
-						}.github.io/${split[1]}${folder === "" ? "" : `/${folder}`}`,
-					)
-					repositoryData.baseURL = `https://${split[0]}.github.io/${split[1]}${
-						folder === "" ? "" : `/${folder}`
-					}`
-				}
-			} else {
-				this.log(`Using custom baseURL: ${packageData.baseURL}`)
-				repositoryData.baseURL = packageData.baseURL
-			}
+              return parsedTime ?? '0.0s'
+            },
+            // @ts-expect-error type shenanigans
+            format: () => color.dim,
+          },
+        },
+      },
+    )
 
-			if (packageData.noAddToPaperbackButton !== undefined) {
-				this.log("Using noAddToPaperbackButton parameter")
-				repositoryData.noAddToPaperbackButton =
-					packageData.noAddToPaperbackButton
-			}
-
-			if (packageData.repositoryLogo !== undefined) {
-				this.log("Using repositoryLogo parameter")
-				repositoryData.repositoryLogo = packageData.repositoryLogo
-			}
-
-			// Compilation of the pug file which is available in website-generation folder
-			const htmlCode = pug.compileFile(pugFilePath)(repositoryData)
-
-			fs.writeFileSync(path.join(directoryPath, "index.html"), htmlCode)
-		}
-	}
+    await tasks.run()
+  }
 }

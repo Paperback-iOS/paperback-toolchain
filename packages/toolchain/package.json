@@ -1,90 +1,80 @@
 {
-  "name": "@paperback/toolchain",
-  "version": "0.8.0-alpha.47",
-  "description": "The CLI and Build Tools for Paperback sources",
   "author": "Faizan Durrani @FaizanDurrani",
   "bin": {
-    "paperback": "./bin/run"
-  },
-  "homepage": "https://github.com/Paperback-iOS/toolchain",
-  "license": "GPL-3.0-Only",
-  "main": "dist/index.js",
-  "repository": "Paperback-iOS/toolchain",
-  "files": [
-    "/bin",
-    "/dist",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json"
-  ],
-  "overrides": {
-    "@types/cacheable-request": "^6.0.2",
-    "@types/responselike": "^1.0.0"
+    "paperback-cli": "./bin/run.js"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.8.14",
-    "@oclif/core": "^1.16.1",
-    "@oclif/plugin-help": "^5.1.12",
-    "@oclif/plugin-plugins": "^2.1.0",
+    "@oclif/core": "^3",
+    "@oclif/plugin-help": "^6",
+    "@oclif/plugin-plugins": "^4",
     "@paperback/runtime-polyfills": "*",
     "@paperback/types": "*",
     "@protobuf-ts/runtime-rpc": "^2.8.3",
-    "@types/pug": "^2.0.6",
-    "browserify": "^17.0.0",
-    "chai": "^4.3.7",
-    "chalk": "^4.1.2",
-    "cheerio": "^1.0.0-rc.12",
-    "esbuild": "^0.19.0",
-    "fs-extra": "^11.1.1",
-    "ip": "^2.0.0",
-    "pug": "^3.0.2",
-    "shelljs": "^0.8.5"
+    "esbuild": "^0.19.11",
+    "fs-extra": "^11.2.0",
+    "listr2": "^8.0.1"
   },
+  "description": "The Paperback extension development toolchain",
   "devDependencies": {
-    "@oclif/test": "^2",
+    "@oclif/prettier-config": "^0.2.1",
+    "@oclif/test": "^3",
     "@protobuf-ts/plugin": "^2.8.3",
     "@protobuf-ts/protoc": "^2.8.3",
-    "@types/browserify": "^12.0.37",
-    "@types/chai": "^4.3.4",
-    "@types/fs-extra": "^11.0.1",
-    "@types/google-protobuf": "^3.15.6",
-    "@types/ip": "^1.1.0",
-    "@types/node": "^16.9.4",
-    "@types/shelljs": "^0.8.11",
-    "@types/update-notifier": "^6.0.1",
-    "globby": "^11",
+    "@types/chai": "^4",
+    "@types/listr": "^0.14.9",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^18",
+    "chai": "^4",
+    "eslint": "^8.56.0",
+    "eslint-config-oclif": "^5",
+    "eslint-config-oclif-typescript": "^3",
+    "eslint-config-prettier": "^9.1.0",
     "grpc-tools": "^1.11.2",
-    "oclif": "^3",
+    "mocha": "^10",
+    "oclif": "^4",
+    "prettier": "^3.2.4",
     "shx": "^0.3.3",
-    "ts-node": "^10.2.1",
-    "tslib": "^2.3.1",
-    "typescript": "~4.7.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "/bin",
+    "/dist",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/FaizanDurrani/paperback-toolchain",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "name": "toolchain",
   "oclif": {
-    "bin": "paperback",
-    "dirname": "paperback",
+    "bin": "paperback-cli",
+    "dirname": "paperback-cli",
     "commands": "./dist/commands",
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-plugins"
-    ]
+    ],
+    "topicSeparator": " "
   },
+  "repository": "FaizanDurrani/paperback-toolchain",
   "scripts": {
-    "fix": "npx rome format ./src --write && npx rome check ./src --apply",
-    "build": "shx rm -rf dist && ./src/devtools/generate-ts.sh && tsc -b",
-    "lint": "npx rome check ./src",
+    "build": "shx rm -rf dist && tsc -b && cp -r src/homepage dist/",
+    "lint": "eslint . --ext .ts",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "npm run lint",
-    "prepack": "npm run build && oclif manifest && oclif readme && node ./bin/prepack-script",
+    "prepack": "npm run build && oclif manifest && oclif readme",
+    "prepare": "npm run build",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md"
   },
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "bugs": "https://github.com/Paperback-iOS/toolchain/issues",
+  "version": "0.0.0",
+  "bugs": "https://github.com/FaizanDurrani/paperback-toolchain/issues",
   "keywords": [
     "oclif"
   ],
-  "types": "dist/index.d.ts",
-  "gitHead": "f107f9f2ad6b728ab417e024ddf75765ca05c85c"
+  "types": "dist/index.d.ts"
 }

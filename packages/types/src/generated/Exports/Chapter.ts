@@ -1,24 +1,14 @@
+import { SourceManga } from "./SourceManga"
+
 export interface Chapter {
-	id: string
-	chapNum: number
+	chapterId: string
+	sourceManga: SourceManga
 	langCode: string
-	name: string
-	volume: number
-	group: string
-	time: Date
-	sortingIndex: number
-}
-declare global {
-	namespace Paperback {
-		function createChapter(info: {
-			id: string
-			chapNum: number
-			volume?: number
-			name?: string
-			group?: string
-			time?: Date
-			langCode?: string
-			sortingIndex?: number
-		}): Chapter
-	}
+	chapNum: number
+	title?: string
+	volume?: number
+	subtitle?: string
+	publishDate?: Date
+	sortingIndex?: number
+	metadata?: unknown
 }

@@ -29,7 +29,3 @@ class MockSourceStateManager implements SourceStateManager {
 		return this.objectStore[key]
 	}
 }
-
-PaperbackPolyfills.createSourceStateManager = function (): SourceStateManager {
-	return new MockSourceStateManager()
-}

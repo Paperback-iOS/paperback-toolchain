@@ -53,6 +53,6 @@ PaperbackPolyfills.Selector = function(obj, symbol) {
 		}
 	})(obj, symbol as string)
 
-	Paperback.SelectorRegistry.registerSelector(canonicalId, obj, symbol as any)
+	Application.SelectorRegistry.registerSelector(canonicalId, obj, symbol as any)
 	return canonicalId
 }

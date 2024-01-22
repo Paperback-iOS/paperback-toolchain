@@ -1,7 +1,6 @@
 import { SourceManga } from "../.."
-import { RequestManagerProviding } from "./RequestManagerProviding"
 
-export interface MangaProviding extends RequestManagerProviding {
+export interface MangaProviding {
 	/**
 	 * Given a mangaID, this function should use a {@link Request} object's {@link Request.perform} method
 	 * to grab and populate a {@link MangaInfo} object

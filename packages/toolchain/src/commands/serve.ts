@@ -1,13 +1,10 @@
-import { Flags, CliUx } from "@oclif/core"
-import { CLICommand } from "../command"
-import Bundle from "./bundle"
+import { Command, Flags, ux } from "@oclif/core"
+import * as chalk from "chalk"
+
 import Server from "../server"
-import Utils from "../utils"
-import chalk from "chalk"
+import Bundle from "./bundle"
 
-const cli = CliUx.ux
-
-export default class Serve extends CLICommand {
+export default class Serve extends Command {
 	static override description = "Build the sources and start a local server"
 
 	static override flags = {
@@ -18,7 +15,7 @@ export default class Serve extends CLICommand {
 	async run() {
 		const { flags } = await this.parse(Serve)
 
-		// eslint-disable-next-line no-console
+		 
 		console.clear()
 
 		this.log(chalk.underline.blue("Building Sources"))
@@ -37,12 +34,7 @@ export default class Serve extends CLICommand {
 		let stopServer = false
 		while (!stopServer) {
 			// eslint-disable-next-line no-await-in-loop
-			const input =
-				(
-					(await cli.prompt(Utils.prefixTime(""), {
-						required: false,
-					})) as string
-				)?.trim() ?? ""
+			const input = (await ux.prompt(this.prefixTime(""))).trim()
 
 			if (input === "h" || input === "help") {
 				this.log(chalk.underline.bold("Help"))
@@ -58,7 +50,7 @@ export default class Serve extends CLICommand {
 			if (input === "r" || input === "restart") {
 				server.stop()
 
-				// eslint-disable-next-line no-console
+				 
 				console.clear()
 
 				this.log(chalk.underline.blue("Building Sources"))
@@ -77,5 +69,20 @@ export default class Serve extends CLICommand {
 
 		// eslint-disable-next-line no-process-exit, unicorn/no-process-exit
 		process.exit(0)
+	}
+
+	private prefixTime(message = "") {
+		function fixedWidth(number: number, width: number) {
+			return (Array.from({ length: width }).join("0") + number).slice(-width)
+		}
+
+		const date = new Date()
+
+		const hours = fixedWidth(date.getHours(), 2)
+		const minutes = fixedWidth(date.getMinutes(), 2)
+		const seconds = fixedWidth(date.getSeconds(), 2)
+		const milliseconds = fixedWidth(date.getMilliseconds(), 4)
+		const time = `${hours}:${minutes}:${seconds}:${milliseconds}`
+		return chalk`[{gray ${time}}] ${message}`
 	}
 }

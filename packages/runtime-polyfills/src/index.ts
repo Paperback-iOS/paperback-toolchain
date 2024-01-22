@@ -1,10 +1,9 @@
 import { PaperbackPolyfills } from "./PaperbackPolyfills"
-import './RawData'
 import './RequestManager'
 import './SourceStateManager'
 
 // @ts-ignore
-globalThis.Paperback = new Proxy(PaperbackPolyfills, {
+globalThis.Application = new Proxy(PaperbackPolyfills, {
 	get(target, p) {
 		// @ts-ignore
 		if(target[p]) {

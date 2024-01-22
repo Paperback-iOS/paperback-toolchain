@@ -1,14 +1,13 @@
-import * as http from "node:http"
-import * as fs from "node:fs"
-import * as path from "node:path"
+import * as chalk from "chalk"
 import * as ip from "ip"
-import Utils from "./utils"
-import chalk from "chalk"
+import * as fs from "node:fs"
+import * as http from "node:http"
+import * as path from "node:path"
 
 export default class Server {
-	server?: http.Server
-
 	port: number
+
+	server?: http.Server
 
 	constructor(port: number) {
 		this.port = port
@@ -16,13 +15,12 @@ export default class Server {
 
 	start() {
 		if (this.server) {
-			Utils.error("Server already running")
-			return
+			throw new Error("Server already running")
 		}
 
 		this.server = http
-			.createServer(function (request, response) {
-				Utils.log(`Request ${request.url}`)
+			.createServer((request, response) => {
+				console.log(`Request ${request.url}`)
 
 				let filePath = "./bundles" + request.url
 				if (filePath === "./") {
@@ -31,26 +29,26 @@ export default class Server {
 
 				const extname = String(path.extname(filePath)).toLowerCase()
 				const mimeTypes: any = {
-					".html": "text/html",
-					".js": "text/javascript",
 					".css": "text/css",
-					".json": "application/json",
-					".png": "image/png",
-					".jpg": "image/jpg",
-					".gif": "image/gif",
-					".svg": "image/svg+xml",
-					".wav": "audio/wav",
-					".mp4": "video/mp4",
-					".woff": "application/font-woff",
-					".ttf": "application/font-ttf",
 					".eot": "application/vnd.ms-fontobject",
+					".gif": "image/gif",
+					".html": "text/html",
+					".jpg": "image/jpg",
+					".js": "text/javascript",
+					".json": "application/json",
+					".mp4": "video/mp4",
 					".otf": "application/font-otf",
+					".png": "image/png",
+					".svg": "image/svg+xml",
+					".ttf": "application/font-ttf",
 					".wasm": "application/wasm",
+					".wav": "audio/wav",
+					".woff": "application/font-woff",
 				}
 
 				const contentType = mimeTypes[extname] || "application/octet-stream"
 
-				fs.readFile(filePath, function (error, content) {
+				fs.readFile(filePath, (error, content) => {
 					if (error) {
 						if (error.code === "ENOENT") {
 							response.writeHead(404)
@@ -71,12 +69,12 @@ export default class Server {
 			})
 			.listen(this.port)
 
-		Utils.log(
+		console.log(
 			`Server running at ${chalk.green(
 				`http://127.0.0.1:${this.port}/versioning.json`,
 			)}`,
 		)
-		Utils.log(
+		console.log(
 			`Server running at ${chalk.green(
 				`http://${ip.address()}:${this.port}/versioning.json`,
 			)}`,
@@ -85,8 +83,7 @@ export default class Server {
 
 	stop() {
 		if (this.server === undefined) {
-			Utils.error("Server not running")
-			return
+			throw new Error("Server not running")
 		}
 
 		this.server?.close()

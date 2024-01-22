@@ -4,10 +4,8 @@ oclif-hello-world
 oclif example Hello World CLI
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
 [![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
-[![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
-[![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/oclif/hello-world/blob/main/package.json)
+[![GitHub license](https://img.shields.io/github/license/oclif/hello-world)](https://github.com/oclif/hello-world/blob/main/LICENSE)
 
 <!-- toc -->
 * [Usage](#usage)
@@ -16,60 +14,82 @@ oclif example Hello World CLI
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g @paperback/toolchain
-$ paperback COMMAND
+$ npm install -g toolchain
+$ paperback-cli COMMAND
 running command...
-$ paperback (--version)
-@paperback/toolchain/0.8.0-alpha.47 darwin-arm64 node-v16.13.0
-$ paperback --help [COMMAND]
+$ paperback-cli (--version)
+toolchain/0.0.0 darwin-arm64 node-v18.18.2
+$ paperback-cli --help [COMMAND]
 USAGE
-  $ paperback COMMAND
+  $ paperback-cli COMMAND
 ...
 ```
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`paperback bundle`](#paperback-bundle)
-* [`paperback help [COMMANDS]`](#paperback-help-commands)
-* [`paperback logcat`](#paperback-logcat)
-* [`paperback migrate`](#paperback-migrate)
-* [`paperback plugins`](#paperback-plugins)
-* [`paperback plugins:install PLUGIN...`](#paperback-pluginsinstall-plugin)
-* [`paperback plugins:inspect PLUGIN...`](#paperback-pluginsinspect-plugin)
-* [`paperback plugins:install PLUGIN...`](#paperback-pluginsinstall-plugin-1)
-* [`paperback plugins:link PLUGIN`](#paperback-pluginslink-plugin)
-* [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin)
-* [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-1)
-* [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-2)
-* [`paperback plugins update`](#paperback-plugins-update)
-* [`paperback serve`](#paperback-serve)
-* [`paperback test [SOURCE]`](#paperback-test-source)
+* [`paperback-cli hello PERSON`](#paperback-cli-hello-person)
+* [`paperback-cli hello world`](#paperback-cli-hello-world)
+* [`paperback-cli help [COMMANDS]`](#paperback-cli-help-commands)
+* [`paperback-cli plugins`](#paperback-cli-plugins)
+* [`paperback-cli plugins:install PLUGIN...`](#paperback-cli-pluginsinstall-plugin)
+* [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
+* [`paperback-cli plugins:install PLUGIN...`](#paperback-cli-pluginsinstall-plugin-1)
+* [`paperback-cli plugins:link PLUGIN`](#paperback-cli-pluginslink-plugin)
+* [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin)
+* [`paperback-cli plugins reset`](#paperback-cli-plugins-reset)
+* [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin-1)
+* [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin-2)
+* [`paperback-cli plugins update`](#paperback-cli-plugins-update)
 
-## `paperback bundle`
+## `paperback-cli hello PERSON`
 
-Builds all the sources in the repository and generates a versioning file
+Say hello
 
 ```
 USAGE
-  $ paperback bundle [-h] [--folder <value>]
+  $ paperback-cli hello PERSON -f <value>
+
+ARGUMENTS
+  PERSON  Person to say hello to
 
 FLAGS
-  -h, --help        Show CLI help.
-  --folder=<value>  Subfolder to output to
+  -f, --from=<value>  (required) Who is saying hello
 
 DESCRIPTION
-  Builds all the sources in the repository and generates a versioning file
+  Say hello
+
+EXAMPLES
+  $ oex hello friend --from oclif
+  hello friend from oclif! (./src/commands/hello/index.ts)
 ```
 
-_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/bundle.ts)_
+_See code: [src/commands/hello/index.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v0.0.0/src/commands/hello/index.ts)_
 
-## `paperback help [COMMANDS]`
+## `paperback-cli hello world`
 
-Display help for paperback.
+Say hello world
 
 ```
 USAGE
-  $ paperback help [COMMANDS] [-n]
+  $ paperback-cli hello world
+
+DESCRIPTION
+  Say hello world
+
+EXAMPLES
+  $ paperback-cli hello world
+  hello world! (./src/commands/hello/world.ts)
+```
+
+_See code: [src/commands/hello/world.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v0.0.0/src/commands/hello/world.ts)_
+
+## `paperback-cli help [COMMANDS]`
+
+Display help for paperback-cli.
+
+```
+USAGE
+  $ paperback-cli help [COMMANDS] [-n]
 
 ARGUMENTS
   COMMANDS  Command to show help for.
@@ -78,73 +98,41 @@ FLAGS
   -n, --nested-commands  Include all nested commands in the output.
 
 DESCRIPTION
-  Display help for paperback.
+  Display help for paperback-cli.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.9/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.0.12/src/commands/help.ts)_
 
-## `paperback logcat`
-
-describe the command here
-
-```
-USAGE
-  $ paperback logcat [--ip <value>] [--port <value>]
-
-FLAGS
-  --ip=<value>    [default: localhost]
-  --port=<value>  [default: 27015]
-
-DESCRIPTION
-  describe the command here
-```
-
-_See code: [dist/commands/logcat.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/logcat.ts)_
-
-## `paperback migrate`
-
-Migrate 0.7 sources to 0.8
-
-```
-USAGE
-  $ paperback migrate
-
-DESCRIPTION
-  Migrate 0.7 sources to 0.8
-
-EXAMPLES
-  $ paperback migrate
-```
-
-_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/migrate.ts)_
-
-## `paperback plugins`
+## `paperback-cli plugins`
 
 List installed plugins.
 
 ```
 USAGE
-  $ paperback plugins [--core]
+  $ paperback-cli plugins [--json] [--core]
 
 FLAGS
   --core  Show core plugins.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   List installed plugins.
 
 EXAMPLES
-  $ paperback plugins
+  $ paperback-cli plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.4.6/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/index.ts)_
 
-## `paperback plugins:install PLUGIN...`
+## `paperback-cli plugins:install PLUGIN...`
 
 Installs a plugin into the CLI.
 
 ```
 USAGE
-  $ paperback plugins:install PLUGIN...
+  $ paperback-cli plugins add plugins:install PLUGIN...
 
 ARGUMENTS
   PLUGIN  Plugin to install.
@@ -152,7 +140,11 @@ ARGUMENTS
 FLAGS
   -f, --force    Run yarn install with force flag.
   -h, --help     Show CLI help.
-  -v, --verbose
+  -s, --silent   Silences yarn output.
+  -v, --verbose  Show verbose yarn output.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Installs a plugin into the CLI.
@@ -166,23 +158,23 @@ DESCRIPTION
 
 
 ALIASES
-  $ paperback plugins add
+  $ paperback-cli plugins add
 
 EXAMPLES
-  $ paperback plugins:install myplugin 
+  $ paperback-cli plugins add myplugin 
 
-  $ paperback plugins:install https://github.com/someuser/someplugin
+  $ paperback-cli plugins add https://github.com/someuser/someplugin
 
-  $ paperback plugins:install someuser/someplugin
+  $ paperback-cli plugins add someuser/someplugin
 ```
 
-## `paperback plugins:inspect PLUGIN...`
+## `paperback-cli plugins:inspect PLUGIN...`
 
 Displays installation properties of a plugin.
 
 ```
 USAGE
-  $ paperback plugins:inspect PLUGIN...
+  $ paperback-cli plugins inspect PLUGIN...
 
 ARGUMENTS
   PLUGIN  [default: .] Plugin to inspect.
@@ -198,16 +190,18 @@ DESCRIPTION
   Displays installation properties of a plugin.
 
 EXAMPLES
-  $ paperback plugins:inspect myplugin
+  $ paperback-cli plugins inspect myplugin
 ```
 
-## `paperback plugins:install PLUGIN...`
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/inspect.ts)_
+
+## `paperback-cli plugins:install PLUGIN...`
 
 Installs a plugin into the CLI.
 
 ```
 USAGE
-  $ paperback plugins:install PLUGIN...
+  $ paperback-cli plugins install PLUGIN...
 
 ARGUMENTS
   PLUGIN  Plugin to install.
@@ -215,7 +209,11 @@ ARGUMENTS
 FLAGS
   -f, --force    Run yarn install with force flag.
   -h, --help     Show CLI help.
-  -v, --verbose
+  -s, --silent   Silences yarn output.
+  -v, --verbose  Show verbose yarn output.
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
   Installs a plugin into the CLI.
@@ -229,30 +227,33 @@ DESCRIPTION
 
 
 ALIASES
-  $ paperback plugins add
+  $ paperback-cli plugins add
 
 EXAMPLES
-  $ paperback plugins:install myplugin 
+  $ paperback-cli plugins install myplugin 
 
-  $ paperback plugins:install https://github.com/someuser/someplugin
+  $ paperback-cli plugins install https://github.com/someuser/someplugin
 
-  $ paperback plugins:install someuser/someplugin
+  $ paperback-cli plugins install someuser/someplugin
 ```
 
-## `paperback plugins:link PLUGIN`
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/install.ts)_
+
+## `paperback-cli plugins:link PLUGIN`
 
 Links a plugin into the CLI for development.
 
 ```
 USAGE
-  $ paperback plugins:link PLUGIN
+  $ paperback-cli plugins link PLUGIN
 
 ARGUMENTS
   PATH  [default: .] path to plugin
 
 FLAGS
-  -h, --help     Show CLI help.
+  -h, --help          Show CLI help.
   -v, --verbose
+      --[no-]install  Install dependencies after linking the plugin.
 
 DESCRIPTION
   Links a plugin into the CLI for development.
@@ -263,16 +264,18 @@ DESCRIPTION
 
 
 EXAMPLES
-  $ paperback plugins:link myplugin
+  $ paperback-cli plugins link myplugin
 ```
 
-## `paperback plugins:uninstall PLUGIN...`
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/link.ts)_
+
+## `paperback-cli plugins:uninstall PLUGIN...`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ paperback plugins:uninstall PLUGIN...
+  $ paperback-cli plugins remove plugins:uninstall PLUGIN...
 
 ARGUMENTS
   PLUGIN  plugin to uninstall
@@ -285,17 +288,31 @@ DESCRIPTION
   Removes a plugin from the CLI.
 
 ALIASES
-  $ paperback plugins unlink
-  $ paperback plugins remove
+  $ paperback-cli plugins unlink
+  $ paperback-cli plugins remove
+
+EXAMPLES
+  $ paperback-cli plugins remove myplugin
 ```
 
-## `paperback plugins:uninstall PLUGIN...`
+## `paperback-cli plugins reset`
+
+Remove all user-installed and linked plugins.
+
+```
+USAGE
+  $ paperback-cli plugins reset
+```
+
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/reset.ts)_
+
+## `paperback-cli plugins:uninstall PLUGIN...`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ paperback plugins:uninstall PLUGIN...
+  $ paperback-cli plugins uninstall PLUGIN...
 
 ARGUMENTS
   PLUGIN  plugin to uninstall
@@ -308,17 +325,22 @@ DESCRIPTION
   Removes a plugin from the CLI.
 
 ALIASES
-  $ paperback plugins unlink
-  $ paperback plugins remove
+  $ paperback-cli plugins unlink
+  $ paperback-cli plugins remove
+
+EXAMPLES
+  $ paperback-cli plugins uninstall myplugin
 ```
 
-## `paperback plugins:uninstall PLUGIN...`
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/uninstall.ts)_
+
+## `paperback-cli plugins:uninstall PLUGIN...`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ paperback plugins:uninstall PLUGIN...
+  $ paperback-cli plugins unlink plugins:uninstall PLUGIN...
 
 ARGUMENTS
   PLUGIN  plugin to uninstall
@@ -331,17 +353,20 @@ DESCRIPTION
   Removes a plugin from the CLI.
 
 ALIASES
-  $ paperback plugins unlink
-  $ paperback plugins remove
+  $ paperback-cli plugins unlink
+  $ paperback-cli plugins remove
+
+EXAMPLES
+  $ paperback-cli plugins unlink myplugin
 ```
 
-## `paperback plugins update`
+## `paperback-cli plugins update`
 
 Update installed plugins.
 
 ```
 USAGE
-  $ paperback plugins update [-h] [-v]
+  $ paperback-cli plugins update [-h] [-v]
 
 FLAGS
   -h, --help     Show CLI help.
@@ -351,42 +376,5 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-## `paperback serve`
-
-Build the sources and start a local server
-
-```
-USAGE
-  $ paperback serve [-h] [-p <value>]
-
-FLAGS
-  -h, --help          Show CLI help.
-  -p, --port=<value>  [default: 8080]
-
-DESCRIPTION
-  Build the sources and start a local server
-```
-
-_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/serve.ts)_
-
-## `paperback test [SOURCE]`
-
-describe the command here
-
-```
-USAGE
-  $ paperback test [SOURCE] [--ip <value>] [--port <value>]
-
-ARGUMENTS
-  SOURCE  (optional) The source to test
-
-FLAGS
-  --ip=<value>
-  --port=<value>  [default: 27015]
-
-DESCRIPTION
-  describe the command here
-```
-
-_See code: [dist/commands/test.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.0-alpha.47/dist/commands/test.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/update.ts)_
 <!-- commandsstop -->

@@ -1,16 +1,13 @@
-export interface PartialSourceManga {
+export interface SimpleCarouselDiscoverItem {
 	mangaId: string
 	title: string
-	image: string
+	imageUrl: string
 	subtitle?: string
 }
-declare global {
-	namespace Paperback {
-		function createPartialSourceManga(info: {
-			mangaId: string
-			image: string
-			title: string
-			subtitle?: string
-		}): PartialSourceManga
-	}
+
+export interface SearchResultItem {
+	mangaId: string
+	title: string
+	imageUrl: string
+	subtitle?: string
 }

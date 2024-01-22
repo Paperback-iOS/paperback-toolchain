@@ -1,3 +1,3 @@
-import { MangaProviding, Requestable, Searchable } from "./interfaces"
+import { MangaProviding, Searchable } from "./interfaces"
 
-export type PaperbackExtensionBase = Requestable & MangaProviding & Searchable
+export type PaperbackExtensionBase = MangaProviding & Searchable

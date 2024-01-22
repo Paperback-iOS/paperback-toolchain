@@ -1,13 +1,5 @@
-import { PartialSourceManga } from "./../_exports"
-export interface PagedResults {
-	results: PartialSourceManga[]
+
+export interface PagedResults<T> {
+	items: T[]
 	metadata?: any
-}
-declare global {
-	namespace Paperback {
-		function createPagedResults(info: {
-			results?: PartialSourceManga[]
-			metadata?: any
-		}): PagedResults
-	}
 }

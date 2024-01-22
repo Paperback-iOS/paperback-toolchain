@@ -5,7 +5,7 @@ type KeyOfType<T, V> = keyof {
 declare global {
 	type SelectorID<K> = string | K
 
-	namespace Paperback {
+	namespace Application {
 		class SelectorRegistry {
 			static registerSelector<T, K>(
 				id: string,
