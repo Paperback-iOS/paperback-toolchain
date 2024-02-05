@@ -142,9 +142,13 @@ export default class Bundle extends Command {
 
     // eslint-disable-next-line no-eval
     const config = eval(configBundle.outputFiles[0].text).default
+    config.id = sourceId
     
     // Write the JSON payload to file
-    fs.writeFileSync(path.join(directoryPath, 'info.json'), JSON.stringify(config))
+    fs.writeFileSync(
+      path.join(directoryPath, 'info.json'),
+      JSON.stringify(config)
+    )
   }
 
   async generateVersioningFile(folder = '') {
