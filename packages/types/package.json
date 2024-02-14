@@ -1,22 +1,22 @@
 {
-    "name": "@paperback/types",
-    "version": "1.0.0-alpha.6",
-    "description": "TypeScript Types for Paperback",
-    "keywords": [],
-    "author": "Faizan Durrani",
-    "publishConfig": {
-        "access": "public"
-    },
-    "license": "ISC",
-    "devDependencies": {
-        "typescript": "^5"
-    },
-    "scripts": {
-        "fix": "npx rome format ./src --write && npx rome check ./src --apply",
-        "build": "rm -rf lib && tsc",
-        "prepack": "npm run build"
-    },
-    "main": "./lib/index.js",
-    "types": "./src/index.ts",
-    "gitHead": "708848621c7cdf0f507ff050721c439d3526ee86"
+  "name": "@paperback/types",
+  "version": "1.0.0-alpha.7",
+  "description": "TypeScript Types for Paperback",
+  "keywords": [],
+  "author": "Faizan Durrani",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5"
+  },
+  "scripts": {
+    "fix": "npx rome format ./src --write && npx rome check ./src --apply",
+    "build": "rm -rf lib && tsc",
+    "prepack": "npm run build"
+  },
+  "main": "./lib/index.js",
+  "types": "./src/index.ts",
+  "gitHead": "708848621c7cdf0f507ff050721c439d3526ee86"
 }
