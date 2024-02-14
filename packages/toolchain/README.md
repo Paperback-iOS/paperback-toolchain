@@ -18,7 +18,7 @@ $ npm install -g toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-toolchain/1.0.0-alpha.1 darwin-arm64 node-v18.18.2
+toolchain/1.0.0-alpha.2 darwin-arm64 node-v18.18.2
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
