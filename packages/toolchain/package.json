@@ -12,7 +12,7 @@
     "@paperback/types": "*",
     "@protobuf-ts/runtime-rpc": "^2.8.3",
     "@types/fs-extra": "^11.0.4",
-    "chalk": "^5.3.0",
+    "chalk": "^4",
     "esbuild": "^0.19.11",
     "fs-extra": "^11.2.0",
     "ip": "^1.1.8",
@@ -69,10 +69,11 @@
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md"
   },
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "bugs": "https://github.com/FaizanDurrani/paperback-toolchain/issues",
   "keywords": [
     "oclif"
   ],
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "gitHead": "77686d4aacbbc8f78677cf6f864e4329ef69d201"
 }

@@ -18,7 +18,7 @@ $ npm install -g toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-toolchain/1.0.0-alpha.2 darwin-arm64 node-v18.18.2
+toolchain/1.0.0-alpha.3 darwin-arm64 node-v18.18.2
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -27,6 +27,7 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`paperback-cli bundle`](#paperback-cli-bundle)
 * [`paperback-cli help [COMMANDS]`](#paperback-cli-help-commands)
 * [`paperback-cli plugins`](#paperback-cli-plugins)
 * [`paperback-cli plugins:install PLUGIN...`](#paperback-cli-pluginsinstall-plugin)
@@ -38,6 +39,24 @@ USAGE
 * [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin-1)
 * [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin-2)
 * [`paperback-cli plugins update`](#paperback-cli-plugins-update)
+
+## `paperback-cli bundle`
+
+Builds all the sources in the repository and generates a versioning file
+
+```
+USAGE
+  $ paperback-cli bundle [--folder <value>] [-h]
+
+FLAGS
+  -h, --help            Show CLI help.
+      --folder=<value>  Subfolder to output to
+
+DESCRIPTION
+  Builds all the sources in the repository and generates a versioning file
+```
+
+_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.3/src/commands/bundle.ts)_
 
 ## `paperback-cli help [COMMANDS]`
 
