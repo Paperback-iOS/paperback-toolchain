@@ -18,7 +18,7 @@ $ npm install -g toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-toolchain/0.0.0 darwin-arm64 node-v18.18.2
+toolchain/1.0.0-alpha.1 darwin-arm64 node-v18.18.2
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -27,8 +27,6 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`paperback-cli hello PERSON`](#paperback-cli-hello-person)
-* [`paperback-cli hello world`](#paperback-cli-hello-world)
 * [`paperback-cli help [COMMANDS]`](#paperback-cli-help-commands)
 * [`paperback-cli plugins`](#paperback-cli-plugins)
 * [`paperback-cli plugins:install PLUGIN...`](#paperback-cli-pluginsinstall-plugin)
@@ -40,48 +38,6 @@ USAGE
 * [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin-1)
 * [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin-2)
 * [`paperback-cli plugins update`](#paperback-cli-plugins-update)
-
-## `paperback-cli hello PERSON`
-
-Say hello
-
-```
-USAGE
-  $ paperback-cli hello PERSON -f <value>
-
-ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Who is saying hello
-
-DESCRIPTION
-  Say hello
-
-EXAMPLES
-  $ oex hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
-```
-
-_See code: [src/commands/hello/index.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v0.0.0/src/commands/hello/index.ts)_
-
-## `paperback-cli hello world`
-
-Say hello world
-
-```
-USAGE
-  $ paperback-cli hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ paperback-cli hello world
-  hello world! (./src/commands/hello/world.ts)
-```
-
-_See code: [src/commands/hello/world.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v0.0.0/src/commands/hello/world.ts)_
 
 ## `paperback-cli help [COMMANDS]`
 
@@ -124,7 +80,7 @@ EXAMPLES
   $ paperback-cli plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.2.2/src/commands/plugins/index.ts)_
 
 ## `paperback-cli plugins:install PLUGIN...`
 
@@ -193,7 +149,7 @@ EXAMPLES
   $ paperback-cli plugins inspect myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/inspect.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.2.2/src/commands/plugins/inspect.ts)_
 
 ## `paperback-cli plugins:install PLUGIN...`
 
@@ -237,7 +193,7 @@ EXAMPLES
   $ paperback-cli plugins install someuser/someplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/install.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.2.2/src/commands/plugins/install.ts)_
 
 ## `paperback-cli plugins:link PLUGIN`
 
@@ -267,7 +223,7 @@ EXAMPLES
   $ paperback-cli plugins link myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/link.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.2.2/src/commands/plugins/link.ts)_
 
 ## `paperback-cli plugins:uninstall PLUGIN...`
 
@@ -301,10 +257,14 @@ Remove all user-installed and linked plugins.
 
 ```
 USAGE
-  $ paperback-cli plugins reset
+  $ paperback-cli plugins reset [--hard] [--reinstall]
+
+FLAGS
+  --hard       Delete node_modules and package manager related files in addition to uninstalling plugins.
+  --reinstall  Reinstall all plugins after uninstalling.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/reset.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.2.2/src/commands/plugins/reset.ts)_
 
 ## `paperback-cli plugins:uninstall PLUGIN...`
 
@@ -332,7 +292,7 @@ EXAMPLES
   $ paperback-cli plugins uninstall myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/uninstall.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.2.2/src/commands/plugins/uninstall.ts)_
 
 ## `paperback-cli plugins:uninstall PLUGIN...`
 
@@ -376,5 +336,5 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.1.19/src/commands/plugins/update.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.2.2/src/commands/plugins/update.ts)_
 <!-- commandsstop -->

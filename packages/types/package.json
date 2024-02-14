@@ -1,6 +1,6 @@
 {
   "name": "@paperback/types",
-  "version": "0.9.0-alpha.1",
+  "version": "1.0.0-alpha.1",
   "description": "TypeScript Types for Paperback",
   "keywords": [],
   "author": "Faizan Durrani",
@@ -9,20 +9,11 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.37.0",
-    "@typescript-eslint/parser": "^5.37.0",
-    "eslint": "^8.23.1",
-    "eslint-config-standard-with-typescript": "^23.0.0",
-    "eslint-config-xo": "^0.42.0",
-    "eslint-config-xo-typescript": "^0.53.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.5",
-    "eslint-plugin-promise": "^6.0.1",
-    "typescript": "^4.8.3"
+    "typescript": "^5"
   },
   "scripts": {
     "fix": "npx rome format ./src --write && npx rome check ./src --apply",
-    "build": "rm -rf lib && npx tsc",
+    "build": "rm -rf lib && tsc",
     "prepack": "npm run build"
   },
   "main": "./lib/index.js",
