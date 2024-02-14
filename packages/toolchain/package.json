@@ -48,7 +48,7 @@
   "homepage": "https://github.com/FaizanDurrani/paperback-toolchain",
   "license": "MIT",
   "main": "dist/index.js",
-  "name": "toolchain",
+  "name": "@paperback/toolchain",
   "oclif": {
     "bin": "paperback-cli",
     "dirname": "paperback-cli",
@@ -69,11 +69,11 @@
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md"
   },
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "bugs": "https://github.com/FaizanDurrani/paperback-toolchain/issues",
   "keywords": [
     "oclif"
   ],
   "types": "dist/index.d.ts",
-  "gitHead": "18a33d9e54f5779897f564e5d557700342921f8a"
+  "gitHead": "708848621c7cdf0f507ff050721c439d3526ee86"
 }
