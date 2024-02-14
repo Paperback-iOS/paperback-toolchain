@@ -1,10 +1,10 @@
 export interface MangaUpdates {
-	ids: string[]
+    ids: string[]
 }
 declare global {
-	namespace Paperback {
-		function createMangaUpdates(info: {
-			ids: string[]
-		}): MangaUpdates
-	}
+    namespace Paperback {
+        function createMangaUpdates(info: {
+            ids: string[]
+        }): MangaUpdates
+    }
 }

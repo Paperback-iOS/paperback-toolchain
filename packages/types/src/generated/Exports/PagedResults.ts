@@ -1,5 +1,5 @@
 
 export interface PagedResults<T> {
-	items: T[]
-	metadata?: any
+    items: T[]
+    metadata?: any
 }

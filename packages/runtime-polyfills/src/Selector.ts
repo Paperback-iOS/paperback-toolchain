@@ -1,58 +1,58 @@
 import { PaperbackPolyfills } from "./PaperbackPolyfills"
 
 class SelectorRef {
-	private objRef: WeakRef<any>
+    private objRef: WeakRef<any>
 
-	get value(): any | undefined {
-		const obj = this.objRef.deref()
-		if (!obj) {
-			return undefined
-		}
+    get value(): any | undefined {
+        const obj = this.objRef.deref()
+        if (!obj) {
+            return undefined
+        }
 
-		const value = obj[this.key]
-		if (typeof value === "function") {
-			return value.bind(obj)
-		} else {
-			return value
-		}
-	}
+        const value = obj[this.key]
+        if (typeof value === "function") {
+            return value.bind(obj)
+        } else {
+            return value
+        }
+    }
 
-	constructor(obj: any, private key: string | number | symbol) {
-		this.objRef = new WeakRef(obj)
-	}
+    constructor(obj: any, private key: string | number | symbol) {
+        this.objRef = new WeakRef(obj)
+    }
 }
 
 PaperbackPolyfills.SelectorRegistry = class {
-	private static registry: Record<string, SelectorRef> = {}
+    private static registry: Record<string, SelectorRef> = {}
 
-	static registerSelector(id: string, obj: any, key: any) {
-		this.registry[id] = new SelectorRef(obj, key)
-	}
+    static registerSelector(id: string, obj: any, key: any) {
+        this.registry[id] = new SelectorRef(obj, key)
+    }
 
-	static unregisterSelector(id: string) {
-		delete this.registry[id]
-	}
+    static unregisterSelector(id: string) {
+        delete this.registry[id]
+    }
 
-	static selector<K>(id: SelectorID<K>): K {
-		return this.registry[id as string]?.value
-	}
+    static selector<K>(id: SelectorID<K>): K {
+        return this.registry[id as string]?.value
+    }
 }
 
-PaperbackPolyfills.Selector = function(obj, symbol) {
-	// This is good enough, we need to generate ids that are relatively unique to each other per instance
-	function relative_uuid() { return `${Date.now()}-${Math.random().toString().slice(2)}` }
+PaperbackPolyfills.Selector = function (obj, symbol) {
+    // This is good enough, we need to generate ids that are relatively unique to each other per instance
+    function relative_uuid() { return `${Date.now()}-${Math.random().toString().slice(2)}` }
 
-	const canonicalId = (function (obj: any, symbol: string) {
-		const key = `$__selector_${symbol}`
-		if (obj[key]) {
-			return obj[key]
-		} else {
-			const id = relative_uuid()
-			Object.defineProperty(obj, key, { value: id })
-			return id
-		}
-	})(obj, symbol as string)
+    const canonicalId = (function (obj: any, symbol: string) {
+        const key = `$__selector_${symbol}`
+        if (obj[key]) {
+            return obj[key]
+        } else {
+            const id = relative_uuid()
+            Object.defineProperty(obj, key, { value: id })
+            return id
+        }
+    })(obj, symbol as string)
 
-	Application.SelectorRegistry.registerSelector(canonicalId, obj, symbol as any)
-	return canonicalId
+    Application.SelectorRegistry.registerSelector(canonicalId, obj, symbol as any)
+    return canonicalId
 }

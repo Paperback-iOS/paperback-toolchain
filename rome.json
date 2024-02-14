@@ -1,17 +1,16 @@
 {
-  "javascript": {
-    "formatter": {
-      "semicolons": "always"
+    "javascript": {
+        "formatter": {
+            "semicolons": "always"
+        }
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "suspicious": {
+                "noExplicitAny": "off"
+            }
+        }
     }
-  },
-
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "off"
-      }
-    }
-  }
 }

@@ -1,3 +1,3 @@
 export interface DUIFormRow {
-	readonly id: string
+    readonly id: string
 }

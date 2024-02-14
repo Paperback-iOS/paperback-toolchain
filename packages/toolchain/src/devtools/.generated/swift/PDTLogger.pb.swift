@@ -20,12 +20,56 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+public enum LogLevel: SwiftProtobuf.Enum {
+  public typealias RawValue = Int
+  case info // = 0
+  case warn // = 1
+  case error // = 2
+  case UNRECOGNIZED(Int)
+
+  public init() {
+    self = .info
+  }
+
+  public init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .info
+    case 1: self = .warn
+    case 2: self = .error
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  public var rawValue: Int {
+    switch self {
+    case .info: return 0
+    case .warn: return 1
+    case .error: return 2
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension LogLevel: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static let allCases: [LogLevel] = [
+    .info,
+    .warn,
+    .error,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 public struct LogLine {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var level: LogLine.LogLevel = .info
+  public var level: LogLevel = .info
 
   public var tags: [String] = []
 
@@ -42,54 +86,10 @@ public struct LogLine {
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public enum LogLevel: SwiftProtobuf.Enum {
-    public typealias RawValue = Int
-    case info // = 0
-    case warn // = 1
-    case error // = 2
-    case UNRECOGNIZED(Int)
-
-    public init() {
-      self = .info
-    }
-
-    public init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .info
-      case 1: self = .warn
-      case 2: self = .error
-      default: self = .UNRECOGNIZED(rawValue)
-      }
-    }
-
-    public var rawValue: Int {
-      switch self {
-      case .info: return 0
-      case .warn: return 1
-      case .error: return 2
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
-
   public init() {}
 
   fileprivate var _date: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
 }
-
-#if swift(>=4.2)
-
-extension LogLine.LogLevel: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [LogLine.LogLevel] = [
-    .info,
-    .warn,
-    .error,
-  ]
-}
-
-#endif  // swift(>=4.2)
 
 public struct LogFilter {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -101,7 +101,21 @@ public struct LogFilter {
   public init() {}
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension LogLevel: @unchecked Sendable {}
+extension LogLine: @unchecked Sendable {}
+extension LogFilter: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
+
+extension LogLevel: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "INFO"),
+    1: .same(proto: "WARN"),
+    2: .same(proto: "ERROR"),
+  ]
+}
 
 extension LogLine: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = "LogLine"
@@ -128,6 +142,10 @@ extension LogLine: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.level != .info {
       try visitor.visitSingularEnumField(value: self.level, fieldNumber: 1)
     }
@@ -137,9 +155,9 @@ extension LogLine: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     if !self.message.isEmpty {
       try visitor.visitSingularStringField(value: self.message, fieldNumber: 3)
     }
-    if let v = self._date {
+    try { if let v = self._date {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -151,14 +169,6 @@ extension LogLine: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
-}
-
-extension LogLine.LogLevel: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "INFO"),
-    1: .same(proto: "WARN"),
-    2: .same(proto: "ERROR"),
-  ]
 }
 
 extension LogFilter: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {

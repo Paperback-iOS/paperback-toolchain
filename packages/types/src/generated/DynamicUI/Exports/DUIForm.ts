@@ -1,19 +1,19 @@
 import { DUISection } from "./../../_exports"
 export interface DUIForm {
-	/*
-	 * internalName: _onSubmit
-	 */
-	onSubmit(values: Record<any, any>): Promise<void> | undefined
-	/*
-	 * internalName: _sections
-	 */
-	sections(): Promise<DUISection[]>
+    /*
+     * internalName: _onSubmit
+     */
+    onSubmit(values: Record<any, any>): Promise<void> | undefined
+    /*
+     * internalName: _sections
+     */
+    sections(): Promise<DUISection[]>
 }
 declare global {
-	namespace Paperback {
-		function createDUIForm(info: {
-			sections: () => Promise<DUISection[]>
-			onSubmit?: (arg0: Record<any, any>) => Promise<void>
-		}): DUIForm
-	}
+    namespace Paperback {
+        function createDUIForm(info: {
+            sections: () => Promise<DUISection[]>
+            onSubmit?: (arg0: Record<any, any>) => Promise<void>
+        }): DUIForm
+    }
 }

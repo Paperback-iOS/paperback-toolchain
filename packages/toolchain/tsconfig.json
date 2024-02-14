@@ -1,11 +1,17 @@
 {
-  "compilerOptions": {
-    "declaration": true,
-    "module": "commonjs",
-    "outDir": "dist",
-    "rootDir": "src",
-    "strict": true,
-    "target": "es2022"
-  },
-  "include": ["src/**/*", "src/devtools/.generated"]
+    "compilerOptions": {
+        "declaration": true,
+        "module": "commonjs",
+        "outDir": "dist",
+        "rootDir": "src",
+        "strict": true,
+        "target": "es2022",
+        "allowJs": false,
+        "checkJs": false,
+        "esModuleInterop": true
+    },
+    "include": [
+        "src/**/*",
+        "src/devtools/.generated"
+    ]
 }

@@ -41,48 +41,106 @@ public struct SourceInstallResponse {
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public enum Status: SwiftProtobuf.Enum {
-    public typealias RawValue = Int
-    case success // = 0
-    case failure // = 2
-    case UNRECOGNIZED(Int)
-
-    public init() {
-      self = .success
-    }
-
-    public init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .success
-      case 2: self = .failure
-      default: self = .UNRECOGNIZED(rawValue)
-      }
-    }
-
-    public var rawValue: Int {
-      switch self {
-      case .success: return 0
-      case .failure: return 2
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
-
   public init() {}
 }
 
-#if swift(>=4.2)
+public struct SearchData {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
 
-extension SourceInstallResponse.Status: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [SourceInstallResponse.Status] = [
-    .success,
-    .failure,
-  ]
+  public var query: String {
+    get {return _query ?? String()}
+    set {_query = newValue}
+  }
+  /// Returns true if `query` has been explicitly set.
+  public var hasQuery: Bool {return self._query != nil}
+  /// Clears the value of `query`. Subsequent reads from it will return its default value.
+  public mutating func clearQuery() {self._query = nil}
+
+  public var includedTags: [String] = []
+
+  public var excludedTags: [String] = []
+
+  /// Select the item at this index
+  public var itemIndex: String {
+    get {return _itemIndex ?? String()}
+    set {_itemIndex = newValue}
+  }
+  /// Returns true if `itemIndex` has been explicitly set.
+  public var hasItemIndex: Bool {return self._itemIndex != nil}
+  /// Clears the value of `itemIndex`. Subsequent reads from it will return its default value.
+  public mutating func clearItemIndex() {self._itemIndex = nil}
+
+  /// Ensure that its id matches this id
+  public var itemID: String {
+    get {return _itemID ?? String()}
+    set {_itemID = newValue}
+  }
+  /// Returns true if `itemID` has been explicitly set.
+  public var hasItemID: Bool {return self._itemID != nil}
+  /// Clears the value of `itemID`. Subsequent reads from it will return its default value.
+  public mutating func clearItemID() {self._itemID = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _query: String? = nil
+  fileprivate var _itemIndex: String? = nil
+  fileprivate var _itemID: String? = nil
 }
 
-#endif  // swift(>=4.2)
+public struct TestData {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var mangaID: String {
+    get {return _mangaID ?? String()}
+    set {_mangaID = newValue}
+  }
+  /// Returns true if `mangaID` has been explicitly set.
+  public var hasMangaID: Bool {return self._mangaID != nil}
+  /// Clears the value of `mangaID`. Subsequent reads from it will return its default value.
+  public mutating func clearMangaID() {self._mangaID = nil}
+
+  public var chapterID: String {
+    get {return _chapterID ?? String()}
+    set {_chapterID = newValue}
+  }
+  /// Returns true if `chapterID` has been explicitly set.
+  public var hasChapterID: Bool {return self._chapterID != nil}
+  /// Clears the value of `chapterID`. Subsequent reads from it will return its default value.
+  public mutating func clearChapterID() {self._chapterID = nil}
+
+  public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_updateTime = newValue}
+  }
+  /// Returns true if `updateTime` has been explicitly set.
+  public var hasUpdateTime: Bool {return self._updateTime != nil}
+  /// Clears the value of `updateTime`. Subsequent reads from it will return its default value.
+  public mutating func clearUpdateTime() {self._updateTime = nil}
+
+  public var searchData: SearchData {
+    get {return _searchData ?? SearchData()}
+    set {_searchData = newValue}
+  }
+  /// Returns true if `searchData` has been explicitly set.
+  public var hasSearchData: Bool {return self._searchData != nil}
+  /// Clears the value of `searchData`. Subsequent reads from it will return its default value.
+  public mutating func clearSearchData() {self._searchData = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _mangaID: String? = nil
+  fileprivate var _chapterID: String? = nil
+  fileprivate var _updateTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _searchData: SearchData? = nil
+}
 
 public struct SourceTestRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -91,8 +149,8 @@ public struct SourceTestRequest {
 
   public var sourceID: String = String()
 
-  public var data: SourceTestRequest.TestData {
-    get {return _data ?? SourceTestRequest.TestData()}
+  public var data: TestData {
+    get {return _data ?? TestData()}
     set {_data = newValue}
   }
   /// Returns true if `data` has been explicitly set.
@@ -102,107 +160,9 @@ public struct SourceTestRequest {
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public struct TestData {
-    // SwiftProtobuf.Message conformance is added in an extension below. See the
-    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-    // methods supported on all messages.
-
-    public var mangaID: String {
-      get {return _mangaID ?? String()}
-      set {_mangaID = newValue}
-    }
-    /// Returns true if `mangaID` has been explicitly set.
-    public var hasMangaID: Bool {return self._mangaID != nil}
-    /// Clears the value of `mangaID`. Subsequent reads from it will return its default value.
-    public mutating func clearMangaID() {self._mangaID = nil}
-
-    public var chapterID: String {
-      get {return _chapterID ?? String()}
-      set {_chapterID = newValue}
-    }
-    /// Returns true if `chapterID` has been explicitly set.
-    public var hasChapterID: Bool {return self._chapterID != nil}
-    /// Clears the value of `chapterID`. Subsequent reads from it will return its default value.
-    public mutating func clearChapterID() {self._chapterID = nil}
-
-    public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
-      get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
-      set {_updateTime = newValue}
-    }
-    /// Returns true if `updateTime` has been explicitly set.
-    public var hasUpdateTime: Bool {return self._updateTime != nil}
-    /// Clears the value of `updateTime`. Subsequent reads from it will return its default value.
-    public mutating func clearUpdateTime() {self._updateTime = nil}
-
-    public var searchData: SourceTestRequest.TestData.SearchData {
-      get {return _searchData ?? SourceTestRequest.TestData.SearchData()}
-      set {_searchData = newValue}
-    }
-    /// Returns true if `searchData` has been explicitly set.
-    public var hasSearchData: Bool {return self._searchData != nil}
-    /// Clears the value of `searchData`. Subsequent reads from it will return its default value.
-    public mutating func clearSearchData() {self._searchData = nil}
-
-    public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-    public struct SearchData {
-      // SwiftProtobuf.Message conformance is added in an extension below. See the
-      // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-      // methods supported on all messages.
-
-      public var query: String {
-        get {return _query ?? String()}
-        set {_query = newValue}
-      }
-      /// Returns true if `query` has been explicitly set.
-      public var hasQuery: Bool {return self._query != nil}
-      /// Clears the value of `query`. Subsequent reads from it will return its default value.
-      public mutating func clearQuery() {self._query = nil}
-
-      public var includedTags: [String] = []
-
-      public var excludedTags: [String] = []
-
-      /// Select the item at this index
-      public var itemIndex: String {
-        get {return _itemIndex ?? String()}
-        set {_itemIndex = newValue}
-      }
-      /// Returns true if `itemIndex` has been explicitly set.
-      public var hasItemIndex: Bool {return self._itemIndex != nil}
-      /// Clears the value of `itemIndex`. Subsequent reads from it will return its default value.
-      public mutating func clearItemIndex() {self._itemIndex = nil}
-
-      /// Ensure that its id matches this id
-      public var itemID: String {
-        get {return _itemID ?? String()}
-        set {_itemID = newValue}
-      }
-      /// Returns true if `itemID` has been explicitly set.
-      public var hasItemID: Bool {return self._itemID != nil}
-      /// Clears the value of `itemID`. Subsequent reads from it will return its default value.
-      public mutating func clearItemID() {self._itemID = nil}
-
-      public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-      public init() {}
-
-      fileprivate var _query: String? = nil
-      fileprivate var _itemIndex: String? = nil
-      fileprivate var _itemID: String? = nil
-    }
-
-    public init() {}
-
-    fileprivate var _mangaID: String? = nil
-    fileprivate var _chapterID: String? = nil
-    fileprivate var _updateTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
-    fileprivate var _searchData: SourceTestRequest.TestData.SearchData? = nil
-  }
-
   public init() {}
 
-  fileprivate var _data: SourceTestRequest.TestData? = nil
+  fileprivate var _data: TestData? = nil
 }
 
 public struct SourceTestResponse {
@@ -220,6 +180,15 @@ public struct SourceTestResponse {
 
   public init() {}
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+extension SourceInstallRequest: @unchecked Sendable {}
+extension SourceInstallResponse: @unchecked Sendable {}
+extension SearchData: @unchecked Sendable {}
+extension TestData: @unchecked Sendable {}
+extension SourceTestRequest: @unchecked Sendable {}
+extension SourceTestResponse: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -280,103 +249,8 @@ extension SourceInstallResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
   }
 }
 
-extension SourceInstallResponse.Status: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "SUCCESS"),
-    2: .same(proto: "FAILURE"),
-  ]
-}
-
-extension SourceTestRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "SourceTestRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "sourceId"),
-    2: .same(proto: "data"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.sourceID) }()
-      case 2: try { try decoder.decodeSingularMessageField(value: &self._data) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.sourceID.isEmpty {
-      try visitor.visitSingularStringField(value: self.sourceID, fieldNumber: 1)
-    }
-    if let v = self._data {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: SourceTestRequest, rhs: SourceTestRequest) -> Bool {
-    if lhs.sourceID != rhs.sourceID {return false}
-    if lhs._data != rhs._data {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension SourceTestRequest.TestData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = SourceTestRequest.protoMessageName + ".TestData"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "mangaId"),
-    2: .same(proto: "chapterId"),
-    3: .same(proto: "updateTime"),
-    4: .same(proto: "searchData"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self._mangaID) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self._chapterID) }()
-      case 3: try { try decoder.decodeSingularMessageField(value: &self._updateTime) }()
-      case 4: try { try decoder.decodeSingularMessageField(value: &self._searchData) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._mangaID {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._chapterID {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
-    if let v = self._updateTime {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
-    if let v = self._searchData {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: SourceTestRequest.TestData, rhs: SourceTestRequest.TestData) -> Bool {
-    if lhs._mangaID != rhs._mangaID {return false}
-    if lhs._chapterID != rhs._chapterID {return false}
-    if lhs._updateTime != rhs._updateTime {return false}
-    if lhs._searchData != rhs._searchData {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension SourceTestRequest.TestData.SearchData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = SourceTestRequest.TestData.protoMessageName + ".SearchData"
+extension SearchData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "SearchData"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "query"),
     2: .same(proto: "includedTags"),
@@ -402,30 +276,130 @@ extension SourceTestRequest.TestData.SearchData: SwiftProtobuf.Message, SwiftPro
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._query {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._query {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.includedTags.isEmpty {
       try visitor.visitRepeatedStringField(value: self.includedTags, fieldNumber: 2)
     }
     if !self.excludedTags.isEmpty {
       try visitor.visitRepeatedStringField(value: self.excludedTags, fieldNumber: 3)
     }
-    if let v = self._itemIndex {
+    try { if let v = self._itemIndex {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
-    if let v = self._itemID {
+    } }()
+    try { if let v = self._itemID {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: SourceTestRequest.TestData.SearchData, rhs: SourceTestRequest.TestData.SearchData) -> Bool {
+  public static func ==(lhs: SearchData, rhs: SearchData) -> Bool {
     if lhs._query != rhs._query {return false}
     if lhs.includedTags != rhs.includedTags {return false}
     if lhs.excludedTags != rhs.excludedTags {return false}
     if lhs._itemIndex != rhs._itemIndex {return false}
     if lhs._itemID != rhs._itemID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension TestData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "TestData"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "mangaId"),
+    2: .same(proto: "chapterId"),
+    3: .same(proto: "updateTime"),
+    4: .same(proto: "searchData"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self._mangaID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self._chapterID) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._updateTime) }()
+      case 4: try { try decoder.decodeSingularMessageField(value: &self._searchData) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._mangaID {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
+    } }()
+    try { if let v = self._chapterID {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
+    } }()
+    try { if let v = self._updateTime {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    try { if let v = self._searchData {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: TestData, rhs: TestData) -> Bool {
+    if lhs._mangaID != rhs._mangaID {return false}
+    if lhs._chapterID != rhs._chapterID {return false}
+    if lhs._updateTime != rhs._updateTime {return false}
+    if lhs._searchData != rhs._searchData {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension SourceTestRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "SourceTestRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "sourceId"),
+    2: .same(proto: "data"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.sourceID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._data) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.sourceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.sourceID, fieldNumber: 1)
+    }
+    try { if let v = self._data {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: SourceTestRequest, rhs: SourceTestRequest) -> Bool {
+    if lhs.sourceID != rhs.sourceID {return false}
+    if lhs._data != rhs._data {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -4,6 +4,6 @@ export * from "./Badge"
 export * from "./interfaces"
 export * from "./SourceInfo"
 export * from "./HomeSectionType"
-export * from "./PaperbackExtensionBase"
+export * from "./PaperbackInterceptor"
 export * from './Selector'
 export * from './Extension'

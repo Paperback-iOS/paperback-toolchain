@@ -1,21 +1,21 @@
 {
-  "name": "@paperback/runtime-polyfills",
-  "version": "1.0.0-alpha.6",
-  "description": "Node runtime polyfills to test Paperback sources",
-  "main": "./lib/index.js",
-  "types": "./src/index.ts",
-  "scripts": {
-    "build": "rm -rf ./lib && npx tsc",
-    "prepack": "npm run build"
-  },
-  "author": "Faizan Durrani",
-  "license": "ISC",
-  "devDependencies": {
-    "@paperback/types": "*",
-    "typescript": "^5"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "gitHead": "708848621c7cdf0f507ff050721c439d3526ee86"
+    "name": "@paperback/runtime-polyfills",
+    "version": "1.0.0-alpha.6",
+    "description": "Node runtime polyfills to test Paperback sources",
+    "main": "./lib/index.js",
+    "types": "./src/index.ts",
+    "scripts": {
+        "build": "rm -rf ./lib && npx tsc",
+        "prepack": "npm run build"
+    },
+    "author": "Faizan Durrani",
+    "license": "ISC",
+    "devDependencies": {
+        "@paperback/types": "*",
+        "typescript": "^5"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "gitHead": "708848621c7cdf0f507ff050721c439d3526ee86"
 }

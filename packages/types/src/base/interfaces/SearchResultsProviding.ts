@@ -7,14 +7,14 @@ import { MangaProviding } from "./MangaProviding"
 export type Searchable = SearchResultsProviding
 
 export interface SearchResultsProviding extends MangaProviding {
-	getSearchResults(
-		query: SearchQuery,
-		metadata: unknown | undefined,
-	): Promise<PagedResults<SearchResultItem>>
+    getSearchResults(
+        query: SearchQuery,
+        metadata: unknown | undefined,
+    ): Promise<PagedResults<SearchResultItem>>
 
-	getSearchTags?(): Promise<TagSection[]>
-	getSearchFields?(): Promise<SearchField[]>
+    getSearchTags?(): Promise<TagSection[]>
+    getSearchFields?(): Promise<SearchField[]>
 
-	supportsTagExclusion?(): Promise<boolean>
-	supportsSearchOperators?(): Promise<boolean>
+    supportsTagExclusion?(): Promise<boolean>
+    supportsSearchOperators?(): Promise<boolean>
 }

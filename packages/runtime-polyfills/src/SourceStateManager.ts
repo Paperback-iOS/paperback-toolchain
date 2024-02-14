@@ -2,30 +2,30 @@ import { SecureStateManager, SourceStateManager } from "@paperback/types"
 import { PaperbackPolyfills } from "./PaperbackPolyfills"
 
 class MockSecureStateManager implements SecureStateManager {
-	
-	private objectStore: Record<string, any> = {}
 
-    
-	async store(key: string, value: any) {
-		this.objectStore[key] = value
-	}
+    private objectStore: Record<string, any> = {}
 
-	async retrieve(key: string) {
-		return this.objectStore[key]
-	}
+
+    async store(key: string, value: any) {
+        this.objectStore[key] = value
+    }
+
+    async retrieve(key: string) {
+        return this.objectStore[key]
+    }
 }
 
 class MockSourceStateManager implements SourceStateManager {
-	readonly keychain: SecureStateManager = new MockSecureStateManager()
-    
-	private objectStore: Record<string, any> = {}
+    readonly keychain: SecureStateManager = new MockSecureStateManager()
 
-    
-	async store(key: string, value: any) {
-		this.objectStore[key] = value
-	}
+    private objectStore: Record<string, any> = {}
 
-	async retrieve(key: string) {
-		return this.objectStore[key]
-	}
+
+    async store(key: string, value: any) {
+        this.objectStore[key] = value
+    }
+
+    async retrieve(key: string) {
+        return this.objectStore[key]
+    }
 }
