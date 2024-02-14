@@ -18,7 +18,7 @@ $ npm install -g toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-toolchain/1.0.0-alpha.3 darwin-arm64 node-v18.18.2
+toolchain/1.0.0-alpha.4 darwin-arm64 node-v18.18.2
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -29,6 +29,7 @@ USAGE
 <!-- commands -->
 * [`paperback-cli bundle`](#paperback-cli-bundle)
 * [`paperback-cli help [COMMANDS]`](#paperback-cli-help-commands)
+* [`paperback-cli logcat [FILE]`](#paperback-cli-logcat-file)
 * [`paperback-cli plugins`](#paperback-cli-plugins)
 * [`paperback-cli plugins:install PLUGIN...`](#paperback-cli-pluginsinstall-plugin)
 * [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
@@ -39,6 +40,7 @@ USAGE
 * [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin-1)
 * [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin-2)
 * [`paperback-cli plugins update`](#paperback-cli-plugins-update)
+* [`paperback-cli serve`](#paperback-cli-serve)
 
 ## `paperback-cli bundle`
 
@@ -56,7 +58,7 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.3/src/commands/bundle.ts)_
+_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.4/src/commands/bundle.ts)_
 
 ## `paperback-cli help [COMMANDS]`
 
@@ -77,6 +79,30 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.0.12/src/commands/help.ts)_
+
+## `paperback-cli logcat [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ paperback-cli logcat [FILE] [--ip <value>] [--port <value>]
+
+ARGUMENTS
+  FILE  file to read
+
+FLAGS
+  --ip=<value>    [default: localhost]
+  --port=<value>  [default: 27015]
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ paperback-cli logcat
+```
+
+_See code: [src/commands/logcat.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.4/src/commands/logcat.ts)_
 
 ## `paperback-cli plugins`
 
@@ -356,4 +382,22 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.2.2/src/commands/plugins/update.ts)_
+
+## `paperback-cli serve`
+
+Build the sources and start a local server
+
+```
+USAGE
+  $ paperback-cli serve [-h] [-p <value>]
+
+FLAGS
+  -h, --help          Show CLI help.
+  -p, --port=<value>  [default: 8080]
+
+DESCRIPTION
+  Build the sources and start a local server
+```
+
+_See code: [src/commands/serve.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.4/src/commands/serve.ts)_
 <!-- commandsstop -->
