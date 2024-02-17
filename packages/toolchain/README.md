@@ -18,7 +18,7 @@ $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-@paperback/toolchain/1.0.0-alpha.7 darwin-arm64 node-v18.18.2
+@paperback/toolchain/1.0.0-alpha.9 darwin-arm64 node-v18.18.2
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -58,7 +58,7 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.7/src/commands/bundle.ts)_
+_See code: [src/commands/bundle.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.9/src/commands/bundle.ts)_
 
 ## `paperback-cli help [COMMANDS]`
 
@@ -102,7 +102,7 @@ EXAMPLES
   $ paperback-cli logcat
 ```
 
-_See code: [src/commands/logcat.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.7/src/commands/logcat.ts)_
+_See code: [src/commands/logcat.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.9/src/commands/logcat.ts)_
 
 ## `paperback-cli plugins`
 
@@ -399,5 +399,5 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [src/commands/serve.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.7/src/commands/serve.ts)_
+_See code: [src/commands/serve.ts](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.9/src/commands/serve.ts)_
 <!-- commandsstop -->
