@@ -1,41 +1,18 @@
+import { ContentRating } from "../../base"
 import { TagSection } from "./../_exports"
 export interface MangaInfo {
-    image: string
-    artist: string
-    author: string
-    desc: string
-    status: string
-    hentai: boolean
-    titles: string[]
-    banner?: string
-    /*
-     * internalName: _rating
-     */
+    thumbnailUrl: string
+    synopsis: string
+    primaryTitle: string
+    secondaryTitles: string[]
+    contentRating: ContentRating
+
+    status?: string
+    artist?: string
+    author?: string
+    bannerUrl?: string
     rating?: number
-    tags: TagSection[]
-    covers: string[]
-    avgRating: number
-    follows: number
-    langFlag: string
-    langName: string
-    users: number
-    views: number
-}
-declare global {
-    namespace Paperback {
-        function createMangaInfo(info: {
-            image: string
-            artist?: string
-            author?: string
-            desc: string
-            status: string
-            hentai?: boolean
-            titles: string[]
-            banner?: string
-            rating?: number
-            tags?: TagSection[]
-            covers?: string[]
-            additionalInfo?: Record<string, string>
-        }): MangaInfo
-    }
+    tagGroups?: TagSection[]
+    artworkUrls?: string[]
+    additionalInfo?: Record<string, string>
 }

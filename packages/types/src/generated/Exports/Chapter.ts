@@ -7,8 +7,8 @@ export interface Chapter {
     chapNum: number
     title?: string
     volume?: number
-    subtitle?: string
+    metadata?: string
     publishDate?: Date
-    sortingIndex?: number
-    metadata?: unknown
+    creationDate?: number
+    sortingIndex?: unknown
 }
