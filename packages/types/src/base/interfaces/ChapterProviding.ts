@@ -3,16 +3,12 @@ import { MangaProviding } from "./MangaProviding"
 
 export interface ChapterProviding extends MangaProviding {
     /**
-     * Given a mangaID, this function should use a {@link Request} object's {@link Request.perform} method
-     * to grab and populate a {@link Chapter} array.
-     * @param mangaId The ID which this function is expected to grab data for
+     * @param sourceManga The sourceManga for which the chapters should be fetched
      */
     getChapters(sourceManga: SourceManga): Promise<Chapter[]>
 
     /**
-     * Given a mangaID, this function should use a {@link Request} object's {@link Request.perform} method
-     * to grab and populate a {@link ChapterDetails} object
-     * @param mangaId The ID which this function is expected to grab data for
+     * @param chapter The chapter listing for which the details should be fetched
      */
     getChapterDetails(chapter: Chapter): Promise<ChapterDetails>
 }

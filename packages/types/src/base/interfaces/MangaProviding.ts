@@ -7,10 +7,4 @@ export interface MangaProviding {
      * @param mangaId The ID which this function is expected to grab data for
      */
     getMangaDetails(mangaId: string): Promise<SourceManga>
-
-    /**
-     * (OPTIONAL METHOD) Given a manga ID, return a URL which Safari can open in a browser to display.
-     * @param mangaId
-     */
-    getMangaShareUrl?(mangaId: string): string
 }
