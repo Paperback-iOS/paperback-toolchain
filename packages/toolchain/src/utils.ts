@@ -1,12 +1,11 @@
 /* eslint-disable unicorn/prefer-module */
 import chalk from 'chalk'
+import {promises as fs} from 'node:fs'
+import * as path from 'node:path'
 
 export default class Utils {
   static headingFormat = chalk`{bold {red #} $1}`
-
-  fs: any
   fsutils: any
-  path: any = require('node:path')
 
   constructor(useFSUtils = true) {
     let canUseFSUtils = false
@@ -15,15 +14,11 @@ export default class Utils {
     if (useFSUtils && platform === 'win32') {
       canUseFSUtils = true
 
-      this.fsutils = require(this.path.join(__dirname, '..', 'rust-modules', 'fs-utils'))
+      this.fsutils = require(path.join(__dirname, '..', 'rust-modules', 'fs-utils'))
     }
 
-    if (!canUseFSUtils) {
-      if (useFSUtils) {
-        Utils.log(chalk`{yellow WARNING:} {gray (rust) fs-utils} is not available for your platform '${platform}', falling back to {gray node fs}!`)
-      }
-
-      this.fs = require('node:fs')
+    if (!canUseFSUtils && useFSUtils) {
+      Utils.log(chalk`{yellow WARNING:} {gray (rust) fs-utils} is not available for your platform '${platform}', falling back to {gray node fs}!`)
     }
   }
 
@@ -63,58 +58,23 @@ export default class Utils {
     }
   }
 
-  deleteFolderRecursive(folderPath: string) {
+  async deleteFolderRecursive(folderPath: string) {
     folderPath = folderPath.trim()
     if (folderPath.length === 0 || folderPath === '/') return
 
     if (this.fsutils) {
-      this.fsutils.deleteFolderRecursive(folderPath)
-    } else if (this.fs.existsSync(folderPath)) {
-      for (const file of this.fs.readdirSync(folderPath)) {
-        const curPath = this.path.join(folderPath, file)
-
-        if (this.fs.lstatSync(curPath).isDirectory()) { // recurse
-          this.deleteFolderRecursive(curPath)
-        } else { // delete file
-          this.fs.unlinkSync(curPath)
+      return new Promise<void>((res, rej) => {
+        try {
+          this.fsutils.deleteFolderRecursive(folderPath)
+          res()
+        } catch (error) {
+          rej(error)
         }
-      }
-
-      this.fs.rmdirSync(folderPath)
+      })
     }
-  }
 
-  copyFolderRecursive(source: string, target: string) {
-    source = source.trim()
-    if (source.length === 0 || source === '/') return
-
-    target = target.trim()
-    if (target.length === 0 || target === '/') return
-
-    if (this.fsutils) {
-      this.fsutils.copyFolderRecursive(source, target)
-    } else {
-      if (!this.fs.existsSync(source)) return
-
-      let files = []
-      // check if folder needs to be created or integrated
-      const targetFolder = this.path.join(target, this.path.basename(source))
-      if (!this.fs.existsSync(targetFolder)) {
-        this.fs.mkdirSync(targetFolder)
-      }
-
-      // copy
-      if (this.fs.lstatSync(source).isDirectory()) {
-        files = this.fs.readdirSync(source)
-        for (const file of files) {
-          const curSource = this.path.join(source, file)
-          if (this.fs.lstatSync(curSource).isDirectory()) {
-            this.copyFolderRecursive(curSource, targetFolder)
-          } else {
-            this.fs.copyFileSync(curSource, this.path.join(targetFolder, file))
-          }
-        }
-      }
-    }
+    await fs.rm(folderPath, {recursive: true}).catch(error => {
+      console.error(`Error deleting and/or creating bundles directory '${folderPath}}'`, error)
+    })
   }
 }

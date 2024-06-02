@@ -6,8 +6,8 @@ import Bundle from './bundle'
 import * as path from 'node:path'
 import * as fs from 'node:fs'
 import chalk from 'chalk'
-import {ISourceTester, ISourceInstaller, OnDeviceSourceTester, SourceTester} from '../source-tester'
-import {SourceTestRequest, TestData, SourceTestResponse} from '../devtools/generated/typescript/PDTSourceTester'
+import {ISourceTester, OnDeviceSourceTester, SourceTester} from '../source-tester'
+import {SourceTestRequest, SourceTestResponse} from '../devtools/generated/typescript/PDTSourceTester'
 import shelljs from 'shelljs'
 import Utils from '../utils'
 import Server from '../server'
@@ -45,7 +45,7 @@ export default class Test extends CLICommand {
     const sourceId = args.source
     let sourcesDirPath: string
     let testClient: ISourceTester
-    let installClient: ISourceInstaller | undefined = undefined
+    let installClient: OnDeviceSourceTester | undefined
     if (flags.ip) {
       const grpcClient = new PaperbackSourceTesterClient(
         `${flags.ip}:${flags.port}`,
@@ -61,7 +61,7 @@ export default class Test extends CLICommand {
 
       sourcesDirPath = path.join(cwd, 'tmp')
       await this.measure('Time', Utils.headingFormat, async () => {
-        this.utils.deleteFolderRecursive(sourcesDirPath)
+        await this.utils.deleteFolderRecursive(sourcesDirPath)
         shelljs.exec('npx tsc --outDir tmp')
       })
 
@@ -72,6 +72,7 @@ export default class Test extends CLICommand {
     if (installClient) {
       await this.installSources(sourcesToTest, installClient, flags['use-node-fs'])
     }
+
     await this.testSources(sourcesToTest, testClient)
   }
 
@@ -110,7 +111,7 @@ export default class Test extends CLICommand {
     }
   }
 
-  private async installSources(sources: string[], client: ISourceTester, useNodeFS: boolean) {
+  private async installSources(sources: string[], client: OnDeviceSourceTester, useNodeFS: boolean) {
     if (!client.installSource) {
       return
     }
@@ -137,5 +138,6 @@ export default class Test extends CLICommand {
 }
 
 function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  // eslint-disable-next-line no-promise-executor-return
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

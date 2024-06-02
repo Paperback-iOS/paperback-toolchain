@@ -5,6 +5,7 @@ import Server from '../server'
 import Utils from '../utils'
 import chalk from 'chalk'
 import {watch} from 'node:fs'
+import * as path from 'node:path'
 
 const cli = CliUx.ux
 
@@ -16,19 +17,19 @@ export default class Serve extends CLICommand {
     port: Flags.integer({char: 'p', default: 8080}),
     watch: Flags.boolean({char: 'w', description: 'Rebuild sources on typescript file changes within directory', default: false}),
     'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false, default: false}),
-    'with-typechecking': Flags.boolean({aliases: ['tsc'], description: 'Enable typechecking when transpiling typescript files', required: false, default: false}),
   }
 
-  async _bundleRun(useNodeFS: boolean, withTypechecking: boolean) {
-    return Bundle.run([
+  workingPath = process.cwd()
+
+  async _bundleRun(useNodeFS: boolean) {
+    await Bundle.run([
       ...(useNodeFS ? ['--use-node-fs'] : []),
-      ...(withTypechecking ? ['--with-typechecking'] : []),
     ])
   }
 
-  async _rebuildSources(useNodeFS: boolean, withTypechecking: boolean) {
+  async _rebuildSources(useNodeFS: boolean) {
     this.log(chalk.underline.blue('Building Sources'))
-    await this._bundleRun(useNodeFS, withTypechecking)
+    await this._bundleRun(useNodeFS)
     this.log(chalk.underline.blue('Sources Rebuilt'))
   }
 
@@ -41,7 +42,7 @@ export default class Serve extends CLICommand {
     this.log(chalk.underline.blue('Building Sources'))
 
     // Make sure the repo is bundled
-    await this._bundleRun(flags['use-node-fs'], flags['with-typechecking'])
+    await this._bundleRun(flags['use-node-fs'])
     this.log()
     this.log(chalk.underline.blue('Starting Server on port ' + flags.port))
 
@@ -54,10 +55,10 @@ export default class Serve extends CLICommand {
     let isRebuildingSources = false
     let watcher: any
     if (flags.watch) {
-      watcher = watch('./src', {recursive: true}, async (_eventType, filename) => {
+      watcher = watch(path.join(this.workingPath, 'src'), {recursive: true}, async (_eventType, filename) => {
         if (isRebuildingSources === false && filename?.endsWith('.ts')) {
           isRebuildingSources = true
-          await this._rebuildSources(flags['use-node-fs'], flags['with-typechecking'])
+          await this._rebuildSources(flags['use-node-fs'])
           isRebuildingSources = false
         }
       })
@@ -92,7 +93,7 @@ export default class Serve extends CLICommand {
 
         // Make sure the repo is bundled
         // eslint-disable-next-line no-await-in-loop
-        await this._bundleRun(flags['use-node-fs'], flags['with-typechecking'])
+        await this._bundleRun(flags['use-node-fs'])
         this.log()
         this.log(chalk.underline.blue('Starting Server on port ' + flags.port))
 
@@ -105,10 +106,8 @@ export default class Serve extends CLICommand {
         // eslint-disable-next-line no-console
         console.clear()
 
-        this.log(chalk.underline.blue('Re-building Sources'))
-
         // eslint-disable-next-line no-await-in-loop
-        await Bundle.run([])
+        await this._bundleRun(flags['use-node-fs'])
         this.log()
 
         this.log(chalk`For a list of commands do {green h} or {green help}`)

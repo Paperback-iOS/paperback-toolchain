@@ -2,11 +2,13 @@ import {Flags} from '@oclif/core'
 import {CLICommand} from '../command'
 import * as path from 'node:path'
 import {promises as fs} from 'node:fs'
+import {constants} from 'node:fs/promises'
 
 import * as esbuild from 'esbuild'
 import Utils from '../utils'
-import {constants} from 'node:fs/promises'
 
+const workingPath = process.cwd()
+const cliInfo = require('../../package.json')
 // Homepage generation requirement
 const pug = require('pug')
 
@@ -18,21 +20,21 @@ export default class Bundle extends CLICommand {
     help: Flags.help({char: 'h'}),
     folder: Flags.string({description: 'Subfolder to output to', required: false}),
     'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
-    'with-typechecking': Flags.boolean({aliases: ['tsc'], description: 'Enable typechecking when transpiling typescript files', required: false, default: false}),
   };
 
-  utils: Utils = undefined as any
+  fsUtils: Utils = undefined as any
+  commonsInfo = require(path.join(workingPath, 'node_modules/@paperback/types/package.json'))
 
   async run() {
     const {flags} = await this.parse(Bundle)
 
-    this.utils = flags['use-node-fs'] ? new Utils(false) : new Utils(true)
+    this.fsUtils = flags['use-node-fs'] ? new Utils(false) : new Utils(true)
 
-    this.log(`Working directory: ${process.cwd()}`)
+    this.log(`Working directory: ${workingPath}`)
     this.log()
 
     const execTime = this.time('Execution time', Utils.headingFormat)
-    await this.bundleSources(flags.folder, flags['with-typechecking'])
+    await this.bundleSources(flags.folder)
 
     const versionTime = this.time('Versioning File', Utils.headingFormat)
     await this.generateVersioningFile(flags.folder)
@@ -48,31 +50,24 @@ export default class Bundle extends CLICommand {
   }
 
   async generateVersioningFile(folder = '') {
-    const basePath = process.cwd()
-    const directoryPath = path.join(basePath, 'bundles', folder)
-    const cliInfo = require('../../package.json')
-    const commonsInfo = require(path.join(basePath, 'node_modules/@paperback/types/package.json'))
+    const directoryPath = path.join(workingPath, 'bundles', folder)
 
     const jsonObject = {
       buildTime: new Date(),
       sources: [] as any[],
       builtWith: {
         toolchain: cliInfo.version,
-        types: commonsInfo.version,
+        types: this.commonsInfo.version,
       },
     }
 
     const promises = (await fs.readdir(directoryPath)).map(async file => {
       if (file.startsWith('.') || file.startsWith('tests')) return
 
-      const time = this.time(`- Generating ${file} Info`)
-      await this.generateSourceInfo(file, directoryPath).then(sourceInfo => {
-        jsonObject.sources.push(sourceInfo)
-      }).catch(error => {
+      const sourceInfo = await this.generateSourceInfo(file, directoryPath).catch(error => {
         this.log(`- ${file} ${error}`)
       })
-
-      time.end()
+      jsonObject.sources.push(sourceInfo)
     })
 
     await Promise.all(promises)
@@ -127,7 +122,7 @@ export default class Bundle extends CLICommand {
   async findSourceEntryPoints(srcFolder?: string) {
     let srcFolderActual = srcFolder ?? ''
     if (srcFolder === undefined || !srcFolder || srcFolderActual === '') {
-      srcFolderActual = path.join(process.cwd(), 'src')
+      srcFolderActual = path.join(workingPath, 'src')
     }
 
     let files: string[] = []
@@ -163,17 +158,15 @@ export default class Bundle extends CLICommand {
   }
 
   async bundleSources(folder = '') {
-    const cwd = process.cwd()
-    const bundlesPath = path.join(cwd, 'bundles', folder)
+    const bundlesPath = path.join(workingPath, 'bundles', folder)
 
-    await fs.rm(bundlesPath, {recursive: true}).catch(error => {
-      console.error(`Error deleting and/or creating bundles directory '${bundlesPath}}'`, error)
-    })
+    await this.fsUtils.deleteFolderRecursive(bundlesPath)
+
     await fs.mkdir(bundlesPath)
 
     const bundleTime = this.time('Transpile and bundle time', Utils.headingFormat)
 
-    const entryPoints = await this.findSourceEntryPoints(path.join(cwd, 'src'))
+    const entryPoints = await this.findSourceEntryPoints(path.join(workingPath, 'src'))
     const includesPromises = entryPoints.map(entryPoint => {
       return fs.mkdir(path.join(bundlesPath, path.basename(path.dirname(entryPoint.in)), 'includes'), {recursive: true}).catch(error => {
         console.error(`Error creating includes directory in bundles folder for '${entryPoint.in}'`, error)
@@ -238,9 +231,8 @@ export default class Bundle extends CLICommand {
      */
 
     // joining path of directory
-    const basePath = process.cwd()
-    const directoryPath = path.join(basePath, 'bundles', folder)
-    const packageFilePath = path.join(basePath, 'package.json')
+    const directoryPath = path.join(workingPath, 'bundles', folder)
+    const packageFilePath = path.join(workingPath, 'package.json')
     // homepage.pug file is added to the package during the prepack process
     const pugFilePath = path.join(__dirname, '../website-generation/homepage.pug')
     const versioningFilePath = path.join(directoryPath, 'versioning.json')
