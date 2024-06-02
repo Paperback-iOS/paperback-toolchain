@@ -359,15 +359,14 @@ Build the sources and start a local server
 
 ```
 USAGE
-  $ paperback serve [-h] [-p <value>] [-w] [--use-node-fs] [--with-typechecking]
+  $ paperback serve [-h] [-p <value>] [-w] [--use-node-fs]
 
 FLAGS
-  -h, --help           Show CLI help.
-  -p, --port=<value>   [default: 8080]
-  -w, --watch          Rebuild sources on typescript file changes within directory
-  --use-node-fs        For more info, check
-                       https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
-  --with-typechecking  Enable typechecking when transpiling typescript files
+  -h, --help          Show CLI help.
+  -p, --port=<value>  [default: 8080]
+  -w, --watch         Rebuild sources on typescript file changes within directory
+  --use-node-fs       For more info, check
+                      https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
 
 DESCRIPTION
   Build the sources and start a local server
