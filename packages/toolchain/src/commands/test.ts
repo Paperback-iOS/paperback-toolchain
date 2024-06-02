@@ -72,7 +72,6 @@ export default class Test extends CLICommand {
     if (installClient) {
       await this.installSources(sourcesToTest, installClient, flags['use-node-fs'])
     }
-
     await this.testSources(sourcesToTest, testClient)
   }
 
