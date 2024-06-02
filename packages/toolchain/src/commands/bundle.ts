@@ -1,10 +1,13 @@
-import {Flags} from '@oclif/core'
-import {CLICommand} from '../command'
+import { Flags } from '@oclif/core'
+import { CLICommand } from '../command'
 import * as path from 'node:path'
 import * as fs from 'node:fs'
 
-import browserify from 'browserify'
+// import browserify from 'browserify'
+import * as esbuild from 'esbuild'
 import * as shelljs from 'shelljs'
+import * as swc from '@swc/core'
+import { BundleInput } from '@swc/core/spack'
 import Utils from '../utils'
 
 // Homepage generation requirement
@@ -15,16 +18,16 @@ export default class Bundle extends CLICommand {
     'Builds all the sources in the repository and generates a versioning file';
 
   static override flags = {
-    help: Flags.help({char: 'h'}),
-    folder: Flags.string({description: 'Subfolder to output to', required: false}),
-    'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
-    'with-typechecking': Flags.boolean({aliases: ['tsc'], description: 'Enable typechecking when transpiling typescript files', required: false, default: false}),
+    help: Flags.help({ char: 'h' }),
+    folder: Flags.string({ description: 'Subfolder to output to', required: false }),
+    'use-node-fs': Flags.boolean({ description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false }),
+    'with-typechecking': Flags.boolean({ aliases: ['tsc'], description: 'Enable typechecking when transpiling typescript files', required: false, default: false }),
   };
 
   utils: Utils = undefined as any
 
   async run() {
-    const {flags} = await this.parse(Bundle)
+    const { flags } = await this.parse(Bundle)
 
     this.utils = flags['use-node-fs'] ? new Utils(false) : new Utils(true)
 
@@ -99,8 +102,38 @@ export default class Bundle extends CLICommand {
     }
 
     const finalPath = path.join(directoryPath, sourceId, 'index.js')
+    const legacyFinalPath = path.join(directoryPath, sourceId, 'source.js')
 
     return new Promise<any>((res, rej) => {
+      fs.appendFileSync(finalPath, '\nmodule.exports = source;', 'utf8')
+
+      // 0.8
+      // remove the last matching '();' efficiently
+      const data = fs.readFileSync(legacyFinalPath, 'utf8')
+      const lastIndex = data.lastIndexOf('})();')
+      fs.writeFileSync(legacyFinalPath, data.substring(0, lastIndex), 'utf8')
+      // reattach }); to the end of the file
+      fs.appendFileSync(legacyFinalPath, `});
+/* compatibility 'layer' for browserify transition, by the way I hate this, the behavior of paperback changed throuhgout 0.8.6 to 0.8.7, to the point where I had to implement this dumb thing. */
+if (typeof exports === 'object' && typeof module !== 'undefined') {
+  module.exports = source()
+} else if (typeof define === 'function' && define.amd) {
+  define([], source)
+} else {
+  var g; if (typeof window !== 'undefined') {
+    g = window
+  } else if (typeof global !== 'undefined') {
+    g = global
+  } else if (typeof self !== 'undefined') {
+    g = self
+  } else {
+    g = this
+  }
+  g.Sources = source();
+}
+`,
+      'utf8')
+
       const req = require(finalPath)
 
       const classInstance = req[`${sourceId}Info`]
@@ -138,7 +171,25 @@ export default class Bundle extends CLICommand {
     if (useTypeChecking) {
       shelljs.exec('npx tsc --outDir tmp')
     } else {
-      shelljs.exec('npx swc src -C module.type=commonjs --out-dir tmp --source-maps')
+      shelljs.exec('npx swc src -q --out-dir tmp --source-maps')
+      
+      // try {
+      //   const transpiledCode = await swc.transform(path.join(cwd, 'src'), {
+      //     outputPath: tmpTranspilePath,
+      //     sourceMaps: true,
+      //     jsc: {
+      //       target: 'es2020',
+      //       parser: {
+      //         syntax: 'typescript',
+      //         tsx: false,
+      //       },
+      //     },
+      //   })
+      // } catch (error) {
+      //   this.log('Transpilation failed')
+      //   this.log((error as Error).message)
+      //   return
+      // }
     }
 
     transpileTime.end()
@@ -147,7 +198,7 @@ export default class Bundle extends CLICommand {
 
     const bundleTime = this.time('Bundle time', Utils.headingFormat)
     this.utils.deleteFolderRecursive(bundlesDirPath)
-    fs.mkdirSync(bundlesDirPath, {recursive: true})
+    fs.mkdirSync(bundlesDirPath, { recursive: true })
 
     const promises: Promise<void>[] = fs.readdirSync(tmpTranspilePath).map(async file => {
       const fileBundleTime = this.time(`- Building ${file}`)
@@ -157,7 +208,7 @@ export default class Bundle extends CLICommand {
         path.join(tmpTranspilePath, file),
       )
 
-      await this.bundle(file, tmpTranspilePath, bundlesDirPath)
+      await this.altbundle(file, tmpTranspilePath, bundlesDirPath)
 
       this.utils.copyFolderRecursive(
         path.join(cwd, 'src', file, 'includes'),
@@ -202,32 +253,207 @@ export default class Bundle extends CLICommand {
 
     await Promise.all([
       // For 0.9 and above
-      new Promise<void>(res => {
-        browserify([filePath], {standalone: 'Sources'})
-        .external(['axios', 'fs'])
-        .bundle()
-        .pipe(
-          fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
-            res()
-          }),
-        )
+      // new Promise<void>(res => {
+      // browserify([filePath], {standalone: 'Sources'})
+      // .external(['axios', 'fs'])
+      // .bundle()
+      // .pipe(
+      //   fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
+      //     res()
+      //   }),
+      // )
+      // }),
+      // use esbuild instead
+      esbuild.build({
+        entryPoints: [filePath],
+        bundle: true,
+        platform: 'node',
+        target: 'es2019', // Change the target to 'es2019' for ES modules
+        format: 'esm', // Change the format to 'esm' for ES modules
+        outfile: path.join(outputPath, 'index.js'),
+        external: ['axios', 'fs'],
+        globalName: 'source',
       }),
 
       // For 0.8; ensures backwards compatibility with 0.7 sources
-      new Promise<void>(res => {
-        browserify([filePath], {standalone: 'Sources'})
-        .external(['axios', 'fs'])
-        .bundle()
-        .pipe(
-          fs.createWriteStream(path.join(outputPath, 'source.js')).on('finish', () => {
-            res()
-          }),
-        )
+      // new Promise<void>(res => {
+      //   browserify([filePath], {standalone: 'Sources'})
+      //   .external(['axios', 'fs'])
+      //   .bundle()
+      //   .pipe(
+      //     fs.createWriteStream(path.join(outputPath, 'source.js')).on('finish', () => {
+      //       res()
+      //     }),
+      //   )
+      // }),
+      esbuild.build({
+        entryPoints: [filePath],
+        bundle: true,
+        platform: 'node',
+        target: 'es2019', // Change the target to 'es2019' for ES modules
+        format: 'esm', // Change the format to 'esm' for ES modules
+        outfile: path.join(outputPath, 'source.js'),
+        external: ['axios', 'fs'],
+        globalName: 'source',
       }),
     ])
   }
 
-  async generateHomepage(folder = '')  {
+  async altbundle(fileName: string, sourceDir: string, destDir: string): Promise<void> {
+    if (fileName === 'tests') {
+      this.log('Tests directory, skipping')
+      return
+    }
+
+    // If its a directory
+    if (!fs.statSync(path.join(sourceDir, fileName)).isDirectory()) {
+      this.log('Not a directory, skipping ' + fileName)
+      return
+    }
+
+    const absoluteFilePath = path.join(sourceDir, fileName, `/${fileName}.js`)
+
+    if (!fs.existsSync(absoluteFilePath)) {
+      this.log("The file doesn't exist, skipping. " + fileName)
+      return
+    }
+
+    const absoluteOutputPath = path.join(destDir, fileName)
+    if (!fs.existsSync(absoluteOutputPath)) {
+      fs.mkdirSync(absoluteOutputPath)
+    }
+
+    const bundleResults = await Promise.all([
+      // For 0.9 and above
+      // new Promise<void>(res => {
+      // browserify([filePath], {standalone: 'Sources'})
+      // .external(['axios', 'fs'])
+      // .bundle()
+      // .pipe(
+      //   fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
+      //     res()
+      //   }),
+      // )
+      // }),
+      // use esbuild instead
+      esbuild.build({
+        entryPoints: [absoluteFilePath],
+        bundle: true,
+        platform: 'browser',
+        target: 'es2020', // Change the target to 'es2019' for ES modules
+        format: 'iife', // Change the format to 'esm' for ES modules
+        outfile: path.join(absoluteOutputPath, 'index.js'),
+        external: ['axios', 'fs'],
+        globalName: 'source',
+        metafile: true,
+      }),
+
+      // The following doesn't work
+      // swc.bundle({
+      //   workingDir: process.cwd(),
+      //   entry: absoluteFilePath,
+      //   options: {
+      //     sourceMaps: true,
+      //     swcrc: false,
+      //     isModule: true,
+      //     module: {
+      //       type: 'commonjs',
+      //       strict: true,
+      //     },
+      //     jsc: {
+      //       baseUrl: sourceDir,
+      //       paths: {
+      //         '@paperback': [path.join(process.cwd(), 'node_modules', '@paperback')],
+      //       },
+      //       parser: {
+      //         syntax: 'typescript',
+      //         tsx: false,
+      //       },
+      //       target: 'es2020',
+      //       keepClassNames: true,
+      //     },
+      //   },
+      //   module: {
+      //     type: 'commonjs',
+      //     strict: true,
+      //   },
+      //   output: {
+      //     name: 'index.js',
+      //     path: absoluteOutputPath,
+      //   },
+      //   target: 'node',
+      //   mode: 'production',
+      // } as BundleInput),
+
+      // For 0.8; ensures backwards compatibility with 0.7 sources
+      // new Promise<void>(res => {
+      //   browserify([filePath], {standalone: 'Sources'})
+      //   .external(['axios', 'fs'])
+      //   .bundle()
+      //   .pipe(
+      //     fs.createWriteStream(path.join(outputPath, 'source.js')).on('finish', () => {
+      //       res()
+      //     }),
+      //   )
+      // }),
+      esbuild.build({
+        entryPoints: [absoluteFilePath],
+        bundle: true,
+        platform: 'browser',
+        target: 'es2020', // Change the target to 'es2019' for ES modules
+        format: 'iife', // Change the format to 'esm' for ES modules
+        outfile: path.join(absoluteOutputPath, 'source.js'),
+        external: ['axios', 'fs'],
+        globalName: 'source',
+        metafile: true,
+      }),
+
+      // The following doesn't work
+      // swc.bundle({
+      //   workingDir: process.cwd(),
+      //   entry: absoluteFilePath,
+      //   options: {
+      //     sourceMaps: true,
+      //     swcrc: false,
+      //     isModule: true,
+      //     module: {
+      //       type: 'commonjs',
+      //       strict: true,
+      //     },
+      //     jsc: {
+      //       baseUrl: sourceDir,
+      //       paths: {
+      //         '@paperback': [path.join(process.cwd(), 'node_modules', '@paperback')],
+      //       },
+      //       parser: {
+      //         syntax: 'typescript',
+      //         tsx: false,
+      //       },
+      //       target: 'es2020',
+      //       keepClassNames: true,
+      //     },
+      //   },
+      //   module: {
+      //     type: 'commonjs',
+      //     strict: true,
+      //   },
+      //   output: {
+      //     name: 'source.js',
+      //     path: absoluteOutputPath,
+      //   },
+      //   target: 'node',
+      //   mode: 'production',
+      // } as BundleInput),
+    ])
+
+    let c = 0
+    bundleResults.forEach(result => {
+      fs.writeFileSync(path.join(absoluteOutputPath, `meta${c == 0 ? '-index' : '-source'}.json`), JSON.stringify(result.metafile))
+      c++
+    })
+  }
+
+  async generateHomepage(folder = '') {
     /*
      * Generate a homepage for the repository based on the package.json file and the generated versioning.json
      *
@@ -250,10 +476,10 @@ export default class Bundle extends CLICommand {
     // joining path of directory
     const basePath = process.cwd()
     const directoryPath = path.join(basePath, 'bundles', folder)
-    const packageFilePath  = path.join(basePath, 'package.json')
+    const packageFilePath = path.join(basePath, 'package.json')
     // homepage.pug file is added to the package during the prepack process
     const pugFilePath = path.join(__dirname, '../website-generation/homepage.pug')
-    const versioningFilePath  = path.join(directoryPath, 'versioning.json')
+    const versioningFilePath = path.join(directoryPath, 'versioning.json')
 
     // The homepage should only be generated if a package.json file exist at the root of the repo
     if (fs.existsSync(packageFilePath)) {
@@ -288,7 +514,7 @@ export default class Bundle extends CLICommand {
           noAddToPaperbackButton: true,
         }
       */
-      const repositoryData: {[id: string]: unknown} = {}
+      const repositoryData: { [id: string]: unknown } = {}
 
       repositoryData.repositoryName = packageData.repositoryName
       repositoryData.repositoryDescription = packageData.description
