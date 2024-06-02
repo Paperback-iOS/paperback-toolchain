@@ -1,6 +1,6 @@
 {
   "name": "@paperback/toolchain",
-  "version": "0.8.1-alpha.48",
+  "version": "0.8.1-alpha.49",
   "description": "The CLI and Build Tools for Paperback sources",
   "author": "Faizan Durrani @FaizanDurrani",
   "bin": {
@@ -34,6 +34,7 @@
     "chai": "^4.3.7",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
+    "esbuild": "^0.21.4",
     "ip": "^2.0.0",
     "pug": "^3.0.2",
     "shelljs": "^0.8.5"
@@ -77,7 +78,9 @@
     }
   },
   "scripts": {
-    "build": "shx rm -rf dist && node ./src/devtools/generate.js && swc src -C module.type=commonjs --out-dir dist --source-maps",
+    "betterbuild": "shx rm -rf dist && tsc -b",
+    "betterfullbuild": "npm run betterbuild && oclif manifest && oclif readme && node ./bin/prepack-script && shx rm -f oclif.manifest.json",
+    "build": "shx rm -rf dist && ./src/devtools/generate-ts.sh && tsc -b",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",

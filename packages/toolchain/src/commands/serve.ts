@@ -70,10 +70,10 @@ export default class Serve extends CLICommand {
 
       if (input === 'h' || input === 'help') {
         this.log(chalk.underline.bold('Help'))
-        this.log('  h,  help - Display this message')
-        this.log('  s,  stop - Stop the server')
-        this.log('  r,  restart - Restart the server, also rebuilds the sources')
-        this.log('  rb, rebuild - Rebuild the sources')
+        this.log('  h, help - Display this message')
+        this.log('  s, stop - Stop the server')
+        this.log('  r, rebuild - Rebuilds the sources')
+        this.log('  rs, restart - Restart the server, also rebuilding the sources')
       }
 
       if (input === 's' || input === 'stop') {
@@ -82,7 +82,7 @@ export default class Serve extends CLICommand {
         stopServer = true
       }
 
-      if (input === 'r' || input === 'restart') {
+      if (input === 'rs' || input === 'restart') {
         server.stop()
 
         // eslint-disable-next-line no-console
@@ -101,10 +101,17 @@ export default class Serve extends CLICommand {
         this.log(chalk`For a list of commands do {green h} or {green help}`)
       }
 
-      if ((input === 'rb' || input === 'rebuild') && isRebuildingSources === false) {
-        isRebuildingSources = true
-        this._rebuildSources(flags['use-node-fs'], flags['with-typechecking'])
-        isRebuildingSources = false
+      if (input === 'r' || input === 'rebuild') {
+        // eslint-disable-next-line no-console
+        console.clear()
+
+        this.log(chalk.underline.blue('Re-building Sources'))
+
+        // eslint-disable-next-line no-await-in-loop
+        await Bundle.run([])
+        this.log()
+
+        this.log(chalk`For a list of commands do {green h} or {green help}`)
       }
     }
 

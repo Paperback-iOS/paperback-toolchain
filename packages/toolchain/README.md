@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.1-alpha.48 win32-x64 node-v19.4.0
+@paperback/toolchain/0.8.0-alpha.47 win32-x64 node-v18.19.1
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND

@@ -1,11 +1,11 @@
 import {Flags} from '@oclif/core'
 import {CLICommand} from '../command'
 import * as path from 'node:path'
-import * as fs from 'node:fs'
+import {promises as fs} from 'node:fs'
 
-import browserify from 'browserify'
-import * as shelljs from 'shelljs'
+import * as esbuild from 'esbuild'
 import Utils from '../utils'
+import {constants} from 'node:fs/promises'
 
 // Homepage generation requirement
 const pug = require('pug')
@@ -48,7 +48,6 @@ export default class Bundle extends CLICommand {
   }
 
   async generateVersioningFile(folder = '') {
-    // joining path of directory
     const basePath = process.cwd()
     const directoryPath = path.join(basePath, 'bundles', folder)
     const cliInfo = require('../../package.json')
@@ -63,24 +62,23 @@ export default class Bundle extends CLICommand {
       },
     }
 
-    const promises = fs.readdirSync(directoryPath).map(async file => {
+    const promises = (await fs.readdir(directoryPath)).map(async file => {
       if (file.startsWith('.') || file.startsWith('tests')) return
 
-      try {
-        const time = this.time(`- Generating ${file} Info`)
-        const sourceInfo = await this.generateSourceInfo(file, directoryPath)
-
+      const time = this.time(`- Generating ${file} Info`)
+      await this.generateSourceInfo(file, directoryPath).then(sourceInfo => {
         jsonObject.sources.push(sourceInfo)
-        time.end()
-      } catch (error) {
+      }).catch(error => {
         this.log(`- ${file} ${error}`)
-      }
+      })
+
+      time.end()
     })
 
     await Promise.all(promises)
 
     // Write the JSON payload to file
-    fs.writeFileSync(
+    await fs.writeFile(
       path.join(directoryPath, 'versioning.json'),
       JSON.stringify(jsonObject),
     )
@@ -93,12 +91,12 @@ export default class Bundle extends CLICommand {
     }
 
     // If its a directory
-    if (!fs.statSync(path.join(directoryPath, sourceId)).isDirectory()) {
+    if (!(await fs.stat(path.join(directoryPath, sourceId))).isDirectory()) {
       this.log('not a Directory, skipping ' + sourceId)
       return
     }
 
-    const finalPath = path.join(directoryPath, sourceId, 'index.js')
+    const finalPath = path.join(directoryPath, sourceId, 'source.js')
 
     return new Promise<any>((res, rej) => {
       const req = require(finalPath)
@@ -106,128 +104,120 @@ export default class Bundle extends CLICommand {
       const classInstance = req[`${sourceId}Info`]
 
       // make sure the icon is present in the includes folder.
-      if (!fs.existsSync(path.join(directoryPath, sourceId, 'includes', classInstance.icon))) {
+      fs.access(path.join(directoryPath, sourceId, 'includes', classInstance.icon), constants.F_OK).then(() => {
+        res({
+          id: sourceId,
+          name: classInstance.name,
+          author: classInstance.author,
+          desc: classInstance.description,
+          website: classInstance.authorWebsite,
+          contentRating: classInstance.contentRating,
+          version: classInstance.version,
+          icon: classInstance.icon,
+          tags: classInstance.sourceTags,
+          websiteBaseURL: classInstance.websiteBaseURL,
+          intents: classInstance.intents,
+        })
+      }).catch(() => {
         rej(new Error('[ERROR] [' + sourceId + '] Icon must be inside the includes folder'))
-        return
-      }
-
-      res({
-        id: sourceId,
-        name: classInstance.name,
-        author: classInstance.author,
-        desc: classInstance.description,
-        website: classInstance.authorWebsite,
-        contentRating: classInstance.contentRating,
-        version: classInstance.version,
-        icon: classInstance.icon,
-        tags: classInstance.sourceTags,
-        websiteBaseURL: classInstance.websiteBaseURL,
-        intents: classInstance.intents,
       })
     })
   }
 
-  async bundleSources(folder = '', useTypeChecking = false) {
-    const cwd = process.cwd()
-    const tmpTranspilePath = path.join(cwd, 'tmp')
-    const bundlesDirPath = path.join(cwd, 'bundles', folder)
-
-    const transpileTime = this.time('Transpiling project', Utils.headingFormat)
-    this.utils.deleteFolderRecursive(tmpTranspilePath)
-
-    if (useTypeChecking) {
-      shelljs.exec('npx tsc --outDir tmp')
-    } else {
-      shelljs.exec('npx swc src -C module.type=commonjs --out-dir tmp --source-maps')
+  async findSourceEntryPoints(srcFolder?: string) {
+    let srcFolderActual = srcFolder ?? ''
+    if (srcFolder === undefined || !srcFolder || srcFolderActual === '') {
+      srcFolderActual = path.join(process.cwd(), 'src')
     }
 
-    transpileTime.end()
+    let files: string[] = []
+    try {
+      files = await fs.readdir(srcFolderActual)
+    } catch (error) {
+      console.error(`Error reading directory: ${srcFolderActual}, are you sure you are in the right folder?`, error)
 
-    this.log()
+      return []
+    }
 
-    const bundleTime = this.time('Bundle time', Utils.headingFormat)
-    this.utils.deleteFolderRecursive(bundlesDirPath)
-    fs.mkdirSync(bundlesDirPath, {recursive: true})
-
-    const promises: Promise<void>[] = fs.readdirSync(tmpTranspilePath).map(async file => {
-      const fileBundleTime = this.time(`- Building ${file}`)
-
-      this.utils.copyFolderRecursive(
-        path.join(cwd, 'src', file, 'external'),
-        path.join(tmpTranspilePath, file),
-      )
-
-      await this.bundle(file, tmpTranspilePath, bundlesDirPath)
-
-      this.utils.copyFolderRecursive(
-        path.join(cwd, 'src', file, 'includes'),
-        path.join(bundlesDirPath, file),
-      )
-
-      fileBundleTime.end()
+    const validFiles: string[] = []
+    const validFilesPromises = files.map(sourceFolder => {
+      const fullFilePath = path.join(srcFolderActual, sourceFolder)
+      return fs.stat(fullFilePath)
+      .then(stats => {
+        if (stats.isDirectory()) {
+          return fs.access(path.join(fullFilePath, sourceFolder + '.ts'), constants.F_OK).then(() => {
+            validFiles.push(sourceFolder)
+          })
+        }
+      })
+      .then()
     })
+    await Promise.all(validFilesPromises)
 
-    await Promise.all(promises)
+    return validFiles.map(sourceFolder => {
+      return {
+        in: path.join(srcFolderActual, sourceFolder, sourceFolder + '.ts'),
+        out: path.join(sourceFolder, 'source'),
+      }
+    })
+  }
+
+  async bundleSources(folder = '') {
+    const cwd = process.cwd()
+    const bundlesPath = path.join(cwd, 'bundles', folder)
+
+    await fs.rm(bundlesPath, {recursive: true}).catch(error => {
+      console.error(`Error deleting and/or creating bundles directory '${bundlesPath}}'`, error)
+    })
+    await fs.mkdir(bundlesPath)
+
+    const bundleTime = this.time('Transpile and bundle time', Utils.headingFormat)
+
+    const entryPoints = await this.findSourceEntryPoints(path.join(cwd, 'src'))
+    const includesPromises = entryPoints.map(entryPoint => {
+      return fs.mkdir(path.join(bundlesPath, path.basename(path.dirname(entryPoint.in)), 'includes'), {recursive: true}).catch(error => {
+        console.error(`Error creating includes directory in bundles folder for '${entryPoint.in}'`, error)
+      })
+    })
+    // Do wait for all includes to be created before starting the build, as they also instantiate each source's bundles folder.
+    await Promise.all(includesPromises)
+
+    // Currently only does shallow copies. However, this should not be a problem as there has not been a case where a source uses nested files inside the includes folder.
+    const includesCopyPromises = entryPoints.map(entryPoint => {
+      return fs.readdir(path.join(path.dirname(entryPoint.in), 'includes')).then(files => {
+        return Promise.all(files.map(file => {
+          return fs.copyFile(path.join(path.dirname(entryPoint.in), 'includes', file), path.join(bundlesPath, path.basename(path.dirname(entryPoint.in)), 'includes', file)).catch(error => {
+            console.error(`Error copying file '${file}' from includes folder to bundles folder for '${entryPoint.in}'`, error)
+          })
+        }),
+        )
+      }).catch(error => {
+        console.error(`Error reading includes folder for '${entryPoint.in}'`, error)
+      })
+    })
+    await Promise.all(includesCopyPromises)
+    await esbuild.build({
+      entryPoints: entryPoints,
+      mainFields: ['module', 'window', 'self', 'main', 'global', 'this'],
+      globalName: 'source',
+      bundle: true,
+      format: 'iife',
+      outdir: bundlesPath,
+      external: ['axios', 'fs'],
+      banner: {
+        js: 'function compat() {',
+      },
+      footer: {
+        js: 'return source;} this.Sources = compat(); if (typeof exports === \'object\' && typeof module !== \'undefined\') {module.exports = this.Sources;}',
+      },
+    })
 
     bundleTime.end()
 
     this.log()
-    // Remove the build folder
-    this.utils.deleteFolderRecursive(path.join(cwd, 'tmp'))
   }
 
-  async bundle(file: string, sourceDir: string, destDir: string): Promise<void> {
-    if (file === 'tests') {
-      this.log('Tests directory, skipping')
-      return
-    }
-
-    // If its a directory
-    if (!fs.statSync(path.join(sourceDir, file)).isDirectory()) {
-      this.log('Not a directory, skipping ' + file)
-      return
-    }
-
-    const filePath = path.join(sourceDir, file, `/${file}.js`)
-
-    if (!fs.existsSync(filePath)) {
-      this.log("The file doesn't exist, skipping. " + file)
-      return
-    }
-
-    const outputPath = path.join(destDir, file)
-    if (!fs.existsSync(outputPath)) {
-      fs.mkdirSync(outputPath)
-    }
-
-    await Promise.all([
-      // For 0.9 and above
-      new Promise<void>(res => {
-        browserify([filePath], {standalone: 'Sources'})
-        .external(['axios', 'fs'])
-        .bundle()
-        .pipe(
-          fs.createWriteStream(path.join(outputPath, 'index.js')).on('finish', () => {
-            res()
-          }),
-        )
-      }),
-
-      // For 0.8; ensures backwards compatibility with 0.7 sources
-      new Promise<void>(res => {
-        browserify([filePath], {standalone: 'Sources'})
-        .external(['axios', 'fs'])
-        .bundle()
-        .pipe(
-          fs.createWriteStream(path.join(outputPath, 'source.js')).on('finish', () => {
-            res()
-          }),
-        )
-      }),
-    ])
-  }
-
-  async generateHomepage(folder = '')  {
+  async generateHomepage(folder = '') {
     /*
      * Generate a homepage for the repository based on the package.json file and the generated versioning.json
      *
@@ -250,18 +240,19 @@ export default class Bundle extends CLICommand {
     // joining path of directory
     const basePath = process.cwd()
     const directoryPath = path.join(basePath, 'bundles', folder)
-    const packageFilePath  = path.join(basePath, 'package.json')
+    const packageFilePath = path.join(basePath, 'package.json')
     // homepage.pug file is added to the package during the prepack process
     const pugFilePath = path.join(__dirname, '../website-generation/homepage.pug')
-    const versioningFilePath  = path.join(directoryPath, 'versioning.json')
+    const versioningFilePath = path.join(directoryPath, 'versioning.json')
 
     // The homepage should only be generated if a package.json file exist at the root of the repo
-    if (fs.existsSync(packageFilePath)) {
+    try {
+      await fs.access(packageFilePath, constants.F_OK)
       this.log('- Generating the repository homepage')
 
       // We need data from package.json and versioning.json created previously
-      const packageData = JSON.parse(fs.readFileSync(packageFilePath, 'utf8'))
-      const extensionsData = JSON.parse(fs.readFileSync(versioningFilePath, 'utf8'))
+      const packageData = JSON.parse(await fs.readFile(packageFilePath, 'utf8'))
+      const extensionsData = JSON.parse(await fs.readFile(versioningFilePath, 'utf8'))
 
       // Creation of the list of available extensions
       // [{name: sourceName, tags[]: []}]
@@ -288,7 +279,7 @@ export default class Bundle extends CLICommand {
           noAddToPaperbackButton: true,
         }
       */
-      const repositoryData: {[id: string]: unknown} = {}
+      const repositoryData: { [id: string]: unknown } = {}
 
       repositoryData.repositoryName = packageData.repositoryName
       repositoryData.repositoryDescription = packageData.description
@@ -329,10 +320,12 @@ export default class Bundle extends CLICommand {
         repositoryData,
       )
 
-      fs.writeFileSync(
+      await fs.writeFile(
         path.join(directoryPath, 'index.html'),
         htmlCode,
       )
+    } catch (error) {
+      console.group('Unexpected error', error)
     }
   }
 }
