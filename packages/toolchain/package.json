@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.8.14",
+    "@ivanmatthew/fs-utils-rs": "^0.1.2",
     "@oclif/core": "^1.16.1",
     "@oclif/plugin-help": "^5.1.12",
     "@oclif/plugin-plugins": "^2.1.0",
@@ -78,8 +79,6 @@
     }
   },
   "scripts": {
-    "betterbuild": "shx rm -rf dist && tsc -b",
-    "betterfullbuild": "npm run betterbuild && oclif manifest && oclif readme && node ./bin/prepack-script && shx rm -f oclif.manifest.json",
     "build": "shx rm -rf dist && ./src/devtools/generate-ts.sh && tsc -b",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",

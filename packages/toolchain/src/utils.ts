@@ -1,29 +1,32 @@
 /* eslint-disable unicorn/prefer-module */
 import chalk from 'chalk'
-import {promises as fs} from 'node:fs'
+import { promises as fs } from 'node:fs'
 import * as path from 'node:path'
 
 export default class Utils {
   static headingFormat = chalk`{bold {red #} $1}`
-  fsutils: any
 
+  fsutils: any
   constructor(useFSUtils = true) {
     let canUseFSUtils = false
-    const platform = require('node:os').platform()
 
-    if (useFSUtils && platform === 'win32') {
-      canUseFSUtils = true
-
-      this.fsutils = require(path.join(__dirname, '..', 'rust-modules', 'fs-utils'))
+    if (useFSUtils) {
+      try {
+        this.fsutils = require('@ivanmatthew/fs-utils-rs')
+        canUseFSUtils = true
+      } catch (error) {
+        canUseFSUtils = false
+      }
     }
 
     if (!canUseFSUtils && useFSUtils) {
+      const platform = require('node:os').platform()
       Utils.log(chalk`{yellow WARNING:} {gray (rust) fs-utils} is not available for your platform '${platform}', falling back to {gray node fs}!`)
     }
   }
 
   static fixedWidth(number: number, width: number) {
-    return (Array.from({length: width}).join('0') + number).slice(-width)
+    return (Array.from({ length: width }).join('0') + number).slice(-width)
   }
 
   static prefixTime(message = '') {
@@ -73,7 +76,7 @@ export default class Utils {
       })
     }
 
-    await fs.rm(folderPath, {recursive: true}).catch(error => {
+    await fs.rm(folderPath, { recursive: true }).catch(error => {
       console.error(`Error deleting and/or creating bundles directory '${folderPath}}'`, error)
     })
   }

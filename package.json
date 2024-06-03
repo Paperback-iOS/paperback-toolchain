@@ -2,9 +2,14 @@
   "name": "paperback-toolchain",
   "description": "Paperback Toolchain",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@ivanmatthew/**"
+    ]
+  },
   "dependencies": {
     "turbo": "^1.10.16"
   },

@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"name": "runtime-polyfills",
+			"path": "./packages/runtime-polyfills"
+		},
+		{
+			"name": "toolchain",
+			"path": "./packages/toolchain"
+		},
+		{
+			"name": "types",
+			"path": "./packages/types"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
