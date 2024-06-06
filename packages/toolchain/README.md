@@ -380,17 +380,16 @@ describe the command here
 
 ```
 USAGE
-  $ paperback test [SOURCE] [--ip <value>] [--port <value>] [--use-node-fs] [--with-typechecking]
+  $ paperback test [SOURCE] [--ip <value>] [--port <value>] [--use-node-fs]
 
 ARGUMENTS
   SOURCE  (optional) The source to test
 
 FLAGS
   --ip=<value>
-  --port=<value>       [default: 27015]
-  --use-node-fs        For more info, check
-                       https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
-  --with-typechecking  Enable typechecking when transpiling typescript files
+  --port=<value>  [default: 27015]
+  --use-node-fs   For more info, check
+                  https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
 
 DESCRIPTION
   describe the command here
