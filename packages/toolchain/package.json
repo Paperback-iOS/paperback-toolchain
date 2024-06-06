@@ -79,13 +79,16 @@
     }
   },
   "scripts": {
-    "build": "shx rm -rf dist && ./src/devtools/generate-ts.sh && tsc -b",
+    "build-mac": "shx rm -rf dist && ./src/devtools/generate.sh && tsc -b",
+    "build-win": "shx rm -rf dist && ./src/devtools/generate.cmd && tsc -b",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",
-    "prepack": "yarn build && oclif manifest && oclif readme && node ./bin/prepack-script",
+    "prepack-mac": "yarn build-mac && oclif manifest && oclif readme && node ./bin/prepack-script",
+    "prepack-win": "yarn build-win && oclif manifest && oclif readme && node ./bin/prepack-script",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif readme && git add README.md"
+    "version": "oclif readme && git add README.md",
+    "protoc": "protoc"
   },
   "engines": {
     "node": ">=12.0.0"
