@@ -38,7 +38,6 @@ export default class Logcat extends CLICommand {
           break
         }
 
-        // eslint-disable-next-line no-console
         console.log(`${level} [${logLine.date?.seconds}] ${logLine.tags.map(x => `[${x}]`).join(' ')} ${logLine.message}`)
       })
       .on('error', reject)

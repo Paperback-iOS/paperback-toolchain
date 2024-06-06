@@ -36,7 +36,6 @@ export default class Serve extends CLICommand {
   async run() {
     const {flags} = await this.parse(Serve)
 
-    // eslint-disable-next-line no-console
     console.clear()
 
     this.log(chalk.underline.blue('Building Sources'))
@@ -86,7 +85,6 @@ export default class Serve extends CLICommand {
       if (input === 'rs' || input === 'restart') {
         server.stop()
 
-        // eslint-disable-next-line no-console
         console.clear()
 
         this.log(chalk.underline.blue('Building Sources'))
@@ -103,7 +101,6 @@ export default class Serve extends CLICommand {
       }
 
       if (input === 'r' || input === 'rebuild') {
-        // eslint-disable-next-line no-console
         console.clear()
 
         // eslint-disable-next-line no-await-in-loop

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {Command} from '@oclif/core'
 import Utils from './utils'
 

@@ -15,6 +15,7 @@ export default class Migrate extends CLICommand {
   public async run(): Promise<void> {
     this.log('Traversing /src directory')
 
+    // eslint-disable-next-line unicorn/prefer-module
     const myPkgPath = path.join(__dirname, '../../package.json')
     const myPkg = JSON.parse(fs.readFileSync(myPkgPath).toString())
 

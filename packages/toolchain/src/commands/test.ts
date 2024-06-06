@@ -22,7 +22,6 @@ export default class Test extends CLICommand {
     ip: Flags.string({name: 'ip', default: undefined}),
     port: Flags.integer({name: 'port', default: 27_015}),
     'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
-    'with-typechecking': Flags.boolean({aliases: ['tsc'], description: 'Enable typechecking when transpiling typescript files', required: false, default: false}),
   }
 
   static override args = [
@@ -72,6 +71,7 @@ export default class Test extends CLICommand {
     if (installClient) {
       await this.installSources(sourcesToTest, installClient, flags['use-node-fs'])
     }
+
     await this.testSources(sourcesToTest, testClient)
   }
 
@@ -138,5 +138,5 @@ export default class Test extends CLICommand {
 
 function sleep(ms: number): Promise<void> {
   // eslint-disable-next-line no-promise-executor-return
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

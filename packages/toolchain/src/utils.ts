@@ -1,7 +1,6 @@
 /* eslint-disable unicorn/prefer-module */
 import chalk from 'chalk'
-import { promises as fs } from 'node:fs'
-import * as path from 'node:path'
+import {promises as fs} from 'node:fs'
 
 export default class Utils {
   static headingFormat = chalk`{bold {red #} $1}`
@@ -14,7 +13,7 @@ export default class Utils {
       try {
         this.fsutils = require('@ivanmatthew/fs-utils-rs')
         canUseFSUtils = true
-      } catch (error) {
+      } catch {
         canUseFSUtils = false
       }
     }
@@ -26,7 +25,7 @@ export default class Utils {
   }
 
   static fixedWidth(number: number, width: number) {
-    return (Array.from({ length: width }).join('0') + number).slice(-width)
+    return (Array.from({length: width}).join('0') + number).slice(-width)
   }
 
   static prefixTime(message = '') {
@@ -55,7 +54,6 @@ export default class Utils {
     return {
       end: () => {
         const hrend = process.hrtime.bigint() - startTime
-        // eslint-disable-next-line new-cap
         this.log(`${template.replace('$1', label)}: ${chalk.green((hrend / BigInt(1_000_000)) + 'ms')}`)
       },
     }
@@ -76,7 +74,7 @@ export default class Utils {
       })
     }
 
-    await fs.rm(folderPath, { recursive: true }).catch(error => {
+    await fs.rm(folderPath, {recursive: true}).catch(error => {
       console.error(`Error deleting and/or creating bundles directory '${folderPath}}'`, error)
     })
   }

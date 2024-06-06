@@ -8,8 +8,10 @@ import * as esbuild from 'esbuild'
 import Utils from '../utils'
 
 const workingPath = process.cwd()
+// eslint-disable-next-line unicorn/prefer-module
 const cliInfo = require('../../package.json')
 // Homepage generation requirement
+// eslint-disable-next-line unicorn/prefer-module
 const pug = require('pug')
 
 export default class Bundle extends CLICommand {
@@ -23,6 +25,7 @@ export default class Bundle extends CLICommand {
   };
 
   fsUtils: Utils = undefined as any
+  // eslint-disable-next-line unicorn/prefer-module
   commonsInfo = require(path.join(workingPath, 'node_modules/@paperback/types/package.json'))
 
   async run() {
@@ -94,6 +97,7 @@ export default class Bundle extends CLICommand {
     const finalPath = path.join(directoryPath, sourceId, 'source.js')
 
     return new Promise<any>((res, rej) => {
+      // eslint-disable-next-line unicorn/prefer-module
       const req = require(finalPath)
 
       const classInstance = req[`${sourceId}Info`]
@@ -234,6 +238,7 @@ export default class Bundle extends CLICommand {
     const directoryPath = path.join(workingPath, 'bundles', folder)
     const packageFilePath = path.join(workingPath, 'package.json')
     // homepage.pug file is added to the package during the prepack process
+    // eslint-disable-next-line unicorn/prefer-module
     const pugFilePath = path.join(__dirname, '../website-generation/homepage.pug')
     const versioningFilePath = path.join(directoryPath, 'versioning.json')
 
