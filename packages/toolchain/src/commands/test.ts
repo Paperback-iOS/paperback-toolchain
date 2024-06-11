@@ -6,8 +6,8 @@ import Bundle from './bundle'
 import * as path from 'node:path'
 import * as fs from 'node:fs'
 import chalk from 'chalk'
-import {ISourceTester, ISourceInstaller, OnDeviceSourceTester, SourceTester} from '../source-tester'
-import {SourceTestRequest, TestData, SourceTestResponse} from '../devtools/generated/typescript/PDTSourceTester'
+import {ISourceTester, OnDeviceSourceTester, SourceTester} from '../source-tester'
+import {SourceTestRequest, SourceTestResponse} from '../devtools/generated/typescript/PDTSourceTester'
 import shelljs from 'shelljs'
 import Utils from '../utils'
 import Server from '../server'
@@ -21,6 +21,7 @@ export default class Test extends CLICommand {
   static override flags = {
     ip: Flags.string({name: 'ip', default: undefined}),
     port: Flags.integer({name: 'port', default: 27_015}),
+    'use-node-fs': Flags.boolean({description: 'For more info, check https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399', required: false}),
   }
 
   static override args = [
@@ -32,14 +33,18 @@ export default class Test extends CLICommand {
     },
   ]
 
+  utils: Utils = undefined as any
+
   async run() {
     const {flags, args} = await this.parse(Test)
+
+    this.utils = flags['use-node-fs'] ? new Utils(false) : new Utils(true)
 
     const cwd = process.cwd()
     const sourceId = args.source
     let sourcesDirPath: string
     let testClient: ISourceTester
-    let installClient: ISourceInstaller | undefined = undefined
+    let installClient: OnDeviceSourceTester | undefined
     if (flags.ip) {
       const grpcClient = new PaperbackSourceTesterClient(
         `${flags.ip}:${flags.port}`,
@@ -55,7 +60,7 @@ export default class Test extends CLICommand {
 
       sourcesDirPath = path.join(cwd, 'tmp')
       await this.measure('Time', Utils.headingFormat, async () => {
-        Utils.deleteFolderRecursive(sourcesDirPath)
+        await this.utils.deleteFolderRecursive(sourcesDirPath)
         shelljs.exec('npx tsc --outDir tmp')
       })
 
@@ -64,8 +69,9 @@ export default class Test extends CLICommand {
 
     const sourcesToTest = this.getSourceIdsToTest(sourceId, sourcesDirPath)
     if (installClient) {
-      await this.installSources(sourcesToTest, installClient)
+      await this.installSources(sourcesToTest, installClient, flags['use-node-fs'])
     }
+
     await this.testSources(sourcesToTest, testClient)
   }
 
@@ -104,8 +110,14 @@ export default class Test extends CLICommand {
     }
   }
 
-  private async installSources(sources: string[], client: ISourceInstaller) {
-    await Bundle.run([])
+  private async installSources(sources: string[], client: OnDeviceSourceTester, useNodeFS: boolean) {
+    if (!client.installSource) {
+      return
+    }
+
+    await Bundle.run([
+      ...(useNodeFS ? ['--use-node-fs'] : []),
+    ])
     const server = new Server(8000)
     server.start()
 
@@ -125,5 +137,6 @@ export default class Test extends CLICommand {
 }
 
 function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  // eslint-disable-next-line no-promise-executor-return
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
