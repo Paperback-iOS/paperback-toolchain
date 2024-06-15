@@ -1,6 +1,6 @@
 {
   "name": "@paperback/runtime-polyfills",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Node runtime polyfills to test Paperback sources",
   "main": "./lib/index.js",
   "types": "./src/index.ts",
@@ -11,7 +11,7 @@
   "author": "Faizan Durrani",
   "license": "ISC",
   "devDependencies": {
-    "@paperback/types": "*",
+    "@paperback/types": "^0.8.1",
     "typescript": "^4.8.2"
   },
   "publishConfig": {
