@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.4 darwin-arm64 node-v18.18.2
+@paperback/toolchain/0.8.5 darwin-arm64 node-v18.18.2
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
