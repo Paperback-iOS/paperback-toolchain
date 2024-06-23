@@ -203,7 +203,7 @@ export default class Bundle extends CLICommand {
       outdir: bundlesPath,
       external: ['axios', 'fs'],
       footer: {
-        js: 'this.Sources = _Sources;',
+        js: 'this.Sources = _Sources; if (typeof exports === \'object\' && typeof module !== \'undefined\') {module.exports.Sources = this.Sources;}',
       },
     })
 
