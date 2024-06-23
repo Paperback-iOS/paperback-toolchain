@@ -63,8 +63,6 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.2/dist/commands/bundle.ts)_
-
 ## `paperback help [COMMANDS]`
 
 Display help for paperback.
@@ -101,8 +99,6 @@ DESCRIPTION
   describe the command here
 ```
 
-_See code: [dist/commands/logcat.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.2/dist/commands/logcat.ts)_
-
 ## `paperback migrate`
 
 Migrate 0.7 sources to 0.8
@@ -117,8 +113,6 @@ DESCRIPTION
 EXAMPLES
   $ paperback migrate
 ```
-
-_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.2/dist/commands/migrate.ts)_
 
 ## `paperback plugins`
 
@@ -372,8 +366,6 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.2/dist/commands/serve.ts)_
-
 ## `paperback test [SOURCE]`
 
 describe the command here
@@ -394,6 +386,4 @@ FLAGS
 DESCRIPTION
   describe the command here
 ```
-
-_See code: [dist/commands/test.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.2/dist/commands/test.ts)_
 <!-- commandsstop -->
