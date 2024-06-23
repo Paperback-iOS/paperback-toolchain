@@ -100,7 +100,8 @@ export default class Bundle extends CLICommand {
       // eslint-disable-next-line unicorn/prefer-module
       const req = require(finalPath)
 
-      const classInstance = req[`${sourceId}Info`]
+      // eslint-disable-next-line dot-notation
+      const classInstance = req['Sources'][`${sourceId}Info`]
 
       // make sure the icon is present in the includes folder.
       fs.access(path.join(directoryPath, sourceId, 'includes', classInstance.icon), constants.F_OK).then(() => {
@@ -196,16 +197,13 @@ export default class Bundle extends CLICommand {
     await esbuild.build({
       entryPoints: entryPoints,
       mainFields: ['module', 'window', 'self', 'main', 'global', 'this'],
-      globalName: 'source',
+      globalName: '_Sources',
       bundle: true,
       format: 'iife',
       outdir: bundlesPath,
       external: ['axios', 'fs'],
-      banner: {
-        js: 'function compat() {',
-      },
       footer: {
-        js: 'return source;} this.Sources = compat(); if (typeof exports === \'object\' && typeof module !== \'undefined\') {module.exports = this.Sources;}',
+        js: 'this.Sources = _Sources; if (typeof exports === \'object\' && typeof module !== \'undefined\') {module.exports.Sources = this.Sources;}',
       },
     })
 
