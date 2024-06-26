@@ -1,6 +1,6 @@
 {
   "name": "@paperback/toolchain",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "The CLI and Build Tools for Paperback sources",
   "author": "Faizan Durrani @FaizanDurrani",
   "bin": {
@@ -26,8 +26,8 @@
     "@oclif/core": "^1.16.1",
     "@oclif/plugin-help": "^5.1.12",
     "@oclif/plugin-plugins": "^2.1.0",
-    "@paperback/runtime-polyfills": "^0.8.6",
-    "@paperback/types": "^0.8.6",
+    "@paperback/runtime-polyfills": "^0.8.7",
+    "@paperback/types": "^0.8.7",
     "@protobuf-ts/runtime-rpc": "^2.8.3",
     "@swc/cli": "^0.1.62",
     "@swc/core": "^1.3.96",

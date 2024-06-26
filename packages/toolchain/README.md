@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback COMMAND
 running command...
 $ paperback (--version)
-@paperback/toolchain/0.8.6 darwin-arm64 node-v18.18.2
+@paperback/toolchain/0.8.7 darwin-arm64 node-v18.18.2
 $ paperback --help [COMMAND]
 USAGE
   $ paperback COMMAND
@@ -29,7 +29,10 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`paperback bundle`](#paperback-bundle)
 * [`paperback help [COMMANDS]`](#paperback-help-commands)
+* [`paperback logcat`](#paperback-logcat)
+* [`paperback migrate`](#paperback-migrate)
 * [`paperback plugins`](#paperback-plugins)
 * [`paperback plugins:install PLUGIN...`](#paperback-pluginsinstall-plugin)
 * [`paperback plugins:inspect PLUGIN...`](#paperback-pluginsinspect-plugin)
@@ -39,6 +42,28 @@ USAGE
 * [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-1)
 * [`paperback plugins:uninstall PLUGIN...`](#paperback-pluginsuninstall-plugin-2)
 * [`paperback plugins update`](#paperback-plugins-update)
+* [`paperback serve`](#paperback-serve)
+* [`paperback test [SOURCE]`](#paperback-test-source)
+
+## `paperback bundle`
+
+Builds all the sources in the repository and generates a versioning file
+
+```
+USAGE
+  $ paperback bundle [-h] [--folder <value>] [--use-node-fs]
+
+FLAGS
+  -h, --help        Show CLI help.
+  --folder=<value>  Subfolder to output to
+  --use-node-fs     For more info, check
+                    https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
+
+DESCRIPTION
+  Builds all the sources in the repository and generates a versioning file
+```
+
+_See code: [dist/commands/bundle.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.7/dist/commands/bundle.ts)_
 
 ## `paperback help [COMMANDS]`
 
@@ -59,6 +84,41 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.9/src/commands/help.ts)_
+
+## `paperback logcat`
+
+describe the command here
+
+```
+USAGE
+  $ paperback logcat [--ip <value>] [--port <value>]
+
+FLAGS
+  --ip=<value>    [default: localhost]
+  --port=<value>  [default: 27015]
+
+DESCRIPTION
+  describe the command here
+```
+
+_See code: [dist/commands/logcat.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.7/dist/commands/logcat.ts)_
+
+## `paperback migrate`
+
+Migrate 0.7 sources to 0.8
+
+```
+USAGE
+  $ paperback migrate
+
+DESCRIPTION
+  Migrate 0.7 sources to 0.8
+
+EXAMPLES
+  $ paperback migrate
+```
+
+_See code: [dist/commands/migrate.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.7/dist/commands/migrate.ts)_
 
 ## `paperback plugins`
 
@@ -292,4 +352,48 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
+
+## `paperback serve`
+
+Build the sources and start a local server
+
+```
+USAGE
+  $ paperback serve [-h] [-p <value>] [-w] [--use-node-fs]
+
+FLAGS
+  -h, --help          Show CLI help.
+  -p, --port=<value>  [default: 8080]
+  -w, --watch         Rebuild sources on typescript file changes within directory
+  --use-node-fs       For more info, check
+                      https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
+
+DESCRIPTION
+  Build the sources and start a local server
+```
+
+_See code: [dist/commands/serve.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.7/dist/commands/serve.ts)_
+
+## `paperback test [SOURCE]`
+
+describe the command here
+
+```
+USAGE
+  $ paperback test [SOURCE] [--ip <value>] [--port <value>] [--use-node-fs]
+
+ARGUMENTS
+  SOURCE  (optional) The source to test
+
+FLAGS
+  --ip=<value>
+  --port=<value>  [default: 27015]
+  --use-node-fs   For more info, check
+                  https://github.com/Paperback-iOS/paperback-toolchain/pull/4#issuecomment-1791566399
+
+DESCRIPTION
+  describe the command here
+```
+
+_See code: [dist/commands/test.ts](https://github.com/Paperback-iOS/toolchain/blob/v0.8.7/dist/commands/test.ts)_
 <!-- commandsstop -->
