@@ -1,6 +1,15 @@
-42 error Error: Command failed with exit code 128: git tag v0.8.2 -m v0.8.2
-42 error fatal: tag 'v0.8.2' already exists
-42 error     at makeError (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/execa/lib/error.js:60:11)
-42 error     at handlePromise (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/execa/index.js:118:26)
-42 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-42 error     at async Promise.all (index 0)
+40 error Error: Command failed with exit code 1: git commit -m v0.8.5
+40 error On branch main
+40 error Your branch is ahead of 'origin/main' by 3 commits.
+40 error   (use "git push" to publish your local commits)
+40 error
+40 error Changes not staged for commit:
+40 error   (use "git add <file>..." to update what will be committed)
+40 error   (use "git restore <file>..." to discard changes in working directory)
+40 error 	modified:   lerna-debug.log
+40 error
+40 error no changes added to commit (use "git add" and/or "git commit -a")
+40 error     at makeError (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/execa/lib/error.js:60:11)
+40 error     at handlePromise (/Users/paper/Developer/NodeProjects/paperback-toolchain/node_modules/execa/index.js:118:26)
+40 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+40 error     at async Promise.all (index 0)
