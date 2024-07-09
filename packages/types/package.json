@@ -1,6 +1,6 @@
 {
   "name": "@paperback/types",
-  "version": "1.0.0-alpha.16",
+  "version": "1.0.0-alpha.17",
   "description": "TypeScript Types for Paperback",
   "keywords": [],
   "author": "Faizan Durrani",
@@ -18,5 +18,5 @@
   },
   "main": "./lib/index.js",
   "types": "./src/index.ts",
-  "gitHead": "0945de447b247456f110d3f9969cbc326346e469"
+  "gitHead": "f7fcc07ceb1cf80f903abb7b63db9fbec01ab690"
 }
