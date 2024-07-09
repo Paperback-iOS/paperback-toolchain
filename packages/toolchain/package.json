@@ -12,6 +12,7 @@
     "@paperback/types": "*",
     "@protobuf-ts/runtime-rpc": "^2.8.3",
     "@types/fs-extra": "^11.0.4",
+    "buffer": "^6.0.3",
     "chalk": "^4",
     "esbuild": "^0.19.11",
     "fs-extra": "^11.2.0",
@@ -61,7 +62,7 @@
   },
   "repository": "FaizanDurrani/paperback-toolchain",
   "scripts": {
-    "build": "shx rm -rf dist && tsc -b && cp -r src/homepage dist/",
+    "build": "shx rm -rf dist && tsc -b && cp -r src/homepage dist/ && cp -r src/shims dist/",
     "lint": "eslint . --ext .ts",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "npm run lint",
@@ -69,7 +70,7 @@
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md"
   },
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.16",
   "bugs": "https://github.com/FaizanDurrani/paperback-toolchain/issues",
   "keywords": [
     "oclif"
