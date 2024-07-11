@@ -1,4 +1,4 @@
-import { DiscoverSection, PagedResults, Request, Response } from ".."
+import { DiscoverSection, DiscoverSectionItem, PagedResults, Request, Response, SearchFilter } from ".."
 
 export { }
 
@@ -13,13 +13,14 @@ declare global {
     namespace Application {
         // Global
         function decodeHTMLEntities(str: string): string
+        function sleep(seconds: number): Promise<void>
 
 
         // Discover Section
         function registeredDiscoverSections(): DiscoverSection[]
         function registerDiscoverSection(
             section: DiscoverSection,
-            selector: SelectorID<(metadata: unknown) => Promise<PagedResults<unknown>>>
+            selector: SelectorID<(section: DiscoverSection, metadata: any | undefined) => Promise<PagedResults<DiscoverSectionItem>>>
         ): void
         function unregisterDiscoverSection(sectionId: string): void
 
@@ -39,5 +40,18 @@ declare global {
         function arrayBufferToUTF8String(arrayBuffer: ArrayBuffer): string
         function arrayBufferToASCIIString(arrayBuffer: ArrayBuffer): string
         function arrayBufferToUTF16String(arrayBuffer: ArrayBuffer): string
+
+
+        // Search Filters
+        function registerSearchFilter(searchFilter: SearchFilter): void
+        function unregisterSearchFilter(id: String): void
+        function registeredSearchFilters(): SearchFilter[]
+
+
+        // State Manager
+        function getState(key: String): unknown | undefined
+        function setState(value: unknown, key: String): void
+        function getSecureState(key: String): unknown | undefined
+        function setSecureState(value: unknown, key: String): void
     }
 }

@@ -4,5 +4,5 @@ export interface Request {
     method: string
     headers?: Record<string, string>
     body?: ArrayBuffer | Object | String
-    cookies?: Cookie[]
+    cookies?: Record<string, string>
 }

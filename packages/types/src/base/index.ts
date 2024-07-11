@@ -6,3 +6,12 @@ export * from "./HomeSectionType"
 export * from "./PaperbackInterceptor"
 export * from './Selector'
 export * from './Extension'
+export * from './DiscoverSectionItem'
+export * from './PagedResults'
+export * from './SearchQuery'
+export * from './SearchResultItem'
+export * from './SearchFilter'
+export * from './BasicRateLimiter'
+export * from './SettingsUI'
+export * from './CloudflareError'
+export * from './CookieStorageInterceptor'

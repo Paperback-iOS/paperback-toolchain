@@ -11,10 +11,4 @@ export interface SearchResultsProviding extends MangaProviding {
         query: SearchQuery,
         metadata: unknown | undefined,
     ): Promise<PagedResults<SearchResultItem>>
-
-    getSearchTags?(): Promise<TagSection[]>
-    getSearchFields?(): Promise<SearchField[]>
-
-    supportsTagExclusion?(): Promise<boolean>
-    supportsSearchOperators?(): Promise<boolean>
 }

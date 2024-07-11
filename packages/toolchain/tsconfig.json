@@ -11,7 +11,8 @@
         "esModuleInterop": true
     },
     "include": [
-        "src/**/*",
+        "src/**/*.ts",
         "src/devtools/.generated"
-    ]
+    ],
+    "exclude": ["src/shims"]
 }

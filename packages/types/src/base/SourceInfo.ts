@@ -6,6 +6,7 @@ export enum SourceIntents {
     COLLECTION_MANAGEMENT = 1 << 3,
     CLOUDFLARE_BYPASS_REQUIRED = 1 << 4,
     SETTINGS_UI = 1 << 5,
+    MANGA_SEARCH = 1 << 6,
 }
 
 export interface SourceDeveloper {
@@ -24,7 +25,7 @@ export interface SourceBadge {
  * A content rating to be attributed to each source.
  */
 export enum ContentRating {
-    EVERYONE = "EVERYONE",
+    EVERYONE = "SAFE",
     MATURE = "MATURE",
     ADULT = "ADULT",
 }

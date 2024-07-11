@@ -6,9 +6,10 @@ export interface Chapter {
     langCode: string
     chapNum: number
     title?: string
+    version?: string
     volume?: number
     metadata?: string
     publishDate?: Date
-    creationDate?: number
-    sortingIndex?: unknown
+    creationDate?: Date
+    sortingIndex?: number
 }

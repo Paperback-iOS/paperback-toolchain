@@ -16,23 +16,6 @@ export default class Bundle extends Command {
         help: Flags.help({ char: 'h' })
     }
 
-    async bundleExtension(directoryName: string, sourceDirectory: string, destinationDirectory: string): Promise<void> {
-        const directoryContainsExtensionDefinition = fs.existsSync(path.join(sourceDirectory, 'pbconfig.js'))
-        if (!directoryContainsExtensionDefinition) return
-
-        const result = await esbuild.build({
-            bundle: true,
-            entryPoints: [path.join(sourceDirectory, 'main.js')],
-            format: 'iife',
-            globalName: 'source',
-            metafile: true,
-            minify: true,
-            outfile: path.join(destinationDirectory, 'index.js')
-        })
-
-        fs.writeFileSync(path.join(destinationDirectory, 'metafile.json'), JSON.stringify(result.metafile))
-    }
-
     async bundleSources(folder = '') {
         const cwd = process.cwd()
 
@@ -60,15 +43,16 @@ export default class Bundle extends Command {
                             }
                         ])
 
+                    
                     const result = await esbuild.build({
                         bundle: true,
                         entryPoints: files,
                         format: 'iife',
                         globalName: 'source',
-                        jsx: 'transform',
-                        jsxFactory: 'Paperback.createFormElement',
                         metafile: true,
-                        outdir: bundlesDirPath
+                        outdir: bundlesDirPath,
+                        inject: [path.join(__dirname,'../shims/buffer.js')],
+
                         // minify: true,
                         // sourcemap: "inline"
                     })

@@ -10,7 +10,7 @@ export interface SourceManga {
      * 
      * These are updated and tracked by the database.
      */
-    readonly chapterCount: number
-    readonly newChapterCount: number
-    readonly unreadChapterCount: number
+    readonly chapterCount?: number
+    readonly newChapterCount?: number
+    readonly unreadChapterCount?: number
 }
