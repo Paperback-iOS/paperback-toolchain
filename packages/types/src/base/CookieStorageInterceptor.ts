@@ -8,8 +8,6 @@ type CookieStorageOptions = {
 const cookieStateKey = 'cookie_store_cookies'
 
 export class CookieStorageInterceptor extends PaperbackInterceptor {
-    // Good enough random id
-    sessionId: string = `${Date.now()}-${Math.random().toString().slice(2)}`
     private _cookies: Record<string, Cookie> = {}
 
     get cookies(): Readonly<Cookie[]> {
@@ -57,8 +55,10 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
         for (const cookie of response.cookies) {
             const identifier = this.cookieIdentifier(cookie)
 
-            // If the cookie is already expired, skip
-            if (cookie.expires && cookie.expires.getUTCMilliseconds() <= Date.now()) {
+            // If the cookie is already expired, delete it
+            // Usually backends "delete" a cookie by setting its
+            // expiry in the past
+            if (this.isCookieExpired(cookie)) {
                 delete cookies[identifier]
                 continue
             }
@@ -68,12 +68,13 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
 
         this._cookies = cookies
         this.saveCookiesToStorage()
+        
         return data
     }
 
     setCookie(cookie: Cookie) {
         // If the cookie is already expired, skip
-        if (cookie.expires && cookie.expires.getUTCMilliseconds() <= Date.now()) {
+        if (this.isCookieExpired(cookie)) {
             return
         }
 
@@ -89,8 +90,14 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
         const url = new URL(urlString)
         const matchedCookies: Record<string, { cookie: Cookie, pathMatches: number }> = {}
         const splitUrlPath = url.pathname.split('/')
+        const cookies = this.cookies
 
-        for (const cookie of this.cookies) {
+        for (const cookie of cookies) {
+            if (this.isCookieExpired(cookie)) {
+                delete this._cookies[this.cookieIdentifier(cookie)]
+                continue
+            }
+
             const cookieDomain = this.cookieSanitizedDomain(cookie)
             if (cookieDomain != url.hostname) {
                 continue
@@ -138,6 +145,14 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
         return cookie.domain.startsWith('.') ? cookie.domain.slice(1) : cookie.domain
     }
 
+    private isCookieExpired(cookie: Cookie): boolean {
+        if (cookie.expires && cookie.expires.getUTCMilliseconds() <= Date.now()) {
+            return true
+        } else { 
+            return false 
+        }
+    }
+
     private loadCookiesFromStorage() {
         // If this stores in memory, we probably already have the latest cookies
         if (this.options.storage == 'memory') { return }
@@ -148,23 +163,15 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
             return
         }
 
-        const cookies: Cookie[] = []
+        const cookies: Record<string, Cookie> = {}
+        for (const cookie of cookieData) {
+            // ignore session cookies and expired cookies
+            if (!cookie.expires || this.isCookieExpired(cookie)) { continue }
 
-        for (const cookieInfo of cookieData) {
-            // This should never be the case since we're not storing 
-            // session cookies in storage
-            if (!cookieInfo.expires) { continue }
-
-            // Make sure the cookie is not expired
-            if (cookieInfo.expires.getUTCMilliseconds() > Date.now()) {
-                cookies.push(cookieInfo)
-            } else {
-                // Cookie has been expired, discard
-                continue
-            }
+            cookies[this.cookieIdentifier(cookie)] = cookie
         }
 
-        this.cookies = cookies
+        this._cookies = cookies
     }
 
     private saveCookiesToStorage() {
