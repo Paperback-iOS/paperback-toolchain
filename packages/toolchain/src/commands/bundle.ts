@@ -14,6 +14,13 @@ const cliInfo = require('../../package.json')
 // eslint-disable-next-line unicorn/prefer-module
 const pug = require('pug')
 
+// eslint-disable-next-line unicorn/prefer-module
+const plugin = require('node-stdlib-browser/helpers/esbuild/plugin')
+// eslint-disable-next-line unicorn/prefer-module
+const stdLibBrowser = require('node-stdlib-browser')
+// eslint-disable-next-line unicorn/prefer-module
+const nodeSTDLibESBuildShimPath = require.resolve('node-stdlib-browser/helpers/esbuild/shim')
+
 export default class Bundle extends CLICommand {
   static override description =
     'Builds all the sources in the repository and generates a versioning file';
@@ -196,15 +203,23 @@ export default class Bundle extends CLICommand {
     await Promise.all(includesCopyPromises)
     await esbuild.build({
       entryPoints: entryPoints,
-      mainFields: ['module', 'window', 'self', 'main', 'global', 'this'],
+      mainFields: ['main', 'module', 'browser'],
       globalName: '_Sources',
       bundle: true,
+      minify: true,
       format: 'iife',
       outdir: bundlesPath,
       external: ['axios', 'fs'],
       footer: {
-        js: 'this.Sources = _Sources; if (typeof exports === \'object\' && typeof module !== \'undefined\') {module.exports.Sources = this.Sources;}',
+        js: 'this.Sources = _Sources; if (typeof exports === \'object\' && typeof module !== \'undefined\') {module.exports.Sources = this.Sources;} if (typeof globalThis === \'object\') { globalThis.Sources = this.Sources;}',
       },
+      inject: [nodeSTDLibESBuildShimPath],
+      define: {
+        Buffer: 'Buffer',
+        process: 'process',
+        global: 'global',
+      },
+      plugins: [plugin(stdLibBrowser)],
     })
 
     bundleTime.end()
