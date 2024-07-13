@@ -112,7 +112,8 @@ export default class Bundle extends Command {
             bundle: true,
             entryPoints: [configPath],
             format: 'cjs',
-            write: false
+            write: false,
+            treeShaking: true
         })
 
         if (configBundle.errors.length > 0) {

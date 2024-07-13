@@ -1,5 +1,4 @@
-import { Request, Response } from "../generated/_exports";
-import { MangaProviding } from "./interfaces";
+import { Request, Response } from "..";
 
 export abstract class PaperbackInterceptor {
     constructor(public id: string) { }

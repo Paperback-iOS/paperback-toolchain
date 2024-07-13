@@ -1,5 +1,6 @@
 
-import { Cookie, PaperbackInterceptor, Request, Response } from "..";
+import { PaperbackInterceptor } from "./PaperbackInterceptor";
+import { Cookie, Request, Response } from "..";
 
 type CookieStorageOptions = {
     storage: 'stateManager' | 'memory'
@@ -68,7 +69,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
 
         this._cookies = cookies
         this.saveCookiesToStorage()
-        
+
         return data
     }
 
