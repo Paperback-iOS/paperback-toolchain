@@ -165,7 +165,7 @@ export default class Bundle extends Command {
         }
 
         // Write the JSON payload to file
-        fs.writeFileSync(path.join(directoryPath, 'versioning.json'), JSON.stringify(jsonObject))
+        fs.writeFileSync(path.join(directoryPath, 'versioning.json'), JSON.stringify(jsonObject, null, 2))
     }
 
     async run() {
