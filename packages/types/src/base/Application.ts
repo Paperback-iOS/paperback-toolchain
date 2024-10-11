@@ -12,6 +12,7 @@ type ResponseInterceptor = (
 declare global {
     namespace Application {
         // Global
+        const isResourceLimited: boolean
         function decodeHTMLEntities(str: string): string
         function sleep(seconds: number): Promise<void>
 
