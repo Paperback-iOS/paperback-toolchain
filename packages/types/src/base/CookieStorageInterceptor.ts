@@ -2,6 +2,8 @@
 import { PaperbackInterceptor } from "./PaperbackInterceptor";
 import { Cookie, Request, Response } from "..";
 
+
+
 type CookieStorageOptions = {
     storage: 'stateManager' | 'memory'
 }
@@ -88,9 +90,15 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
     }
 
     cookiesForUrl(urlString: string): Cookie[] {
-        const url = new URL(urlString)
+        console.log('[COMPAT] COOKIES FOR URL')
+        const urlRegex = /^((?:(https?):\/\/)?((?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9]))|(?:(?:(?:\w+\.){1,2}[\w]{2,3})))(?::(\d+))?((?:\/[\w]+)*)(?:\/|(\/[\w]+\.[\w]{3,4})|(\?(?:([\w]+=[\w]+)&)*([\w]+=[\w]+))?|\?(?:(wsdl|wadl))))$/gm;
+        const urlParsed = urlRegex.exec(urlString);
+        if (!urlParsed)
+          return [];
+        const hostname = urlParsed[3];
+        const pathname = urlParsed[5];
         const matchedCookies: Record<string, { cookie: Cookie, pathMatches: number }> = {}
-        const splitUrlPath = url.pathname.split('/')
+        const splitUrlPath = pathname.split('/')
         const cookies = this.cookies
 
         for (const cookie of cookies) {
@@ -100,7 +108,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
             }
 
             const cookieDomain = this.cookieSanitizedDomain(cookie)
-            if (cookieDomain != url.hostname) {
+            if (cookieDomain != hostname) {
                 continue
             }
 
@@ -108,11 +116,11 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
             const splitCookiePath = cookiePath.split('/')
             let pathMatches = 0
 
-            if (url.pathname === cookiePath) {
+            if (pathname === cookiePath) {
                 pathMatches = Number.MAX_SAFE_INTEGER
             } else if (splitUrlPath.length === 0) {
                 pathMatches = 1
-            } else if (cookiePath.startsWith(url.pathname) && splitUrlPath.length >= splitCookiePath.length) {
+            } else if (cookiePath.startsWith(pathname) && splitUrlPath.length >= splitCookiePath.length) {
                 for (let i = 0; i < splitUrlPath.length; i++) {
                     if (splitCookiePath[i] === splitUrlPath[i]) {
                         pathMatches += 1

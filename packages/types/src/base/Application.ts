@@ -50,9 +50,15 @@ declare global {
 
 
         // State Manager
-        function getState(key: String): unknown | undefined
-        function setState(value: unknown, key: String): void
         function getSecureState(key: String): unknown | undefined
         function setSecureState(value: unknown, key: String): void
+        function getState(key: String): unknown | undefined
+        function setState(value: unknown, key: String): void
+        /**
+         * Clears all saved state.
+         * 
+         * Note: Does not clear secure state.
+         */
+        function resetAllState(): void
     }
 }
