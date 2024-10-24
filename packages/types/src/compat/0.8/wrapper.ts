@@ -1,4 +1,4 @@
-import { Chapter, ChapterDetails, ChapterProviding, ContentRating, DiscoverSection, DiscoverSectionItem, DiscoverSectionType, EndOfPageResults, Extension, MangaProviding, PagedResults, SearchQuery, SearchResultItem, SearchResultsProviding, SourceManga } from "@paperback/types";
+import { Chapter, ChapterDetails, ChapterProviding, ContentRating, DiscoverSection, DiscoverSectionItem, DiscoverSectionType, EndOfPageResults, Extension, MangaProviding, PagedResults, SearchQuery, SearchResultItem, SearchResultsProviding, SourceManga, DiscoverSectionProviding } from "@paperback/types";
 import {
     PaperbackExtensionBase,
     SearchRequest as LegacySearchRequest,
@@ -9,21 +9,26 @@ import {
 
 type Source = PaperbackExtensionBase & LegacyChapterProviding & LegacyHomePageSectionsProviding & LegacySearchResultsProviding
 
-class _CompatWrapper implements Extension, MangaProviding, SearchResultsProviding, ChapterProviding {
+class _CompatWrapper implements Extension, MangaProviding, SearchResultsProviding, ChapterProviding, DiscoverSectionProviding {
     private homepageItemCache: Record<string, DiscoverSectionItem[]> = {}
     constructor(private legacySource: Source) { }
 
-    async initialise() {
+    async initialise() {}
+
+    async getDiscoverSections(): Promise<DiscoverSection[]> {
+        const discoverSections: DiscoverSection[] = []
+
         await this.legacySource.getHomePageSections?.((section) => {
-            Application.registerDiscoverSection({
+            discoverSections.push({
                 id: section.id,
                 title: section.title,
                 type: DiscoverSectionType.simpleCarousel
-            }, Application.Selector(this as _CompatWrapper, 'homepageItems'))
+            })
 
             if (!section.containsMoreItems && section.items.length > 0) {
                 this.homepageItemCache[section.id] = section.items.map(x => {
                     return {
+                        type: 'simpleCarouselItem',
                         title: x.title,
                         subtitle: x.subtitle,
                         mangaId: x.mangaId,
@@ -32,9 +37,11 @@ class _CompatWrapper implements Extension, MangaProviding, SearchResultsProvidin
                 })
             }
         })
+
+        return discoverSections
     }
 
-    async homepageItems(section: DiscoverSection, metadata: unknown | undefined): Promise<PagedResults<DiscoverSectionItem>> {
+    async getDiscoverSectionItems(section: DiscoverSection, metadata: unknown | undefined): Promise<PagedResults<DiscoverSectionItem>> {
         const cachedItems = this.homepageItemCache[section.id]
         if (cachedItems) {
             return { items: cachedItems }
@@ -46,6 +53,7 @@ class _CompatWrapper implements Extension, MangaProviding, SearchResultsProvidin
             return {
                 items: result.results.map(x => {
                     return {
+                        type: 'simpleCarouselItem',
                         title: x.title,
                         subtitle: x.subtitle,
                         mangaId: x.mangaId,
@@ -81,6 +89,20 @@ class _CompatWrapper implements Extension, MangaProviding, SearchResultsProvidin
             includedTags: [],
             excludedTags: [],
             parameters: {}
+        }
+
+        for (const filter of query.filters) {
+            if (typeof filter.value === 'string') {
+                legacyQuery.parameters[filter.id] = filter.value
+            } else {
+                for (const tag of Object.keys(filter.value)) {
+                    if (filter.value[tag] === 'included'){
+                        legacyQuery.includedTags.push({id: tag, label: tag})
+                    } else {
+                        legacyQuery.excludedTags.push({id: tag, label: tag})
+                    }
+                }
+            }
         }
 
         let legacyResults = await this.legacySource.getSearchResults(legacyQuery, metadata)

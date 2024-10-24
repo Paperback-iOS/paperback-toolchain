@@ -1,4 +1,4 @@
-import { DiscoverSectionType } from "../../DiscoverSectionType"
+import { DiscoverSectionType } from "../../base/DiscoverSectionType"
 
 export interface DiscoverSection {
     readonly id: string
