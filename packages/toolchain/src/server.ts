@@ -1,9 +1,10 @@
-import * as ip from 'ip'
 import * as fs from 'node:fs'
 import * as http from 'node:http'
 import * as path from 'node:path'
 
 import chalk from 'chalk'
+
+import { getLocalIPv4Address } from './ip'
 
 export default class Server {
     port: number
@@ -82,7 +83,7 @@ export default class Server {
         )
         console.log(
             `Server running at ${chalk.green(
-                `http://${ip.address()}:${this.port}/versioning.json`
+                `http://${getLocalIPv4Address()}:${this.port}/versioning.json`
             )}`
         )
     }

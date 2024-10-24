@@ -8,11 +8,7 @@
     "access": "public"
   },
   "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5"
-  },
   "scripts": {
-    "fix": "npx rome format ./src --write && npx rome check ./src --apply",
     "build": "rm -rf lib && tsc",
     "prepack": "npm run build"
   },
