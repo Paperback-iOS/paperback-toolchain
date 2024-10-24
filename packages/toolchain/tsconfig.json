@@ -8,7 +8,8 @@
         "target": "es2022",
         "allowJs": false,
         "checkJs": false,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
     },
     "include": [
         "src/**/*.ts",
