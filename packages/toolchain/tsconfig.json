@@ -9,7 +9,6 @@
         "allowJs": false,
         "checkJs": false,
         "esModuleInterop": true,
-        "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
     },
     "include": [
         "src/**/*.ts",
