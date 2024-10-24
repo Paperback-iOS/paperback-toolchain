@@ -9,7 +9,7 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5"
+    "typescript": "^5.6.3"
   },
   "scripts": {
     "fix": "npx rome format ./src --write && npx rome check ./src --apply",

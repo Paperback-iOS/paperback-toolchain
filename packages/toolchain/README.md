@@ -18,7 +18,7 @@ $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-@paperback/toolchain/1.0.0-alpha.23 darwin-arm64 node-v18.18.2
+@paperback/toolchain/1.0.0-alpha.23 darwin-arm64 node-v20.18.0
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -31,14 +31,14 @@ USAGE
 * [`paperback-cli help [COMMAND]`](#paperback-cli-help-command)
 * [`paperback-cli logcat [FILE]`](#paperback-cli-logcat-file)
 * [`paperback-cli plugins`](#paperback-cli-plugins)
-* [`paperback-cli plugins:install PLUGIN...`](#paperback-cli-pluginsinstall-plugin)
+* [`paperback-cli plugins add PLUGIN`](#paperback-cli-plugins-add-plugin)
 * [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
-* [`paperback-cli plugins:install PLUGIN...`](#paperback-cli-pluginsinstall-plugin)
-* [`paperback-cli plugins:link PLUGIN`](#paperback-cli-pluginslink-plugin)
-* [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin)
+* [`paperback-cli plugins install PLUGIN`](#paperback-cli-plugins-install-plugin)
+* [`paperback-cli plugins link PATH`](#paperback-cli-plugins-link-path)
+* [`paperback-cli plugins remove [PLUGIN]`](#paperback-cli-plugins-remove-plugin)
 * [`paperback-cli plugins reset`](#paperback-cli-plugins-reset)
-* [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin)
-* [`paperback-cli plugins:uninstall PLUGIN...`](#paperback-cli-pluginsuninstall-plugin)
+* [`paperback-cli plugins uninstall [PLUGIN]`](#paperback-cli-plugins-uninstall-plugin)
+* [`paperback-cli plugins unlink [PLUGIN]`](#paperback-cli-plugins-unlink-plugin)
 * [`paperback-cli plugins update`](#paperback-cli-plugins-update)
 * [`paperback-cli serve`](#paperback-cli-serve)
 
@@ -78,7 +78,7 @@ DESCRIPTION
   Display help for paperback-cli.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.3/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.16/src/commands/help.ts)_
 
 ## `paperback-cli logcat [FILE]`
 
@@ -125,48 +125,53 @@ EXAMPLES
   $ paperback-cli plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.3.10/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.15/src/commands/plugins/index.ts)_
 
-## `paperback-cli plugins:install PLUGIN...`
+## `paperback-cli plugins add PLUGIN`
 
-Installs a plugin into the CLI.
+Installs a plugin into paperback-cli.
 
 ```
 USAGE
-  $ paperback-cli plugins add plugins:install PLUGIN...
+  $ paperback-cli plugins add PLUGIN... [--json] [-f] [-h] [-s | -v]
 
 ARGUMENTS
   PLUGIN...  Plugin to install.
 
 FLAGS
-  -f, --force    Run yarn install with force flag.
+  -f, --force    Force npm to fetch remote resources even if a local copy exists on disk.
   -h, --help     Show CLI help.
-  -s, --silent   Silences yarn output.
-  -v, --verbose  Show verbose yarn output.
+  -s, --silent   Silences npm output.
+  -v, --verbose  Show verbose npm output.
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Installs a plugin into the CLI.
-  Can be installed from npm or a git url.
+  Installs a plugin into paperback-cli.
+
+  Uses npm to install plugins.
 
   Installation of a user-installed plugin will override a core plugin.
 
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
-
+  Use the PAPERBACK_CLI_NPM_LOG_LEVEL environment variable to set the npm loglevel.
+  Use the PAPERBACK_CLI_NPM_REGISTRY environment variable to set the npm registry.
 
 ALIASES
   $ paperback-cli plugins add
 
 EXAMPLES
-  $ paperback-cli plugins add myplugin 
+  Install a plugin from npm registry.
 
-  $ paperback-cli plugins add https://github.com/someuser/someplugin
+    $ paperback-cli plugins add myplugin
 
-  $ paperback-cli plugins add someuser/someplugin
+  Install a plugin from a github url.
+
+    $ paperback-cli plugins add https://github.com/someuser/someplugin
+
+  Install a plugin from a github slug.
+
+    $ paperback-cli plugins add someuser/someplugin
 ```
 
 ## `paperback-cli plugins:inspect PLUGIN...`
@@ -194,59 +199,64 @@ EXAMPLES
   $ paperback-cli plugins inspect myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.3.10/src/commands/plugins/inspect.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.15/src/commands/plugins/inspect.ts)_
 
-## `paperback-cli plugins:install PLUGIN...`
+## `paperback-cli plugins install PLUGIN`
 
-Installs a plugin into the CLI.
+Installs a plugin into paperback-cli.
 
 ```
 USAGE
-  $ paperback-cli plugins install PLUGIN...
+  $ paperback-cli plugins install PLUGIN... [--json] [-f] [-h] [-s | -v]
 
 ARGUMENTS
   PLUGIN...  Plugin to install.
 
 FLAGS
-  -f, --force    Run yarn install with force flag.
+  -f, --force    Force npm to fetch remote resources even if a local copy exists on disk.
   -h, --help     Show CLI help.
-  -s, --silent   Silences yarn output.
-  -v, --verbose  Show verbose yarn output.
+  -s, --silent   Silences npm output.
+  -v, --verbose  Show verbose npm output.
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Installs a plugin into the CLI.
-  Can be installed from npm or a git url.
+  Installs a plugin into paperback-cli.
+
+  Uses npm to install plugins.
 
   Installation of a user-installed plugin will override a core plugin.
 
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
-
+  Use the PAPERBACK_CLI_NPM_LOG_LEVEL environment variable to set the npm loglevel.
+  Use the PAPERBACK_CLI_NPM_REGISTRY environment variable to set the npm registry.
 
 ALIASES
   $ paperback-cli plugins add
 
 EXAMPLES
-  $ paperback-cli plugins install myplugin 
+  Install a plugin from npm registry.
 
-  $ paperback-cli plugins install https://github.com/someuser/someplugin
+    $ paperback-cli plugins install myplugin
 
-  $ paperback-cli plugins install someuser/someplugin
+  Install a plugin from a github url.
+
+    $ paperback-cli plugins install https://github.com/someuser/someplugin
+
+  Install a plugin from a github slug.
+
+    $ paperback-cli plugins install someuser/someplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.3.10/src/commands/plugins/install.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.15/src/commands/plugins/install.ts)_
 
-## `paperback-cli plugins:link PLUGIN`
+## `paperback-cli plugins link PATH`
 
 Links a plugin into the CLI for development.
 
 ```
 USAGE
-  $ paperback-cli plugins link PLUGIN
+  $ paperback-cli plugins link PATH [-h] [--install] [-v]
 
 ARGUMENTS
   PATH  [default: .] path to plugin
@@ -258,6 +268,7 @@ FLAGS
 
 DESCRIPTION
   Links a plugin into the CLI for development.
+
   Installation of a linked plugin will override a user-installed or core plugin.
 
   e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
@@ -268,15 +279,15 @@ EXAMPLES
   $ paperback-cli plugins link myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.3.10/src/commands/plugins/link.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.15/src/commands/plugins/link.ts)_
 
-## `paperback-cli plugins:uninstall PLUGIN...`
+## `paperback-cli plugins remove [PLUGIN]`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ paperback-cli plugins remove plugins:uninstall PLUGIN...
+  $ paperback-cli plugins remove [PLUGIN...] [-h] [-v]
 
 ARGUMENTS
   PLUGIN...  plugin to uninstall
@@ -309,15 +320,15 @@ FLAGS
   --reinstall  Reinstall all plugins after uninstalling.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.3.10/src/commands/plugins/reset.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.15/src/commands/plugins/reset.ts)_
 
-## `paperback-cli plugins:uninstall PLUGIN...`
+## `paperback-cli plugins uninstall [PLUGIN]`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ paperback-cli plugins uninstall PLUGIN...
+  $ paperback-cli plugins uninstall [PLUGIN...] [-h] [-v]
 
 ARGUMENTS
   PLUGIN...  plugin to uninstall
@@ -337,15 +348,15 @@ EXAMPLES
   $ paperback-cli plugins uninstall myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.3.10/src/commands/plugins/uninstall.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.15/src/commands/plugins/uninstall.ts)_
 
-## `paperback-cli plugins:uninstall PLUGIN...`
+## `paperback-cli plugins unlink [PLUGIN]`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ paperback-cli plugins unlink plugins:uninstall PLUGIN...
+  $ paperback-cli plugins unlink [PLUGIN...] [-h] [-v]
 
 ARGUMENTS
   PLUGIN...  plugin to uninstall
@@ -381,7 +392,7 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.3.10/src/commands/plugins/update.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.15/src/commands/plugins/update.ts)_
 
 ## `paperback-cli serve`
 
