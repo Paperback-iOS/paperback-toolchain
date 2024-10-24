@@ -1,6 +1,6 @@
 {
   "name": "@paperback/runtime-polyfills",
-  "version": "1.0.0-alpha.22",
+  "version": "1.0.0-alpha.23",
   "description": "Node runtime polyfills to test Paperback sources",
   "main": "./lib/index.js",
   "types": "./src/index.ts",
