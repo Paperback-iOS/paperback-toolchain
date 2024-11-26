@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.12.2",
-    "@oclif/core": "^3.27.0",
+    "@oclif/core": "^4.0.33",
     "@oclif/plugin-help": "^6.2.18",
     "@oclif/plugin-plugins": "^5.4.17",
     "@paperback/runtime-polyfills": "*",
@@ -16,11 +16,12 @@
     "chalk": "^5.3.0",
     "esbuild": "^0.24.0",
     "fs-extra": "^11.2.0",
+    "inquirer": "^12.1.0",
     "listr2": "^8.2.5"
   },
   "description": "The Paperback extension development toolchain",
   "devDependencies": {
-    "@oclif/test": "^3.2.15",
+    "@oclif/test": "^4.1.2",
     "@protobuf-ts/plugin": "^2.9.4",
     "@protobuf-ts/protoc": "^2.9.4",
     "@types/chai": "^5.0.1",
