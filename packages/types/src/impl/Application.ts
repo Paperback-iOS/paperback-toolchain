@@ -1,9 +1,10 @@
-import type { DiscoverSectionItem } from "../DiscoverSectionItem"
-import type { DiscoverSection } from "../HomeSection"
-import type { PagedResults } from "../PagedResults"
-import type { SearchFilter } from "../SearchFilter"
-import { Request } from "../Request"
-import { Response } from "../Response"
+import type { DiscoverSectionItem } from "../DiscoverSectionItem";
+import type { DiscoverSection } from "../HomeSection";
+import type { PagedResults } from "../PagedResults";
+import type { SearchFilter } from "../SearchFilter";
+import { Request } from "../Request";
+import { Response } from "../Response";
+import { Cookie } from "../Cookie";
 
 export {};
 
@@ -87,5 +88,20 @@ declare global {
      * *Note: Does not clear secure state.*
      */
     function resetAllState(): void;
+
+    // Webview
+
+    type ExecuteInWebViewContext = {
+      source: { html: string; baseUrl: string };
+      inject: string;
+      storage: { cookies: Cookie[] };
+    };
+
+    type WebViewExecutionResult = {
+      result: unknown;
+      storage: { cookies: Cookie[] };
+    };
+
+    function executeInWebView(context: ExecuteInWebViewContext): Promise<WebViewExecutionResult>;
   }
 }
