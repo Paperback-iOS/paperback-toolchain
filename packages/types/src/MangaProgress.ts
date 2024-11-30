@@ -1,15 +1,10 @@
+import { SourceManga } from "./SourceManga";
+
 export interface MangaProgress {
-  sourceId: string;
-  mangaId: string;
+  sourceManga: SourceManga;
+  trackedListName: string;
   lastReadChapterNumber: number;
-  /*
-   * internalName: _lastReadVolumeNumber
-   */
   lastReadVolumeNumber?: number;
-  trackedListName?: string;
   lastReadTime?: Date;
-  /*
-   * internalName: _userRating
-   */
   userRating?: number;
 }

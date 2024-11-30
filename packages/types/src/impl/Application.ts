@@ -5,6 +5,7 @@ import type { SearchFilter } from "../SearchFilter";
 import { Request } from "../Request";
 import { Response } from "../Response";
 import { Cookie } from "../Cookie";
+import { TrackedMangaChapterReadAction } from "../TrackedMangaChapterReadAction"
 
 export {};
 
@@ -90,9 +91,13 @@ declare global {
     function resetAllState(): void;
 
     // Webview
-
     type ExecuteInWebViewContext = {
-      source: { html: string; baseUrl: string };
+      source: {
+        html: string;
+        baseUrl: string;
+        loadCSS: boolean;
+        loadImages: boolean;
+      };
       inject: string;
       storage: { cookies: Cookie[] };
     };
@@ -102,6 +107,17 @@ declare global {
       storage: { cookies: Cookie[] };
     };
 
-    function executeInWebView(context: ExecuteInWebViewContext): Promise<WebViewExecutionResult>;
+    function executeInWebView(
+      context: ExecuteInWebViewContext,
+    ): Promise<WebViewExecutionResult>;
+
+    // Manga Progress
+    function incrementReadActionErrorCount(
+      readAction: TrackedMangaChapterReadAction
+    ): Promise<void>
+    
+    function deleteReadAction(
+      readAction: TrackedMangaChapterReadAction
+    ): Promise<void>
   }
 }

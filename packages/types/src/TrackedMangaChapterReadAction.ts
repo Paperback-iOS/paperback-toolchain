@@ -1,9 +1,10 @@
+import { Chapter } from "./Chapter";
+import { SourceManga } from "./SourceManga";
+
 export interface TrackedMangaChapterReadAction {
-  readonly mangaId: string;
-  readonly sourceMangaId: string;
-  readonly sourceChapterId: string;
-  readonly sourceId: string;
-  readonly chapterNumber: number;
-  readonly volumeNumber: number;
+  readonly sourceManga: SourceManga;
+  readonly readChapter: Chapter;
   readonly readTime: Date;
+  readonly errorCount: number;
+  readonly lastErrorDate?: Date;
 }

@@ -16,4 +16,6 @@ export interface MangaInfo {
   tagGroups?: TagSection[];
   artworkUrls?: string[];
   additionalInfo?: Record<string, string>;
+
+  shareUrl?: string;
 }

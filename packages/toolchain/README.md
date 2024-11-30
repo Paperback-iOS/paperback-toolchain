@@ -27,7 +27,9 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`paperback-cli bundle`](#paperback-cli-bundle)
 * [`paperback-cli help [COMMAND]`](#paperback-cli-help-command)
+* [`paperback-cli logcat [FILE]`](#paperback-cli-logcat-file)
 * [`paperback-cli plugins`](#paperback-cli-plugins)
 * [`paperback-cli plugins add PLUGIN`](#paperback-cli-plugins-add-plugin)
 * [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
@@ -38,6 +40,25 @@ USAGE
 * [`paperback-cli plugins uninstall [PLUGIN]`](#paperback-cli-plugins-uninstall-plugin)
 * [`paperback-cli plugins unlink [PLUGIN]`](#paperback-cli-plugins-unlink-plugin)
 * [`paperback-cli plugins update`](#paperback-cli-plugins-update)
+* [`paperback-cli serve`](#paperback-cli-serve)
+
+## `paperback-cli bundle`
+
+Builds all the sources in the repository and generates a versioning file
+
+```
+USAGE
+  $ paperback-cli bundle [--folder <value>] [-h]
+
+FLAGS
+  -h, --help            Show CLI help.
+      --folder=<value>  Subfolder to output to
+
+DESCRIPTION
+  Builds all the sources in the repository and generates a versioning file
+```
+
+_See code: [dist/commands/bundle.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.29/dist/commands/bundle.js)_
 
 ## `paperback-cli help [COMMAND]`
 
@@ -58,6 +79,30 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.16/src/commands/help.ts)_
+
+## `paperback-cli logcat [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ paperback-cli logcat [FILE] [--ip <value>] [--port <value>]
+
+ARGUMENTS
+  FILE  file to read
+
+FLAGS
+  --ip=<value>    [default: localhost]
+  --port=<value>  [default: 27015]
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ paperback-cli logcat
+```
+
+_See code: [dist/commands/logcat.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.29/dist/commands/logcat.js)_
 
 ## `paperback-cli plugins`
 
@@ -348,4 +393,22 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.15/src/commands/plugins/update.ts)_
+
+## `paperback-cli serve`
+
+Build the sources and start a local server
+
+```
+USAGE
+  $ paperback-cli serve [-h] [-p <value>]
+
+FLAGS
+  -h, --help          Show CLI help.
+  -p, --port=<value>  [default: 8080]
+
+DESCRIPTION
+  Build the sources and start a local server
+```
+
+_See code: [dist/commands/serve.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.29/dist/commands/serve.js)_
 <!-- commandsstop -->

@@ -1,14 +1,11 @@
-// import {
-//     DUIForm,
-//     MangaProgress,
-//     TrackerActionQueue,
-// } from "../../generated/_exports"
+import { MangaProgress } from "../../MangaProgress"
+import { SourceManga } from "../../SourceManga"
+import { TrackedMangaChapterReadAction } from "../../TrackedMangaChapterReadAction"
+import { Form } from "../SettingsUI"
 
-// export interface MangaProgressProviding {
-//     getMangaProgressManagementForm(mangaId: string): Promise<DUIForm>
-//     getMangaProgress(mangaId: string): Promise<MangaProgress | undefined>
+export interface MangaProgressProviding {
+    getMangaProgressManagementForm(sourceManga: SourceManga): Promise<Form>
+    getMangaProgress(sourceManga: SourceManga): Promise<MangaProgress | undefined>
 
-//     processChapterReadActionQueue(actionQueue: TrackerActionQueue): Promise<void>
-// }
-
-export {};
+    processChapterReadActionQueue(actions: TrackedMangaChapterReadAction[]): Promise<void>
+}
