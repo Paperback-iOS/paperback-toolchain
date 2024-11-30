@@ -1,4 +1,5 @@
 import { Command, Flags, ux } from '@oclif/core'
+import inquirer from 'inquirer';
 
 import Server from '../server'
 import Bundle from './bundle'
@@ -38,7 +39,14 @@ export default class Serve extends Command {
         let stopServer = false
         while (!stopServer) {
             // eslint-disable-next-line no-await-in-loop
-            const input = await ux.prompt(this.prefixTime('')).then((x) => x.trim())
+            const input = await inquirer.prompt([
+              {
+                type: 'input',
+                name: 'userInput',
+                message: this.prefixTime(''),
+                filter: (value) => value.trim()
+              }
+            ]).then((answers) => answers.userInput);
 
             if (input === 'h' || input === 'help') {
                 this.log(chalk.underline.bold('Help'))
