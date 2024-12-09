@@ -1,6 +1,6 @@
 {
   "name": "@paperback/runtime-polyfills",
-  "version": "1.0.0-alpha.30",
+  "version": "1.0.0-alpha.31",
   "description": "Node runtime polyfills to test Paperback sources",
   "main": "./lib/index.js",
   "types": "./src/index.ts",
@@ -16,5 +16,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "da3695f50658d1215036ee872c8572df76c72047"
+  "gitHead": "88ca0a9084658c3953b3d3f69c745937ef6d9747"
 }

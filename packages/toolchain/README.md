@@ -18,7 +18,7 @@ $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-@paperback/toolchain/1.0.0-alpha.30 darwin-arm64 node-v22.11.0
+@paperback/toolchain/1.0.0-alpha.31 darwin-arm64 node-v22.11.0
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -58,7 +58,7 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [dist/commands/bundle.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.30/dist/commands/bundle.js)_
+_See code: [dist/commands/bundle.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.31/dist/commands/bundle.js)_
 
 ## `paperback-cli help [COMMAND]`
 
@@ -102,7 +102,7 @@ EXAMPLES
   $ paperback-cli logcat
 ```
 
-_See code: [dist/commands/logcat.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.30/dist/commands/logcat.js)_
+_See code: [dist/commands/logcat.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.31/dist/commands/logcat.js)_
 
 ## `paperback-cli plugins`
 
@@ -410,5 +410,5 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [dist/commands/serve.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.30/dist/commands/serve.js)_
+_See code: [dist/commands/serve.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.31/dist/commands/serve.js)_
 <!-- commandsstop -->
