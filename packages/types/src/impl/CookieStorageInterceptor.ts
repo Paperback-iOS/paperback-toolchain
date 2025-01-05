@@ -129,7 +129,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
 
       if (pathname === cookiePath) {
         pathMatches = Number.MAX_SAFE_INTEGER;
-      } else if (splitUrlPath.length === 0) {
+      } else if (splitUrlPath.length === 0 || pathname === "") {
         pathMatches = 1;
       } else if (
         cookiePath.startsWith(pathname) &&
