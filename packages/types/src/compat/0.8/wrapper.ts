@@ -78,7 +78,7 @@ class _CompatWrapper
         type: DiscoverSectionType.simpleCarousel,
       });
 
-      if (!section.containsMoreItems && section.items.length > 0) {
+      if (!section.containsMoreItems && section.items && section.items.length > 0) {
         this.homepageItemCache[section.id] = section.items.map((x) => {
           return {
             type: "simpleCarouselItem",

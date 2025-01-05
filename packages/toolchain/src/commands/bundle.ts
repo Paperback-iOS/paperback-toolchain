@@ -1,9 +1,9 @@
 import { Command, Flags } from '@oclif/core'
 import { Listr, color } from 'listr2'
 
-import esbuild = require('esbuild')
-import fs = require('fs-extra')
-import path = require('path')
+import esbuild from 'esbuild'
+import fs from 'fs-extra'
+import path from 'path'
 
 export default class Bundle extends Command {
     static override description = 'Builds all the sources in the repository and generates a versioning file'

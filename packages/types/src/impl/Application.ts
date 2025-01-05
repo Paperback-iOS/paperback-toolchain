@@ -110,14 +110,5 @@ declare global {
     function executeInWebView(
       context: ExecuteInWebViewContext,
     ): Promise<WebViewExecutionResult>;
-
-    // Manga Progress
-    function incrementReadActionErrorCount(
-      readAction: TrackedMangaChapterReadAction
-    ): Promise<void>
-    
-    function deleteReadAction(
-      readAction: TrackedMangaChapterReadAction
-    ): Promise<void>
   }
 }

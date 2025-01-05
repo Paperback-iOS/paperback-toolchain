@@ -1,10 +1,11 @@
+import { Chapter } from "./Chapter";
+import { ManagedCollection } from "./impl/interfaces/ManagedCollectionProviding"
 import { SourceManga } from "./SourceManga";
 
 export interface MangaProgress {
   sourceManga: SourceManga;
-  trackedListName: string;
-  lastReadChapterNumber: number;
-  lastReadVolumeNumber?: number;
+  lastReadChapter: Chapter;
+
   lastReadTime?: Date;
   userRating?: number;
 }

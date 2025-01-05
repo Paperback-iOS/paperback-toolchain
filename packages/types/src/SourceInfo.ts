@@ -1,10 +1,24 @@
 export enum SourceIntents {
   MANGA_CHAPTERS = 1 << 0,
+  
+  /**
+   * @deprecated use {@link MANGA_PROGRESS}
+   */
   MANGA_TRACKING = 1 << 1,
+  MANGA_PROGRESS = 1 << 1,
+  
+  /**
+   * @deprecated use {@link DISCOVER_SECIONS}
+   */
   HOMEPAGE_SECTIONS = 1 << 2,
+  DISCOVER_SECIONS = 1 << 2,
+
   COLLECTION_MANAGEMENT = 1 << 3,
+  
   CLOUDFLARE_BYPASS_REQUIRED = 1 << 4,
+  
   SETTINGS_UI = 1 << 5,
+
   MANGA_SEARCH = 1 << 6,
 }
 

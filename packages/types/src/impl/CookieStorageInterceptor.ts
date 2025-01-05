@@ -20,7 +20,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
     const cookies: Record<string, Cookie> = {};
     for (const cookie of newValue) {
       // If the cookie is already expired, skip
-      if (cookie.expires && cookie.expires.getUTCMilliseconds() <= Date.now()) {
+      if (this.isCookieExpired(cookie)) {
         continue;
       }
 
@@ -175,7 +175,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
   }
 
   private isCookieExpired(cookie: Cookie): boolean {
-    if (cookie.expires && cookie.expires.getUTCMilliseconds() <= Date.now()) {
+    if (cookie.expires && cookie.expires.getTime() <= Date.now()) {
       return true;
     } else {
       return false;
