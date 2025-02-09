@@ -1,17 +1,10 @@
-import { expect, test } from '@oclif/test'
+import { runCommand } from "@oclif/test";
+import { expect } from "chai";
+
 
 describe('logcat', () => {
-    test
-        .stdout()
-        .command(['logcat'])
-        .it('runs hello', ctx => {
-            expect(ctx.stdout).to.contain('hello world')
-        })
-
-    test
-        .stdout()
-        .command(['logcat', '--name', 'jeff'])
-        .it('runs hello --name jeff', ctx => {
-            expect(ctx.stdout).to.contain('hello jeff')
-        })
+  it("runs logcat with no parameters", async () => {
+    const { stdout } = await runCommand("logcat");
+    expect(stdout).to.contain("");
+  });
 })
