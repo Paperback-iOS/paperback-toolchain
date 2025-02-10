@@ -23,13 +23,13 @@ export function AutoUpdatingSourceMangaWrapper<
             this: T,
             mangaId: string,
           ): Promise<SourceManga> {
-            const sourceManga = await this.getMangaDetails(mangaId)
+            const sourceManga = await this.getMangaDetails(mangaId);
             sourceManga.mangaInfo.additionalInfo = {
               ...(sourceManga.mangaInfo.additionalInfo ?? {}),
               lastUpdated: new Date().toJSON(),
             };
 
-            return sourceManga
+            return sourceManga;
           }).bind(target);
         }
         case "getChapters": {
@@ -43,10 +43,10 @@ export function AutoUpdatingSourceMangaWrapper<
                 "1970-01-01T00:00:00.000Z",
             );
 
-            const { mangaId: _, ...partialSourceManga } = await this
-              .getMangaDetails(sourceManga.mangaId);
-
             if (Date.now() - lastUpdated.getTime() > config.interval) {
+              const { mangaId: _, ...partialSourceManga } = await this
+                .getMangaDetails(sourceManga.mangaId);
+
               Object.assign(sourceManga, partialSourceManga);
               sourceManga.mangaInfo.additionalInfo = {
                 ...(sourceManga.mangaInfo.additionalInfo ?? {}),
