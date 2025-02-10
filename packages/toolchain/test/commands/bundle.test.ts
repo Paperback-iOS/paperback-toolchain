@@ -1,17 +1,9 @@
-import { expect, test } from '@oclif/test'
+import { runCommand } from "@oclif/test";
+import { expect } from "chai";
 
-describe('bundle', () => {
-    test
-        .stdout()
-        .command(['bundle'])
-        .it('runs hello', ctx => {
-            expect(ctx.stdout).to.contain('hello world')
-        })
-
-    test
-        .stdout()
-        .command(['bundle', '--name', 'jeff'])
-        .it('runs hello --name jeff', ctx => {
-            expect(ctx.stdout).to.contain('hello jeff')
-        })
-})
+describe("bundle", () => {
+  it("runs bundle", async () => {
+    const { stdout } = await runCommand("bundle");
+    expect(stdout).to.contain("Working directory:");
+  });
+});

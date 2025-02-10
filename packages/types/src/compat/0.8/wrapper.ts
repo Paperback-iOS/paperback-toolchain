@@ -18,6 +18,7 @@ import {
   NavigationRow,
   OAuthButtonRow,
   PagedResults,
+  SearchFilter,
   SearchQuery,
   SearchResultItem,
   SearchResultsProviding,
@@ -140,6 +141,28 @@ class _CompatWrapper
         status: legacyManga.mangaInfo.status,
       },
     };
+  }
+
+  async getSearchFilters(): Promise<SearchFilter[]> {
+    const searchFilters: SearchFilter[] = [];
+    const legacyFilters = this.legacySource.getSearchTags ? await this.legacySource.getSearchTags() : [];
+
+    for (const filter of legacyFilters) {
+      searchFilters.push({
+        id: filter.id,
+        title: filter.label,
+        type: "multiselect",
+        options: filter.tags.map((x) => {
+          return { id: x.id, value: x.label };
+        }),
+        value: {},
+        allowExclusion: true,
+        allowEmptySelection: true,
+        maximum: undefined,
+      });
+    }
+
+    return searchFilters;
   }
 
   async getSearchResults(

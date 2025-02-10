@@ -74,9 +74,15 @@ declare global {
     function arrayBufferToUTF16String(arrayBuffer: ArrayBuffer): string;
 
     // Search Filters
+    /**
+     * @description If search filters are registered using this method the app will not call {@link SearchResultsProviding.getSearchFilters} unless {@link Application.invalidateSearchFilters} is called.
+     * @deprecated register search filters in {@link SearchResultsProviding.getSearchFilters} by implementing {@link SearchResultsProviding}
+     */
     function registerSearchFilter(searchFilter: SearchFilter): void;
     function unregisterSearchFilter(id: string): void;
     function registeredSearchFilters(): SearchFilter[];
+    /** Invalidate search filter cache (removes all search filters) */
+    function invalidateSearchFilters(): void;
 
     // State Manager
     function getSecureState(key: string): unknown | undefined;
