@@ -1,206 +1,178 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta name="robots" content="noindex" />
     <meta charset="utf-8" />
-    <link rel="icon" href="https://paperback.moe/icons/logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://paperback.moe/pb-logo.svg" />
     <title>Loading...</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body class="bg-[#1b1b1f] text-gray-200 font-sans p-4 md:p-8 lg:p-12 text-center">
+    <header class="flex flex-col items-center relative">
+      <div 
+        class="absolute w-28 h-28 md:w-40 md:h-40 -top-4 left-1/2 -translate-x-1/2 rounded-full"
+        style="
+          background: radial-gradient(circle at 30% 30%, rgba(84, 120, 219, 0.4) 0%, transparent 70%),
+                      radial-gradient(circle at 70% 70%, rgba(246, 75, 75, 0.4) 0%, transparent 70%);
+          filter: blur(25px);
+        "
+      ></div>
+      <div class="relative z-10">
+        <img
+          class="md:max-h-32 max-h-20 rounded-lg"
+          src="https://paperback.moe/pb-logo.svg"
+          alt="Repository logo"
+        />
+      </div>
+      <h1 id="repositoryName" class="text-2xl mt-4 sm:text-xl"></h1>
+      <p
+        class="max-w-xl text-lg leading-snug text-[#f64b4b] mx-auto mt-4 sm:text-base"
+      >
+        A Paperback extensions repository
+      </p>
+      <a
+        class="addToPaperbackButton inline-block leading-7 mt-4 mx-1 py-2 px-4 text-white bg-[#f64b4b] border-b border-red-700 rounded-full transition-colors duration-100 hover:bg-[#f46565] hover:cursor-pointer"
+        onclick="addToPaperback()"
+      >
+        Add Repository to Paperback
+      </a>
+    </header>
+
+    <div class="mx-auto text-left">
+      <p id="repositoryDescription" class="mt-4 text-center"></p>
+      <div class="mt-4">
+        <p class="font-bold">Available Sources:</p>
+        <div
+          id="listDiv"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
+        ></div>
+      </div>
+    </div>
 
     <script>
-      const jsonFileName = "versioning.json";
-      const baseUrl = window.location.toString().replace("index.html", "");
+      const baseUrl = window.location.toString().replace("index.html", "").replace(/\/$/, '');
       let repository = undefined;
 
+      function getContentRatingClass(rating) {
+        const ratingClasses = {
+          MATURE: "bg-yellow-500 text-yellow-900",
+          ADULT: "bg-red-500 text-red-100",
+          SAFE: "bg-green-500 text-green-100",
+        };
+        return (
+          ratingClasses[rating.toUpperCase()] || "bg-gray-500 text-gray-100"
+        );
+      }
+
       async function bodyOnLoad() {
-        const response = await fetch("./versioning.json");
+        const response = await fetch(`${baseUrl}/versioning.json`);
         const json = await response.json();
 
         repository = json.repository;
-        document.querySelector("#baseUrl").innerText = baseUrl;
         document.querySelector("head > title").innerText = json.repository.name;
         document.querySelector("#repositoryName").innerText =
           json.repository.name;
         document.querySelector("#repositoryDescription").innerText =
           json.repository.description;
 
-        const listDiv = document.querySelector("#listDiv > ul");
-        for (const source of json.sources) {
-          const li = document.createElement("li");
-          li.innerText = source.name;
-          listDiv.appendChild(li);
-        }
+        const listDiv = document.querySelector("#listDiv");
+        json.sources.forEach((source) =>
+          listDiv.appendChild(createSourceCard(source))
+        );
       }
 
-      async function addToPaperback() {
+      function createSourceCard(source) {
+        const card = document.createElement("div");
+        card.className = "bg-zinc-800 rounded-lg shadow-lg overflow-hidden";
+
+        // Desktop Layout
+        card.innerHTML = `
+          <div class="hidden md:block">
+            <div class="p-4 flex items-center space-x-4">
+              <img
+                src="${baseUrl}/${source.id}/static/${source.icon}"
+                alt="${source.name} icon"
+                class="w-12 h-12 rounded-full"
+              >
+              <h3 class="text-xl font-semibold text-gray-200">
+                ${source.name}
+              </h3>
+            </div>
+            <div class="p-4 border-t border-zinc-700">
+              <p class="text-gray-300 text-sm mb-2">
+                Version: ${source.version}
+              </p>
+              <p class="text-gray-300 mb-4">
+                ${source.description}
+              </p>
+              <div class="text-gray-400 text-sm">
+                <span
+                  class="inline-block px-2 py-1 rounded text-xs font-semibold ${getContentRatingClass(
+                    source.contentRating
+                  )}">
+                  ${source.contentRating}
+                </span>
+              </div>
+              <button
+                onclick="installSource('${source.id}')"
+                class="mt-4 py-2 px-4 bg-[#f64b4b] text-white rounded-full hover:bg-[#f46565] transition-colors duration-100 hover:cursor-pointer">
+                Install
+              </button>
+            </div>
+          </div>
+          <div class="md:hidden p-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3 flex-1">
+                <img
+                  src="${baseUrl}/${source.id}/static/${source.icon}"
+                  alt="${source.name} icon"
+                  class="w-12 h-12 rounded-full"
+                >
+                <div class="flex flex-col space-y-1">
+                  <h3 class="text-lg font-semibold text-gray-200">
+                      ${source.name}
+                  </h3>
+                  <span class="text-sm text-gray-400">
+                    v${source.version}
+                  </span>
+                  <span class="px-2 py-0.5 rounded text-xs font-semibold w-fit ${getContentRatingClass(
+                    source.contentRating
+                  )}">
+                      ${source.contentRating}
+                  </span>
+                </div>
+              </div>
+              <button
+                onclick="installSource('${source.id}')"
+                class="ml-2 py-2 px-4 bg-[#f64b4b] text-white rounded-full hover:bg-[#f46565] transition-colors duration-100 hover:cursor-pointer">
+                Install
+              </button>
+            </div>
+          </div>
+      `;
+
+        return card;
+      }
+
+      function installSource(sourceId) {
+        window.location.href = `paperback://installExtensions?data=${btoa(
+          JSON.stringify([[sourceId, baseUrl]])
+        )}`;
+      }
+
+      function addToPaperback() {
         if (!repository) {
           alert("Versioning info is not loaded");
-          console.error("Versioning info is not loaded");
           return;
         }
-
         window.location.href = `paperback://addRepo?displayName=${encodeURI(
           repository.name
         )}&url=${encodeURI(baseUrl)}`;
       }
 
-      async function openInExtDirectory() {
-        window.location.href = `https://paperback-ios.github.io/extensions-directory/?data=${btoa(JSON.stringify([new URL(baseUrl).href + '/versioning.json']))}`;
-      }
+      document.addEventListener("DOMContentLoaded", bodyOnLoad);
     </script>
-  </head>
-
-  <body onload="bodyOnLoad()">
-    <header>
-      <img
-        class="icon"
-        src="https://paperback.moe/pb-logo.svg"
-        alt="Repository logo"
-      />
-      <h1 id="repositoryName"></h1>
-      <p class="pageDescription">A Paperback extensions repository</p>
-      <a class="addToPaperbackButton" onclick="openInExtDirectory()">Open in Extensions Directory</a
-      >
-    </header>
-    <div class="content">
-      <p id="repositoryDescription"></p>
-      <blockquote>
-        <p>
-          A guide is available to learn everything about extensions
-          repositories.
-        </p>
-        <p>
-          Check it
-          <a href="https://paperback.moe/help/guides/adding-repos/">here</a> to
-          learn how to add and use this repository in Paperback.
-        </p>
-      </blockquote>
-      <blockquote>
-        <p><a onclick="openInExtDirectory()">Open in Extensions Directory</a
-          ><span> or use the base URL to add this repository to the app.</span>
-        </p>
-      </blockquote>
-      <div class="baseUrl">
-        <p class="title">Base URL:</p>
-        <p id="baseUrl"></p>
-      </div>
-      <dev class="availableSources">
-        <p class="title">Available Sources:</p>
-        <div id="listDiv">
-          <ul></ul>
-        </div>
-      </dev>
-    </div>
-    <style>
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-          Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-        -moz-osx-font-smoothing: grayscale;
-        color: #2c3e50;
-        padding: 3.6rem 2rem 1.5rem;
-        text-align: center;
-      }
-
-      .title {
-        font-weight: 700;
-        margin-bottom: 8px;
-      }
-
-      /* Header section */
-      .icon {
-        max-height: 8rem;
-        border-radius: 30px;
-      }
-
-      h1 {
-        font-size: 1.7rem;
-        margin: 1rem auto;
-      }
-
-      .pageDescription {
-        max-width: 35rem;
-        font-size: 1.3rem;
-        line-height: 1.3;
-        color: #6a8bad;
-        margin: 1rem auto;
-      }
-
-      .addToPaperbackButton {
-        display: inline-block;
-        line-height: 1.7;
-        margin: 0.25rem;
-        padding: 0.4rem 1rem;
-        color: #fff;
-        background-color: #2e84bf;
-        border-bottom: 1px solid #2977ac;
-        border-radius: 4px;
-        transition: background-color 0.1s ease;
-      }
-
-      .addToPaperbackButton:hover {
-        background-color: #3992cf;
-        text-decoration: none;
-      }
-
-      /* Content section */
-      .content {
-        margin: auto;
-        max-width: 920px;
-        text-align: left;
-      }
-
-      /* Blockquote section */
-      blockquote {
-        font-size: 0.9rem;
-        color: #999;
-        border-left: 0.2rem solid #dfe2e5;
-        margin: 1rem 0;
-        padding: 0.25rem 0 0.25rem 1rem;
-        line-height: 1.6;
-      }
-
-      blockquote p {
-        margin-top: 2px;
-        margin-bottom: 2px;
-      }
-
-      /* Link */
-      a:hover {
-        text-decoration: underline;
-      }
-
-      a {
-        font-weight: 500;
-        text-decoration: none;
-        color: #2196f3;
-      }
-
-      /* Base URL section */
-      .baseUrl {
-        background-color: #f0f4f8;
-        border-radius: 0.4rem;
-        padding: 0.1rem 0.1rem;
-      }
-
-      .baseUrl .title {
-        font-weight: 700;
-      }
-
-      .baseUrl p {
-        margin-left: 16px;
-      }
-
-      /* Available sources section */
-      ul {
-        margin-top: 0px;
-      }
-
-      .el-tag {
-        margin-left: 2px;
-        margin-right: 2px;
-      }
-
-      #listDiv {
-        line-height: 1.5;
-      }
-    </style>
   </body>
 </html>
