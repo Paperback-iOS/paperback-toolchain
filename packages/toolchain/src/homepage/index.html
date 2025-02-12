@@ -6,16 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="https://paperback.moe/pb-logo.svg" />
     <title>Loading...</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
   </head>
 
-  <body class="bg-[#1b1b1f] text-gray-200 font-sans p-4 md:p-8 lg:p-12 text-center">
-    <header class="flex flex-col items-center relative">
-      <div 
+  <body
+    class="bg-[#1b1b1f] text-gray-200 font-[Inter] p-4 md:p-8 lg:p-12 text-center"
+    x-data="repositoryData()"
+    x-init="await initialize()"
+  >
+    <header class="flex flex-col items-center relative mt-4">
+      <div
         class="absolute w-28 h-28 md:w-40 md:h-40 -top-4 left-1/2 -translate-x-1/2 rounded-full"
         style="
-          background: radial-gradient(circle at 30% 30%, rgba(84, 120, 219, 0.4) 0%, transparent 70%),
-                      radial-gradient(circle at 70% 70%, rgba(246, 75, 75, 0.4) 0%, transparent 70%);
+          background: radial-gradient(
+              circle at 30% 30%,
+              rgba(84, 120, 219, 0.4) 0%,
+              transparent 70%
+            ),
+            radial-gradient(
+              circle at 70% 70%,
+              rgba(246, 75, 75, 0.4) 0%,
+              transparent 70%
+            );
           filter: blur(25px);
         "
       ></div>
@@ -26,153 +48,175 @@
           alt="Repository logo"
         />
       </div>
-      <h1 id="repositoryName" class="text-2xl mt-4 sm:text-xl"></h1>
-      <p
-        class="max-w-xl text-lg leading-snug text-[#f64b4b] mx-auto mt-4 sm:text-base"
-      >
+      <h1
+        x-text="repository?.name"
+        class="text-xl mt-4 md:text-3xl font-bold"
+      ></h1>
+      <p class="max-w-xl md:text-lg leading-snug text-[#f64b4b] mx-auto mt-4">
         A Paperback extensions repository
       </p>
       <a
         class="addToPaperbackButton inline-block leading-7 mt-4 mx-1 py-2 px-4 text-white bg-[#f64b4b] border-b border-red-700 rounded-full transition-colors duration-100 hover:bg-[#f46565] hover:cursor-pointer"
-        onclick="addToPaperback()"
+        @click="addToPaperback()"
       >
         Add Repository to Paperback
       </a>
     </header>
 
     <div class="mx-auto text-left">
-      <p id="repositoryDescription" class="mt-4 text-center"></p>
+      <p x-text="repository?.description" class="mt-4 text-center"></p>
       <div class="mt-4">
-        <p class="font-bold">Available Sources:</p>
-        <div
-          id="listDiv"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
-        ></div>
-      </div>
-    </div>
-
-    <script>
-      const baseUrl = window.location.toString().replace("index.html", "").replace(/\/$/, '');
-      let repository = undefined;
-
-      function getContentRatingClass(rating) {
-        const ratingClasses = {
-          MATURE: "bg-yellow-500 text-yellow-900",
-          ADULT: "bg-red-500 text-red-100",
-          SAFE: "bg-green-500 text-green-100",
-        };
-        return (
-          ratingClasses[rating.toUpperCase()] || "bg-gray-500 text-gray-100"
-        );
-      }
-
-      async function bodyOnLoad() {
-        const response = await fetch(`${baseUrl}/versioning.json`);
-        const json = await response.json();
-
-        repository = json.repository;
-        document.querySelector("head > title").innerText = json.repository.name;
-        document.querySelector("#repositoryName").innerText =
-          json.repository.name;
-        document.querySelector("#repositoryDescription").innerText =
-          json.repository.description;
-
-        const listDiv = document.querySelector("#listDiv");
-        json.sources.forEach((source) =>
-          listDiv.appendChild(createSourceCard(source))
-        );
-      }
-
-      function createSourceCard(source) {
-        const card = document.createElement("div");
-        card.className = "bg-zinc-800 rounded-lg shadow-lg overflow-hidden";
-
-        // Desktop Layout
-        card.innerHTML = `
-          <div class="hidden md:block">
-            <div class="p-4 flex items-center space-x-4">
-              <img
-                src="${baseUrl}/${source.id}/static/${source.icon}"
-                alt="${source.name} icon"
-                class="w-12 h-12 rounded-full"
-              >
-              <h3 class="text-xl font-semibold text-gray-200">
-                ${source.name}
-              </h3>
-            </div>
-            <div class="p-4 border-t border-zinc-700">
-              <p class="text-gray-300 text-sm mb-2">
-                Version: ${source.version}
-              </p>
-              <p class="text-gray-300 mb-4">
-                ${source.description}
-              </p>
-              <div class="text-gray-400 text-sm">
-                <span
-                  class="inline-block px-2 py-1 rounded text-xs font-semibold ${getContentRatingClass(
-                    source.contentRating
-                  )}">
-                  ${source.contentRating}
-                </span>
-              </div>
-              <button
-                onclick="installSource('${source.id}')"
-                class="mt-4 py-2 px-4 bg-[#f64b4b] text-white rounded-full hover:bg-[#f46565] transition-colors duration-100 hover:cursor-pointer">
-                Install
-              </button>
-            </div>
-          </div>
-          <div class="md:hidden p-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3 flex-1">
-                <img
-                  src="${baseUrl}/${source.id}/static/${source.icon}"
-                  alt="${source.name} icon"
-                  class="w-12 h-12 rounded-full"
-                >
-                <div class="flex flex-col space-y-1">
-                  <h3 class="text-lg font-semibold text-gray-200">
-                      ${source.name}
-                  </h3>
-                  <span class="text-sm text-gray-400">
-                    v${source.version}
-                  </span>
-                  <span class="px-2 py-0.5 rounded text-xs font-semibold w-fit ${getContentRatingClass(
-                    source.contentRating
-                  )}">
-                      ${source.contentRating}
-                  </span>
+        <div class="flex justify-between items-center">
+          <p class="font-bold">Available Sources:</p>
+          <button
+            @click="installSelectedSources()"
+            class="py-2 px-4 bg-[#f64b4b] text-white rounded-full hover:bg-[#f46565] transition-colors duration-100 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="selectedSources.size === 0"
+          >
+            Install (<span x-text="selectedSources.size"></span>)
+          </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+          <template x-for="source in sources" :key="source.id">
+            <div class="bg-zinc-800 rounded-lg shadow-lg overflow-hidden">
+              <!-- Desktop Layout -->
+              <div class="hidden md:block">
+                <div class="p-4 flex items-center space-x-4">
+                  <img
+                    :src="`${baseUrl}/${source.id}/static/${source.icon}`"
+                    :alt="`${source.name} icon`"
+                    class="w-12 h-12 rounded-full"
+                  />
+                  <h3
+                    class="text-xl font-semibold text-gray-200"
+                    x-text="source.name"
+                  ></h3>
+                </div>
+                <div class="p-4 border-t border-zinc-700">
+                  <p class="text-gray-300 text-sm mb-2">
+                    Version: <span x-text="source.version"></span>
+                  </p>
+                  <p class="text-gray-300 mb-4" x-text="source.description"></p>
+                  <div class="text-gray-400 text-sm">
+                    <span
+                      class="inline-block px-2 py-1 rounded text-xs font-semibold"
+                      :class="getContentRatingClass(source.contentRating)"
+                      x-text="source.contentRating"
+                    ></span>
+                  </div>
+                  <button
+                    @click="toggleSource(source.id)"
+                    class="mt-4 py-2 px-4 rounded-full transition-colors duration-100 hover:cursor-pointer"
+                    :class="selectedSources.has(source.id) ? 'bg-slate-600 text-white hover:bg-slate-400' : 'bg-[#f64b4b] text-white hover:bg-[#f46565]'"
+                  >
+                    <span
+                      x-text="selectedSources.has(source.id) ? 'Selected' : 'Select'"
+                    ></span>
+                  </button>
                 </div>
               </div>
-              <button
-                onclick="installSource('${source.id}')"
-                class="ml-2 py-2 px-4 bg-[#f64b4b] text-white rounded-full hover:bg-[#f46565] transition-colors duration-100 hover:cursor-pointer">
-                Install
-              </button>
+              <!-- Mobile Layout -->
+              <div class="md:hidden p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3 flex-1">
+                    <img
+                      :src="`${baseUrl}/${source.id}/static/${source.icon}`"
+                      :alt="`${source.name} icon`"
+                      class="w-12 h-12 rounded-full"
+                    />
+                    <div class="flex flex-col space-y-1">
+                      <h3
+                        class="text-lg font-semibold text-gray-200"
+                        x-text="source.name"
+                      ></h3>
+                      <span
+                        class="text-sm text-gray-400"
+                        x-text="`v${source.version}`"
+                      ></span>
+                      <span
+                        class="px-2 py-0.5 rounded text-xs font-semibold w-fit"
+                        :class="getContentRatingClass(source.contentRating)"
+                        x-text="source.contentRating"
+                      ></span>
+                    </div>
+                  </div>
+                  <button
+                    @click="toggleSource(source.id)"
+                    class="ml-2 py-2 px-4 rounded-full transition-colors duration-100 hover:cursor-pointer"
+                    :class="selectedSources.has(source.id) ? 'bg-slate-600 text-white hover:bg-slate-400' : 'bg-[#f64b4b] text-white hover:bg-[#f46565]'"
+                  >
+                    <span
+                      x-text="selectedSources.has(source.id) ? 'Selected' : 'Select'"
+                    ></span>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-      `;
-
-        return card;
-      }
-
-      function installSource(sourceId) {
-        window.location.href = `paperback://installExtensions?data=${btoa(
-          JSON.stringify([[sourceId, baseUrl]])
-        )}`;
-      }
-
-      function addToPaperback() {
-        if (!repository) {
-          alert("Versioning info is not loaded");
-          return;
-        }
-        window.location.href = `paperback://addRepo?displayName=${encodeURI(
-          repository.name
-        )}&url=${encodeURI(baseUrl)}`;
-      }
-
-      document.addEventListener("DOMContentLoaded", bodyOnLoad);
-    </script>
+          </template>
+        </div>
+      </div>
+    </div>
   </body>
+
+  <script>
+    document.addEventListener("alpine:init", () => {
+      Alpine.data("repositoryData", () => ({
+        baseUrl: window.location
+          .toString()
+          .replace("index.html", "")
+          .replace(/\/$/, ""),
+        repository: null,
+        sources: [],
+        selectedSources: new Set(),
+
+        async initialize() {
+          const response = await fetch(`${this.baseUrl}/versioning.json`);
+          const json = await response.json();
+          this.repository = json.repository;
+          this.sources = json.sources;
+          document.title = this.repository.name;
+        },
+
+        getContentRatingClass(rating) {
+          const classes = {
+            MATURE: "bg-yellow-500 text-yellow-900",
+            ADULT: "bg-red-500 text-red-100",
+            SAFE: "bg-green-500 text-green-100",
+          };
+          return classes[rating.toUpperCase()] || "bg-gray-500 text-gray-100";
+        },
+
+        toggleSource(sourceId) {
+          if (this.selectedSources.has(sourceId)) {
+            this.selectedSources.delete(sourceId);
+          } else {
+            this.selectedSources.add(sourceId);
+          }
+        },
+
+        installSelectedSources() {
+          if (this.selectedSources.size === 0) {
+            alert("Please select at least one source");
+            return;
+          }
+          const sourcesToInstall = Array.from(this.selectedSources).map(
+            (id) => [id, this.baseUrl]
+          );
+          window.location.href = `paperback://installExtensions?data=${btoa(
+            JSON.stringify(sourcesToInstall)
+          )}`;
+        },
+
+        addToPaperback() {
+          if (!this.repository) {
+            alert("Versioning info is not loaded");
+            return;
+          }
+          window.location.href = `paperback://addRepo?displayName=${encodeURI(
+            this.repository.name
+          )}&url=${encodeURI(this.baseUrl)}`;
+        },
+      }));
+    });
+  </script>
 </html>
