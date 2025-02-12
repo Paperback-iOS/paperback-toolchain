@@ -24,137 +24,156 @@
     x-data="repositoryData()"
     x-init="await initialize()"
   >
-    <header class="flex flex-col items-center relative mt-4">
-      <div
-        class="absolute w-28 h-28 md:w-40 md:h-40 -top-4 left-1/2 -translate-x-1/2 rounded-full"
-        style="
-          background: radial-gradient(
-              circle at 30% 30%,
-              rgba(84, 120, 219, 0.4) 0%,
-              transparent 70%
-            ),
-            radial-gradient(
-              circle at 70% 70%,
-              rgba(246, 75, 75, 0.4) 0%,
-              transparent 70%
-            );
-          filter: blur(25px);
-        "
-      ></div>
-      <div class="relative z-10">
-        <img
-          class="md:max-h-32 max-h-20 rounded-lg"
-          src="https://paperback.moe/pb-logo.svg"
-          alt="Repository logo"
-        />
-      </div>
-      <h1
-        x-text="repository?.name"
-        class="text-xl mt-4 md:text-3xl font-bold"
-      ></h1>
-      <p class="max-w-xl md:text-lg leading-snug text-[#f64b4b] mx-auto mt-4">
-        A Paperback extensions repository
-      </p>
-      <a
-        class="addToPaperbackButton inline-block leading-7 mt-4 mx-1 py-2 px-4 text-white bg-[#f64b4b] border-b border-red-700 rounded-full transition-colors duration-100 hover:bg-[#f46565] hover:cursor-pointer"
-        @click="addToPaperback()"
-      >
-        Add Repository to Paperback
-      </a>
-    </header>
-
-    <div class="mx-auto text-left">
-      <p x-text="repository?.description" class="mt-4 text-center"></p>
-      <div class="mt-4">
-        <div class="flex justify-between items-center">
-          <p class="font-bold">Available Sources:</p>
-          <button
-            @click="installSelectedSources()"
-            class="py-2 px-4 bg-[#f64b4b] text-white rounded-full hover:bg-[#f46565] transition-colors duration-100 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="selectedSources.size === 0"
-          >
-            Install (<span x-text="selectedSources.size"></span>)
-          </button>
+    <div class="container mx-auto max-w-7xl">
+      <header class="flex flex-col items-center relative mt-4">
+        <div
+          class="absolute w-28 h-28 md:w-40 md:h-40 -top-4 left-1/2 -translate-x-1/2 rounded-full"
+          style="
+            background: radial-gradient(
+                circle at 30% 30%,
+                rgba(84, 120, 219, 0.4) 0%,
+                transparent 70%
+              ),
+              radial-gradient(
+                circle at 70% 70%,
+                rgba(246, 75, 75, 0.4) 0%,
+                transparent 70%
+              );
+            filter: blur(25px);
+          "
+        ></div>
+        <div class="relative z-10">
+          <img
+            class="md:max-h-32 max-h-20 rounded-lg"
+            src="https://paperback.moe/pb-logo.svg"
+            alt="Repository logo"
+          />
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-          <template x-for="source in sources" :key="source.id">
-            <div class="bg-zinc-800 rounded-lg shadow-lg overflow-hidden">
-              <!-- Desktop Layout -->
-              <div class="hidden md:block">
-                <div class="p-4 flex items-center space-x-4">
-                  <img
-                    :src="`${baseUrl}/${source.id}/static/${source.icon}`"
-                    :alt="`${source.name} icon`"
-                    class="w-12 h-12 rounded-full"
-                  />
-                  <h3
-                    class="text-xl font-semibold text-gray-200"
-                    x-text="source.name"
-                  ></h3>
-                </div>
-                <div class="p-4 border-t border-zinc-700">
-                  <p class="text-gray-300 text-sm mb-2">
-                    Version: <span x-text="source.version"></span>
-                  </p>
-                  <p class="text-gray-300 mb-4" x-text="source.description"></p>
-                  <div class="text-gray-400 text-sm">
-                    <span
-                      class="inline-block px-2 py-1 rounded text-xs font-semibold"
-                      :class="getContentRatingClass(source.contentRating)"
-                      x-text="source.contentRating"
-                    ></span>
-                  </div>
-                  <button
-                    @click="toggleSource(source.id)"
-                    class="mt-4 py-2 px-4 rounded-full transition-colors duration-100 hover:cursor-pointer"
-                    :class="selectedSources.has(source.id) ? 'bg-slate-600 text-white hover:bg-slate-400' : 'bg-[#f64b4b] text-white hover:bg-[#f46565]'"
-                  >
-                    <span
-                      x-text="selectedSources.has(source.id) ? 'Selected' : 'Select'"
-                    ></span>
-                  </button>
-                </div>
-              </div>
-              <!-- Mobile Layout -->
-              <div class="md:hidden p-4">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-3 flex-1">
+        <h1
+          x-text="repository?.name"
+          class="text-xl mt-4 md:text-3xl font-bold"
+        ></h1>
+        <p x-text="repository?.description" class="mt-4 text-center"></p>
+        <a
+          class="addToPaperbackButton inline-block leading-7 mt-4 mx-1 py-2 px-4 text-white bg-[#f64b4b] border-b border-red-700 rounded-full transition-colors duration-100 hover:bg-[#f46565] hover:cursor-pointer"
+          @click="addToPaperback()"
+        >
+          Add Repository to Paperback
+        </a>
+      </header>
+
+      <div class="mx-auto text-left">
+        <div class="mt-4">
+          <p class="font-bold">Available Sources:</p>
+          <p class="text-sm text-gray-400 mt-1">Click on sources to select them for installation</p>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
+          >
+            <template x-for="source in sources" :key="source.id">
+              <div
+                @click="toggleSource(source.id)"
+                class="bg-zinc-800 rounded-lg shadow-lg overflow-hidden hover:cursor-pointer transition-all duration-200 relative"
+                :class="selectedSources.has(source.id) ? 'ring-2 ring-[#5478db]' : ''"
+              >
+                <!-- Desktop Layout -->
+                <div class="hidden md:block">
+                  <div class="p-4 flex items-center space-x-4">
                     <img
                       :src="`${baseUrl}/${source.id}/static/${source.icon}`"
                       :alt="`${source.name} icon`"
                       class="w-12 h-12 rounded-full"
                     />
-                    <div class="flex flex-col space-y-1">
-                      <h3
-                        class="text-lg font-semibold text-gray-200"
-                        x-text="source.name"
-                      ></h3>
+                    <h3
+                      class="text-xl font-semibold text-gray-200"
+                      x-text="source.name"
+                    ></h3>
+                  </div>
+                  <div class="p-4 border-t border-zinc-700">
+                    <p class="text-gray-300 text-sm mb-2">
+                      Version: <span x-text="source.version"></span>
+                    </p>
+                    <p
+                      class="text-gray-300 mb-4"
+                      x-text="source.description"
+                    ></p>
+                    <div
+                      class="text-gray-400 text-sm flex items-center space-x-2"
+                    >
                       <span
-                        class="text-sm text-gray-400"
-                        x-text="`v${source.version}`"
-                      ></span>
-                      <span
-                        class="px-2 py-0.5 rounded text-xs font-semibold w-fit"
+                        class="inline-block px-2 py-1 rounded text-xs font-semibold"
                         :class="getContentRatingClass(source.contentRating)"
                         x-text="source.contentRating"
                       ></span>
+                      <span
+                        x-show="selectedSources.has(source.id)"
+                        class="text-[#5478db] text-xs"
+                        >• Selected</span
+                      >
                     </div>
                   </div>
-                  <button
-                    @click="toggleSource(source.id)"
-                    class="ml-2 py-2 px-4 rounded-full transition-colors duration-100 hover:cursor-pointer"
-                    :class="selectedSources.has(source.id) ? 'bg-slate-600 text-white hover:bg-slate-400' : 'bg-[#f64b4b] text-white hover:bg-[#f46565]'"
-                  >
-                    <span
-                      x-text="selectedSources.has(source.id) ? 'Selected' : 'Select'"
-                    ></span>
-                  </button>
+                </div>
+                <!-- Mobile Layout -->
+                <div class="md:hidden p-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3 flex-1">
+                      <img
+                        :src="`${baseUrl}/${source.id}/static/${source.icon}`"
+                        :alt="`${source.name} icon`"
+                        class="w-12 h-12 rounded-full"
+                      />
+                      <div class="flex flex-col space-y-1">
+                        <h3
+                          class="text-lg font-semibold text-gray-200"
+                          x-text="source.name"
+                        ></h3>
+                        <span
+                          class="text-sm text-gray-400"
+                          x-text="`v${source.version}`"
+                        ></span>
+                        <div class="flex items-center space-x-2">
+                          <span
+                            class="px-2 py-0.5 rounded text-xs font-semibold"
+                            :class="getContentRatingClass(source.contentRating)"
+                            x-text="source.contentRating"
+                          ></span>
+                          <span
+                            x-show="selectedSources.has(source.id)"
+                            class="text-[#5478db] text-xs"
+                            >• Selected</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
+            </template>
+          </div>
         </div>
       </div>
+    </div>
+
+    <!-- Floating Install Button -->
+    <div
+      x-show="selectedSources.size > 0"
+      class="fixed bottom-6 right-6 z-50"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0 translate-y-4"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="opacity-100 translate-y-0"
+      x-transition:leave-end="opacity-0 translate-y-4"
+    >
+      <button
+        @click="installSelectedSources()"
+        class="py-3 px-6 bg-[#f64b4b] text-white rounded-full hover:bg-[#f46565] transition-colors duration-100 shadow-lg hover:cursor-pointer flex items-center space-x-2"
+      >
+        <span>Install</span>
+        <span
+          class="bg-white/25 px-2 py-0.5 rounded-full text-sm"
+          x-text="selectedSources.size"
+        ></span>
+      </button>
     </div>
   </body>
 
