@@ -150,8 +150,8 @@ export default class Bundle extends Command {
                 types: commonsInfo.version
             },
             repository: {
-                description: projectInfo.paperback?.repositoryDescription ?? 'An extension repository for Paperback',
-                name: projectInfo.paperback?.repositoryName ?? 'Paperback Extension Repository'
+                name: projectInfo?.name ?? 'Paperback Extension Repository',
+                description: projectInfo?.description ?? 'An extension repository for Paperback'
             },
             sources: [] as any[]
         }
