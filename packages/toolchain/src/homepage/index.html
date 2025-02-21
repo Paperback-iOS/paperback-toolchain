@@ -65,7 +65,10 @@
       <div class="mx-auto text-left">
         <div class="mt-4">
           <p class="font-bold">Available Sources:</p>
-          <p class="text-sm text-gray-400 mt-1">Click on sources to select them for installation</p>
+          <p class="text-sm text-gray-400 mt-1">
+            Click on sources to select them for installation
+          </p>
+
           <div class="relative mt-4">
             <input
               type="text"
@@ -74,9 +77,26 @@
               class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5478db] mb-4"
             />
           </div>
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
+
+          <!-- Badge filters -->
+          <div class="mt-2 mb-4 relative">
+            <div class="overflow-x-auto" x-show="availableBadges.length">
+              <div class="inline-flex gap-2 pb-2">
+                <template x-for="badge in availableBadges" :key="badge.label">
+                  <button
+                    @click="toggleBadgeFilter(badge)"
+                    class="px-3 py-2 rounded-lg text-md font-medium transition-all duration-200 border shrink-0"
+                    :style="selectedBadges.some(b => b.label === badge.label) ?
+                            `background-color: ${badge.backgroundColor}; color: ${badge.textColor}; border-color: ${badge.backgroundColor};` :
+                            `background-color: transparent; color: ${badge.backgroundColor}; border-color: ${badge.backgroundColor};`"
+                    x-text="badge.label"
+                  ></button>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <template x-for="source in filteredSources" :key="source.id">
               <div
                 @click="toggleSource(source.id)"
@@ -85,16 +105,23 @@
               >
                 <!-- Desktop Layout -->
                 <div class="hidden md:block">
-                  <div class="p-4 flex items-center space-x-4">
-                    <img
-                      :src="`${baseUrl}/${source.id}/static/${source.icon}`"
-                      :alt="`${source.name} icon`"
-                      class="w-12 h-12 rounded-full"
-                    />
-                    <h3
-                      class="text-xl font-semibold text-gray-200"
-                      x-text="source.name"
-                    ></h3>
+                  <div class="p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <img
+                        :src="`${baseUrl}/${source.id}/static/${source.icon}`"
+                        :alt="`${source.name} icon`"
+                        class="w-12 h-12 rounded-full"
+                      />
+                      <h3
+                        class="text-xl font-semibold text-gray-200"
+                        x-text="source.name"
+                      ></h3>
+                    </div>
+                    <span
+                      class="px-2 py-1 rounded text-xs font-semibold"
+                      :class="getContentRatingClass(source.contentRating)"
+                      x-text="source.contentRating"
+                    ></span>
                   </div>
                   <div class="p-4 border-t border-zinc-700">
                     <p class="text-gray-300 text-sm mb-2">
@@ -105,13 +132,21 @@
                       x-text="source.description"
                     ></p>
                     <div
-                      class="text-gray-400 text-sm flex items-center space-x-2"
+                      class="flex flex-wrap gap-2 mb-2"
+                      x-show="source.badges && source.badges.length"
                     >
-                      <span
-                        class="inline-block px-2 py-1 rounded text-xs font-semibold"
-                        :class="getContentRatingClass(source.contentRating)"
-                        x-text="source.contentRating"
-                      ></span>
+                      <template
+                        x-for="badge in source.badges"
+                        :key="badge.label"
+                      >
+                        <span
+                          class="px-2 py-0.5 rounded text-xs font-medium"
+                          :style="`background-color: ${badge.backgroundColor}; color: ${badge.textColor};`"
+                          x-text="badge.label"
+                        ></span>
+                      </template>
+                    </div>
+                    <div class="text-gray-400 text-sm flex items-center">
                       <span
                         x-show="selectedSources.has(source.id)"
                         class="text-[#5478db] text-xs"
@@ -122,8 +157,8 @@
                 </div>
                 <!-- Mobile Layout -->
                 <div class="md:hidden p-4">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3 flex-1">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center space-x-3">
                       <img
                         :src="`${baseUrl}/${source.id}/static/${source.icon}`"
                         :alt="`${source.name} icon`"
@@ -138,20 +173,33 @@
                           class="text-sm text-gray-400"
                           x-text="`v${source.version}`"
                         ></span>
-                        <div class="flex items-center space-x-2">
-                          <span
-                            class="px-2 py-0.5 rounded text-xs font-semibold"
-                            :class="getContentRatingClass(source.contentRating)"
-                            x-text="source.contentRating"
-                          ></span>
-                          <span
-                            x-show="selectedSources.has(source.id)"
-                            class="text-[#5478db] text-xs"
-                            >• Selected</span
+                        <div
+                          class="flex flex-wrap gap-1 mt-1"
+                          x-show="source.badges && source.badges.length"
+                        >
+                          <template
+                            x-for="badge in source.badges"
+                            :key="badge.label"
                           >
+                            <span
+                              class="px-1.5 py-0.5 rounded text-[10px] font-medium"
+                              :style="`background-color: ${badge.backgroundColor}; color: ${badge.textColor};`"
+                              x-text="badge.label"
+                            ></span>
+                          </template>
                         </div>
+                        <span
+                          x-show="selectedSources.has(source.id)"
+                          class="text-[#5478db] text-xs"
+                          >• Selected</span
+                        >
                       </div>
                     </div>
+                    <span
+                      class="px-2 py-1 rounded text-xs font-semibold shrink-0"
+                      :class="getContentRatingClass(source.contentRating)"
+                      x-text="source.contentRating"
+                    ></span>
                   </div>
                 </div>
               </div>
@@ -162,11 +210,17 @@
     </div>
 
     <!-- Build Information Footer -->
-    <footer class="mt-12 text-center text-sm text-gray-400">
+    <footer class="mt-4 md:mt-12 text-center text-sm text-gray-400">
       <div class="space-y-1">
-        <p>Paperback Toolchain: <span x-text="buildInfo.builtWith.toolchain"></span></p>
+        <p>
+          Paperback Toolchain:
+          <span x-text="buildInfo.builtWith.toolchain"></span>
+        </p>
         <p>Paperback Types: <span x-text="buildInfo.builtWith.types"></span></p>
-        <p>Build Time: <span x-text="new Date(buildInfo.buildTime).toLocaleString()"></span></p>
+        <p>
+          Build Time:
+          <span x-text="new Date(buildInfo.buildTime).toLocaleString()"></span>
+        </p>
       </div>
     </footer>
 
@@ -206,12 +260,31 @@
         selectedSources: new Set(),
         buildInfo: null,
         searchTerm: "",
+        selectedBadges: [],
+        availableBadges: [],
 
         get filteredSources() {
-          return this.sources.filter(source => 
-            source.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-            source.description.toLowerCase().includes(this.searchTerm.toLowerCase())
-          );
+          return this.sources.filter((source) => {
+            // Text search filter
+            const matchesSearch =
+              source.name
+                .toLowerCase()
+                .includes(this.searchTerm.toLowerCase()) ||
+              source.description
+                .toLowerCase()
+                .includes(this.searchTerm.toLowerCase());
+
+            // Badge filter
+            const matchesBadges =
+              this.selectedBadges.length === 0 ||
+              this.selectedBadges.every((selectedBadge) =>
+                source.badges?.some(
+                  (badge) => badge.label === selectedBadge.label
+                )
+              );
+
+            return matchesSearch && matchesBadges;
+          });
         },
 
         async initialize() {
@@ -221,9 +294,29 @@
           this.sources = json.sources;
           this.buildInfo = {
             buildTime: json.buildTime,
-            builtWith: json.builtWith
+            builtWith: json.builtWith,
           };
           document.title = this.repository.name;
+
+          // Collect unique badges from all sources
+          const badgeSet = new Set();
+          this.sources.forEach((source) => {
+            source.badges?.forEach((badge) => {
+              badgeSet.add(JSON.stringify(badge));
+            });
+          });
+          this.availableBadges = Array.from(badgeSet).map((b) => JSON.parse(b));
+        },
+
+        toggleBadgeFilter(badge) {
+          const index = this.selectedBadges.findIndex(
+            (b) => b.label === badge.label
+          );
+          if (index === -1) {
+            this.selectedBadges.push(badge);
+          } else {
+            this.selectedBadges.splice(index, 1);
+          }
         },
 
         getContentRatingClass(rating) {
