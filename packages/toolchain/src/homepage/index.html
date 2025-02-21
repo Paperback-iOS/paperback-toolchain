@@ -85,7 +85,7 @@
                 <template x-for="badge in availableBadges" :key="badge.label">
                   <button
                     @click="toggleBadgeFilter(badge)"
-                    class="px-3 py-2 rounded-lg text-md font-medium transition-all duration-200 border shrink-0"
+                    class="px-3 py-2 rounded-lg text-md font-medium transition-all duration-200 border shrink-0 hover:cursor-pointer"
                     :style="selectedBadges.some(b => b.label === badge.label) ?
                             `background-color: ${badge.backgroundColor}; color: ${badge.textColor}; border-color: ${badge.backgroundColor};` :
                             `background-color: transparent; color: ${badge.backgroundColor}; border-color: ${badge.backgroundColor};`"
@@ -127,26 +127,28 @@
                     <p class="text-gray-300 text-sm mb-2">
                       Version: <span x-text="source.version"></span>
                     </p>
-                    <p
-                      class="text-gray-300 mb-4"
-                      x-text="source.description"
-                    ></p>
+                    <p class="text-gray-300 mb-4 line-clamp-2 min-h-[3rem]"
+                       x-text="source.description"></p>
+                  </div>
+                  <div class="p-4 pt-0">
                     <div
-                      class="flex flex-wrap gap-2 mb-2"
+                      class="flex flex-nowrap gap-2 overflow-x-auto pb-2 hide-scrollbar"
                       x-show="source.badges && source.badges.length"
                     >
                       <template
-                        x-for="badge in source.badges"
+                        x-for="badge in sortBadges(source.badges)"
                         :key="badge.label"
                       >
                         <span
-                          class="px-2 py-0.5 rounded text-xs font-medium"
-                          :style="`background-color: ${badge.backgroundColor}; color: ${badge.textColor};`"
+                          class="px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap shrink-0 border transition-all duration-200"
+                          :style="selectedBadges.some(b => b.label === badge.label) ?
+                                  `background-color: ${badge.backgroundColor}; color: ${badge.textColor}; border-color: ${badge.backgroundColor};` :
+                                  `background-color: transparent; color: ${badge.backgroundColor}; border-color: ${badge.backgroundColor};`"
                           x-text="badge.label"
                         ></span>
                       </template>
                     </div>
-                    <div class="text-gray-400 text-sm flex items-center">
+                    <div class="text-gray-400 text-sm flex items-center mt-2">
                       <span
                         x-show="selectedSources.has(source.id)"
                         class="text-[#5478db] text-xs"
@@ -173,26 +175,6 @@
                           class="text-sm text-gray-400"
                           x-text="`v${source.version}`"
                         ></span>
-                        <div
-                          class="flex flex-wrap gap-1 mt-1"
-                          x-show="source.badges && source.badges.length"
-                        >
-                          <template
-                            x-for="badge in source.badges"
-                            :key="badge.label"
-                          >
-                            <span
-                              class="px-1.5 py-0.5 rounded text-[10px] font-medium"
-                              :style="`background-color: ${badge.backgroundColor}; color: ${badge.textColor};`"
-                              x-text="badge.label"
-                            ></span>
-                          </template>
-                        </div>
-                        <span
-                          x-show="selectedSources.has(source.id)"
-                          class="text-[#5478db] text-xs"
-                          >• Selected</span
-                        >
                       </div>
                     </div>
                     <span
@@ -200,6 +182,32 @@
                       :class="getContentRatingClass(source.contentRating)"
                       x-text="source.contentRating"
                     ></span>
+                  </div>
+                  <p class="text-gray-300 text-sm mt-2 mb-4 line-clamp-2 min-h-[2.5rem]"
+                     x-text="source.description"></p>
+                  <div class="mt-2">
+                    <div
+                      class="flex flex-nowrap gap-2 overflow-x-auto pb-2 hide-scrollbar"
+                      x-show="source.badges && source.badges.length"
+                    >
+                      <template
+                        x-for="badge in sortBadges(source.badges)"
+                        :key="badge.label"
+                      >
+                        <span
+                          class="px-2 py-1 rounded text-sm font-medium whitespace-nowrap shrink-0 border transition-all duration-200"
+                          :style="selectedBadges.some(b => b.label === badge.label) ?
+                                  `background-color: ${badge.backgroundColor}; color: ${badge.textColor}; border-color: ${badge.backgroundColor};` :
+                                  `background-color: transparent; color: ${badge.backgroundColor}; border-color: ${badge.backgroundColor};`"
+                          x-text="badge.label"
+                        ></span>
+                      </template>
+                    </div>
+                    <span
+                      x-show="selectedSources.has(source.id)"
+                      class="text-[#5478db] text-xs block mt-2"
+                      >• Selected</span
+                    >
                   </div>
                 </div>
               </div>
@@ -358,6 +366,15 @@
             this.repository.name
           )}&url=${encodeURI(this.baseUrl)}`;
         },
+
+        sortBadges(badges) {
+          return [...badges].sort((a, b) => {
+            const aSelected = this.selectedBadges.some(s => s.label === a.label);
+            const bSelected = this.selectedBadges.some(s => s.label === b.label);
+            return bSelected - aSelected; // Selected badges first
+          });
+        },
+
       }));
     });
   </script>
