@@ -63,13 +63,50 @@
       </header>
 
       <div class="mx-auto text-left">
-        <div class="mt-4">
-          <p class="font-bold">Available Sources:</p>
-          <p class="text-sm text-gray-400 mt-1">Click on sources to select them for installation</p>
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
-          >
-            <template x-for="source in sources" :key="source.id">
+        <div class="mt-4 space-y-4">
+          <div class="relative">
+            <label for="source-search" class="block text-sm font-medium text-gray-400">
+              Search
+            </label>
+            <input
+              type="text"
+              id="source-search"
+              x-model="searchTerm"
+              placeholder="Search sources..."
+              class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5478db]"
+            />
+          </div>
+
+          <!-- Badge filters -->
+          <div class="relative">
+            <div class="overflow-x-auto" x-show="availableBadges.length">
+              <label id="badge-filter-label" class="block text-sm font-medium text-gray-400 mb-2">
+                Filter
+              </label>
+              <div class="inline-flex gap-2 pb-2" role="group" aria-labelledby="badge-filter-label">
+                <template x-for="badge in availableBadges" :key="badge.label">
+                  <button
+                    @click="toggleBadgeFilter(badge)"
+                    class="px-3 py-2 rounded-lg text-md font-medium transition-all duration-200 shrink-0 hover:cursor-pointer"
+                    :style="selectedBadges.some(b => b.label === badge.label) ?
+                            `background-color: ${badge.backgroundColor}; color: ${badge.textColor};` :
+                            `background-color: ${badge.backgroundColor + '40'}; color: ${badge.textColor};`"
+                    x-text="badge.label"
+                  ></button>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p class="font-bold">Available Sources:</p>
+            <p class="text-sm text-gray-400">
+              Click on sources to select them for installation
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="source in filteredSources" :key="source.id">
               <div
                 @click="toggleSource(source.id)"
                 class="bg-zinc-800 rounded-lg shadow-lg overflow-hidden hover:cursor-pointer transition-all duration-200 relative"
@@ -77,33 +114,52 @@
               >
                 <!-- Desktop Layout -->
                 <div class="hidden md:block">
-                  <div class="p-4 flex items-center space-x-4">
-                    <img
-                      :src="`${baseUrl}/${source.id}/static/${source.icon}`"
-                      :alt="`${source.name} icon`"
-                      class="w-12 h-12 rounded-full"
-                    />
-                    <h3
-                      class="text-xl font-semibold text-gray-200"
-                      x-text="source.name"
-                    ></h3>
+                  <div class="p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <img
+                        :src="`${baseUrl}/${source.id}/static/${source.icon}`"
+                        :alt="`${source.name} icon`"
+                        class="w-12 h-12 rounded-full"
+                      />
+                      <h3
+                        class="text-xl font-semibold text-gray-200"
+                        x-text="source.name"
+                      ></h3>
+                    </div>
+                    <span
+                      class="px-2 py-1 rounded text-xs font-semibold"
+                      :class="getContentRatingClass(source.contentRating)"
+                      x-text="source.contentRating"
+                    ></span>
                   </div>
                   <div class="p-4 border-t border-zinc-700">
                     <p class="text-gray-300 text-sm mb-2">
                       Version: <span x-text="source.version"></span>
                     </p>
                     <p
-                      class="text-gray-300 mb-4"
+                      class="text-gray-300 mb-4 line-clamp-2 min-h-[3rem]"
                       x-text="source.description"
                     ></p>
+                  </div>
+                  <div class="p-4 pt-0">
                     <div
-                      class="text-gray-400 text-sm flex items-center space-x-2"
+                      class="flex flex-nowrap gap-2 overflow-x-auto pb-2 hide-scrollbar"
+                      x-show="source.badges && source.badges.length"
                     >
-                      <span
-                        class="inline-block px-2 py-1 rounded text-xs font-semibold"
-                        :class="getContentRatingClass(source.contentRating)"
-                        x-text="source.contentRating"
-                      ></span>
+                      <template
+                        x-for="badge in sortBadges(source.badges)"
+                        :key="badge.label"
+                      >
+                        <span
+                          class="px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap shrink-0 transition-all duration-200"
+                          :style="selectedBadges.some(b => b.label === badge.label) ?
+                                  `background-color: ${badge.backgroundColor}; color: ${badge.textColor};` :
+                                  `background-color: ${badge.backgroundColor + '40'}; color: ${badge.textColor};`"
+                          x-text="badge.label"
+                        ></span>
+                      </template>
+                    </div>
+                    <div class="text-gray-400 text-sm flex items-center mt-2">
                       <span
                         x-show="selectedSources.has(source.id)"
                         class="text-[#5478db] text-xs"
@@ -114,8 +170,8 @@
                 </div>
                 <!-- Mobile Layout -->
                 <div class="md:hidden p-4">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3 flex-1">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center space-x-3">
                       <img
                         :src="`${baseUrl}/${source.id}/static/${source.icon}`"
                         :alt="`${source.name} icon`"
@@ -130,20 +186,41 @@
                           class="text-sm text-gray-400"
                           x-text="`v${source.version}`"
                         ></span>
-                        <div class="flex items-center space-x-2">
-                          <span
-                            class="px-2 py-0.5 rounded text-xs font-semibold"
-                            :class="getContentRatingClass(source.contentRating)"
-                            x-text="source.contentRating"
-                          ></span>
-                          <span
-                            x-show="selectedSources.has(source.id)"
-                            class="text-[#5478db] text-xs"
-                            >• Selected</span
-                          >
-                        </div>
                       </div>
                     </div>
+                    <span
+                      class="px-2 py-1 rounded text-xs font-semibold shrink-0"
+                      :class="getContentRatingClass(source.contentRating)"
+                      x-text="source.contentRating"
+                    ></span>
+                  </div>
+                  <p
+                    class="text-gray-300 text-sm mt-2 mb-4 line-clamp-2 min-h-[2.5rem]"
+                    x-text="source.description"
+                  ></p>
+                  <div class="mt-2">
+                    <div
+                      class="flex flex-nowrap gap-2 overflow-x-auto pb-2 hide-scrollbar"
+                      x-show="source.badges && source.badges.length"
+                    >
+                      <template
+                        x-for="badge in sortBadges(source.badges)"
+                        :key="badge.label"
+                      >
+                        <span
+                          class="px-2 py-1 rounded text-sm font-medium whitespace-nowrap shrink-0 transition-all duration-200"
+                          :style="selectedBadges.some(b => b.label === badge.label) ?
+                                  `background-color: ${badge.backgroundColor}; color: ${badge.textColor};` :
+                                  `background-color: ${badge.backgroundColor + '40'}; color: ${badge.textColor};`"
+                          x-text="badge.label"
+                        ></span>
+                      </template>
+                    </div>
+                    <span
+                      x-show="selectedSources.has(source.id)"
+                      class="text-[#5478db] text-xs block mt-2"
+                      >• Selected</span
+                    >
                   </div>
                 </div>
               </div>
@@ -152,6 +229,29 @@
         </div>
       </div>
     </div>
+
+    <!-- Build Information Footer -->
+    <footer
+      class="mt-4 md:mt-12 text-center text-sm text-gray-400"
+      x-show="buildInfo?.buildTime && buildInfo?.builtWith"
+    >
+      <div class="space-y-1">
+        <p>
+          Paperback Toolchain:
+          <span x-text="buildInfo?.builtWith?.toolchain"></span>
+        </p>
+        <p>
+          Paperback Types: <span x-text="buildInfo?.builtWith?.types"></span>
+        </p>
+        <p>
+          Build Time:
+          <span
+            x-text="buildInfo?.buildTime ? new Date(buildInfo.buildTime).toLocaleString() : ''"
+          >
+          </span>
+        </p>
+      </div>
+    </footer>
 
     <!-- Floating Install Button -->
     <div
@@ -187,13 +287,130 @@
         repository: null,
         sources: [],
         selectedSources: new Set(),
+        buildInfo: null,
+        searchTerm: "",
+        selectedBadges: [],
+        availableBadges: [],
+
+        get filteredSources() {
+          return this.sources.filter((source) => {
+            // Text search filter
+            const matchesSearch =
+              source.name
+                .toLowerCase()
+                .includes(this.searchTerm.toLowerCase()) ||
+              source.description
+                .toLowerCase()
+                .includes(this.searchTerm.toLowerCase());
+
+            // Badge filter
+            const matchesBadges =
+              this.selectedBadges.length === 0 ||
+              this.selectedBadges.every((selectedBadge) =>
+                source.badges?.some(
+                  (badge) => badge.label === selectedBadge.label
+                )
+              );
+
+            return matchesSearch && matchesBadges;
+          });
+        },
+
+        getCapabilityBadges(capabilities) {
+          const badges = [];
+          const intents = {
+            MANGA_CHAPTERS: 1,
+            MANGA_PROGRESS: 2,
+            DISCOVER_SECTIONS: 4,
+            COLLECTION_MANAGEMENT: 8,
+            CLOUDFLARE_BYPASS: 16,
+            SETTINGS_UI: 32,
+            MANGA_SEARCH: 64,
+          };
+
+          // Not capabilties should be shown
+          const capabilityLabels = {
+            MANGA_CHAPTERS: {
+              label: "Content Provider",
+              textColor: "#FFFFFF",
+              backgroundColor: "#4A90E2",
+              type: "capability"
+            },
+            MANGA_PROGRESS: {
+              label: "Tracker",
+              textColor: "#FFFFFF",
+              backgroundColor: "#50C878",
+              type: "capability"
+            },
+            COLLECTION_MANAGEMENT: {
+              label: "Collections Manager",
+              textColor: "#FFFFFF",
+              backgroundColor: "#E67E22",
+              type: "capability"
+            },
+            CLOUDFLARE_BYPASS: {
+              label: "Cloudflare",
+              textColor: "#FFFFFF",
+              backgroundColor: "#E74C3C",
+              type: "capability"
+            },
+          };
+
+          // Handle both bit string and array formats
+          const capabilityValues = Array.isArray(capabilities)
+            ? capabilities
+            : Object.entries(intents)
+                .filter(([_, value]) => (capabilities & value) === value)
+                .map(([_, value]) => value);
+
+          for (const [key, value] of Object.entries(intents)) {
+            if (capabilityValues.includes(value) && capabilityLabels[key]) {
+              badges.push(capabilityLabels[key]);
+            }
+          }
+
+          return badges;
+        },
 
         async initialize() {
           const response = await fetch(`${this.baseUrl}/versioning.json`);
           const json = await response.json();
           this.repository = json.repository;
-          this.sources = json.sources;
+
+          // Add capability badges to sources
+          this.sources = json.sources.map((source) => ({
+            ...source,
+            badges: [
+              ...this.getCapabilityBadges(source.capabilities),
+              ...(source.badges || []),
+            ],
+          }));
+
+          this.buildInfo = {
+            buildTime: json.buildTime,
+            builtWith: json.builtWith,
+          };
           document.title = this.repository.name;
+
+          // Collect unique badges from all sources
+          const badgeSet = new Set();
+          this.sources.forEach((source) => {
+            source.badges?.forEach((badge) => {
+              badgeSet.add(JSON.stringify(badge));
+            });
+          });
+          this.availableBadges = Array.from(badgeSet).map((b) => JSON.parse(b));
+        },
+
+        toggleBadgeFilter(badge) {
+          const index = this.selectedBadges.findIndex(
+            (b) => b.label === badge.label
+          );
+          if (index === -1) {
+            this.selectedBadges.push(badge);
+          } else {
+            this.selectedBadges.splice(index, 1);
+          }
         },
 
         getContentRatingClass(rating) {
@@ -234,6 +451,18 @@
           window.location.href = `paperback://addRepo?displayName=${encodeURI(
             this.repository.name
           )}&url=${encodeURI(this.baseUrl)}`;
+        },
+
+        sortBadges(badges) {
+          return [...badges].sort((a, b) => {
+            const aSelected = this.selectedBadges.some(
+              (s) => s.label === a.label
+            );
+            const bSelected = this.selectedBadges.some(
+              (s) => s.label === b.label
+            );
+            return bSelected - aSelected;
+          });
         },
       }));
     });
