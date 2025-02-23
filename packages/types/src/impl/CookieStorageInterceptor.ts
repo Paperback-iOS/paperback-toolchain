@@ -1,7 +1,7 @@
-import type { Cookie } from "../Cookie"
-import { PaperbackInterceptor } from "./PaperbackInterceptor"
-import { Request } from "../Request"
-import { Response } from "../Response"
+import type { Cookie } from "../Cookie";
+import { PaperbackInterceptor } from "./PaperbackInterceptor";
+import { Request } from "../Request";
+import { Response } from "../Response";
 
 type CookieStorageOptions = {
   storage: "stateManager" | "memory";
@@ -42,13 +42,10 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
       ...(request.cookies ?? {}),
 
       // Inject all the cookies as { name: value }
-      ...(this.cookiesForUrl(request.url).reduce(
-        (v, c) => {
-          v[c.name] = c.value;
-          return v;
-        },
-        {} as Record<string, string>,
-      )),
+      ...this.cookiesForUrl(request.url).reduce((v, c) => {
+        v[c.name] = c.value;
+        return v;
+      }, {} as Record<string, string>),
     };
 
     return request;
@@ -57,7 +54,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
   async interceptResponse(
     request: Request,
     response: Response,
-    data: ArrayBuffer,
+    data: ArrayBuffer
   ): Promise<ArrayBuffer> {
     const cookies: Record<string, Cookie> = this._cookies;
 
@@ -119,7 +116,24 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
       }
 
       const cookieDomain = this.cookieSanitizedDomain(cookie);
-      if (hostname.endsWith(cookieDomain)) {
+      const splitCookieDomain = cookieDomain.split(".");
+      const splitHostname = hostname.split(".");
+      if (
+        splitHostname.length < splitCookieDomain.length ||
+        splitCookieDomain.length == 0
+      ) {
+        continue;
+      }
+
+      let cookieDomainMatches = true;
+      for (let i = splitCookieDomain.length - 1; i >= 0; i--) {
+        if (splitCookieDomain[i] != splitHostname[i]) {
+          cookieDomainMatches = false;
+          break;
+        }
+      }
+
+      if (!cookieDomainMatches) {
         continue;
       }
 
@@ -157,9 +171,9 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
   }
 
   private cookieIdentifier(cookie: Cookie): string {
-    return `${cookie.name}-${this.cookieSanitizedDomain(cookie)}-${
-      this.cookieSanitizedPath(cookie)
-    }`;
+    return `${cookie.name}-${this.cookieSanitizedDomain(
+      cookie
+    )}-${this.cookieSanitizedPath(cookie)}`;
   }
 
   private cookieSanitizedPath(cookie: Cookie): string {
@@ -169,9 +183,9 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
   }
 
   private cookieSanitizedDomain(cookie: Cookie): string {
-    return cookie.domain.startsWith(".")
-      ? cookie.domain.slice(1)
-      : cookie.domain;
+    return cookie.domain
+      .replace(/^(www)?\.?/gi, "")
+      .toLowerCase();
   }
 
   private isCookieExpired(cookie: Cookie): boolean {
@@ -210,6 +224,9 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
     if (this.options.storage == "memory") return;
 
     // TODO: handle secure cookies differently maybe?
-    Application.setState(this.cookies.filter((x) => x.expires), cookieStateKey);
+    Application.setState(
+      this.cookies.filter((x) => x.expires),
+      cookieStateKey
+    );
   }
 }
