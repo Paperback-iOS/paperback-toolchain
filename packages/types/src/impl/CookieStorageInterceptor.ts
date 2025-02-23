@@ -95,80 +95,83 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
   cookiesForUrl(urlString: string): Cookie[] {
     console.log("[COMPAT] COOKIES FOR URL");
     const urlRegex =
-      /^((?:(https?):\/\/)?((?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9]))|(?:(?:(?:\w+\.){1,2}[\w]{2,3})))(?::(\d+))?((?:\/[\w]+)*)(?:\/|(\/[\w]+\.[\w]{3,4})|(\?(?:([\w]+=[\w]+)&)*([\w]+=[\w]+))?|\?(?:(wsdl|wadl))))$/gm;
+        /^((?:(https?):\/\/)?((?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9])\.)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]|[0-9]))|(?:(?:(?:\w+\.){1,2}[\w]{2,3})))(?::(\d+))?((?:\/[\w]+)*)(?:\/|(\/[\w]+\.[\w]{3,4})|(\?(?:([\w]+=[\w]+)&)*([\w]+=[\w]+))?|\?(?:(wsdl|wadl))))$/gm;
     const urlParsed = urlRegex.exec(urlString);
     if (!urlParsed) {
-      return [];
+        return [];
     }
     const hostname = urlParsed[3];
     const pathname = urlParsed[5];
     const matchedCookies: Record<
-      string,
-      { cookie: Cookie; pathMatches: number }
+        string,
+        { cookie: Cookie; pathMatches: number }
     > = {};
+    const splitHostname = hostname.split(".");
     const splitUrlPath = pathname.split("/");
     const cookies = this.cookies;
 
     for (const cookie of cookies) {
-      if (this.isCookieExpired(cookie)) {
-        delete this._cookies[this.cookieIdentifier(cookie)];
-        continue;
-      }
-
-      const cookieDomain = this.cookieSanitizedDomain(cookie);
-      const splitCookieDomain = cookieDomain.split(".");
-      const splitHostname = hostname.split(".");
-      if (
-        splitHostname.length < splitCookieDomain.length ||
-        splitCookieDomain.length == 0
-      ) {
-        continue;
-      }
-
-      let cookieDomainMatches = true;
-      for (let i = splitCookieDomain.length - 1; i >= 0; i--) {
-        if (splitCookieDomain[i] != splitHostname[i]) {
-          cookieDomainMatches = false;
-          break;
+        if (this.isCookieExpired(cookie)) {
+            delete this._cookies[this.cookieIdentifier(cookie)];
+            continue;
         }
-      }
 
-      if (!cookieDomainMatches) {
-        continue;
-      }
-
-      const cookiePath = this.cookieSanitizedPath(cookie);
-      const splitCookiePath = cookiePath.split("/");
-      let pathMatches = 0;
-
-      if (pathname === cookiePath) {
-        pathMatches = Number.MAX_SAFE_INTEGER;
-      } else if (splitUrlPath.length === 0 || pathname === "") {
-        pathMatches = 1;
-      } else if (
-        cookiePath.startsWith(pathname) &&
-        splitUrlPath.length >= splitCookiePath.length
-      ) {
-        for (let i = 0; i < splitUrlPath.length; i++) {
-          if (splitCookiePath[i] === splitUrlPath[i]) {
-            pathMatches += 1;
-          } else {
-            break;
-          }
+        const cookieDomain = this.cookieSanitizedDomain(cookie);
+        const splitCookieDomain = cookieDomain.split(".");
+        console.log(splitHostname, splitCookieDomain)
+        if (
+            splitHostname.length < splitCookieDomain.length ||
+            splitCookieDomain.length == 0
+        ) {
+            continue;
         }
-      }
 
-      if (pathMatches <= 0) {
-        continue;
-      }
+        let cookieDomainMatches = true;
+        for (let i = 0; i < splitCookieDomain.length; i++) {
+            let splitCookieIndex = splitCookieDomain.length - 1 - i
+            let splitHostnameIndex = splitHostname.length - 1 - i
+            if (splitCookieDomain[splitCookieIndex] != splitHostname[splitHostnameIndex]) {
+                cookieDomainMatches = false;
+                break;
+            }
+        }
 
-      if ((matchedCookies[cookie.name]?.pathMatches ?? 0) < pathMatches) {
-        matchedCookies[cookie.name] = { cookie, pathMatches };
-      }
+        if (!cookieDomainMatches) {
+            continue;
+        }
+
+        const cookiePath = this.cookieSanitizedPath(cookie);
+        const splitCookiePath = cookiePath.split("/");
+        let pathMatches = 0;
+
+        if (pathname === cookiePath) {
+            pathMatches = Number.MAX_SAFE_INTEGER;
+        } else if (splitUrlPath.length === 0 || pathname === "") {
+            pathMatches = 1;
+        } else if (
+            cookiePath.startsWith(pathname) &&
+            splitUrlPath.length >= splitCookiePath.length
+        ) {
+            for (let i = 0; i < splitUrlPath.length; i++) {
+                if (splitCookiePath[i] === splitUrlPath[i]) {
+                    pathMatches += 1;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        if (pathMatches <= 0) {
+            continue;
+        }
+
+        if ((matchedCookies[cookie.name]?.pathMatches ?? 0) < pathMatches) {
+            matchedCookies[cookie.name] = { cookie, pathMatches };
+        }
     }
 
     return Object.values(matchedCookies).map((x) => x.cookie);
-  }
+}
 
   private cookieIdentifier(cookie: Cookie): string {
     return `${cookie.name}-${this.cookieSanitizedDomain(
