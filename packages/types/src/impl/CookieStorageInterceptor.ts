@@ -119,7 +119,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
       }
 
       const cookieDomain = this.cookieSanitizedDomain(cookie);
-      if (cookieDomain != hostname) {
+      if (hostname.endsWith(cookieDomain)) {
         continue;
       }
 
