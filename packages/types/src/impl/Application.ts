@@ -72,6 +72,7 @@ declare global {
     function arrayBufferToUTF8String(arrayBuffer: ArrayBuffer): string;
     function arrayBufferToASCIIString(arrayBuffer: ArrayBuffer): string;
     function arrayBufferToUTF16String(arrayBuffer: ArrayBuffer): string;
+    function arrayBufferToJSONObject(arraybuffer: ArrayBuffer): unknown;
 
     // Search Filters
     /**
