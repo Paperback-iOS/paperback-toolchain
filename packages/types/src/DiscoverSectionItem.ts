@@ -1,6 +1,6 @@
 import type { SearchQuery } from "./SearchQuery"
 
-interface FeaturedCarouselItem {
+export interface FeaturedCarouselItem {
   type: "featuredCarouselItem";
   mangaId: string;
   imageUrl: string;
@@ -9,7 +9,7 @@ interface FeaturedCarouselItem {
   metadata?: unknown;
 }
 
-interface SimpleCarouselItem {
+export interface SimpleCarouselItem {
   type: "simpleCarouselItem";
   mangaId: string;
   imageUrl: string;
@@ -18,7 +18,7 @@ interface SimpleCarouselItem {
   metadata?: unknown;
 }
 
-interface ProminentCarouselItem {
+export interface ProminentCarouselItem {
   type: "prominentCarouselItem";
   mangaId: string;
   imageUrl: string;
@@ -27,7 +27,7 @@ interface ProminentCarouselItem {
   metadata?: unknown;
 }
 
-interface ChapterUpdatesCarouselItem {
+export interface ChapterUpdatesCarouselItem {
   type: "chapterUpdatesCarouselItem";
   mangaId: string;
   chapterId: string;
@@ -38,7 +38,7 @@ interface ChapterUpdatesCarouselItem {
   metadata?: unknown;
 }
 
-interface GenresCarouselItem {
+export interface GenresCarouselItem {
   type: "genresCarouselItem";
   searchQuery: SearchQuery;
   name: string;
