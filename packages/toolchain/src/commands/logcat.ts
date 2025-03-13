@@ -4,7 +4,7 @@ import { Args, Command, Flags } from "@oclif/core";
 import { LogLevel, LogLine } from "../devtools/.generated/typescript/PDTLogger";
 import { PaperbackLoggerClient } from "../devtools/.generated/typescript/PDTLogger.grpc-client";
 
-import chalk from "chalk";
+import pc from "picocolors"
 
 export default class Logcat extends Command {
   static args = {
@@ -36,22 +36,22 @@ export default class Logcat extends Command {
 
           switch (logLine.level) {
             case LogLevel.INFO: {
-              level = chalk.bold.bgGreenBright`[DEBUG]`;
+              level = pc.bold(pc.bgGreenBright('[DEBUG]'));
               break;
             }
 
             case LogLevel.ERROR: {
-              level = chalk.bold.bgRed`[ERROR]`;
+              level = pc.bold(pc.bgRed('[ERROR]'));
               break;
             }
 
             case LogLevel.WARN: {
-              level = chalk.bold.bgYellow`[WARN]`;
+              level = pc.bold(pc.bgYellow('[WARN]'));
               break;
             }
 
             default: {
-              level = chalk.bold.whiteBright`[UNKWN]`;
+              level = pc.bold(pc.whiteBright('[WARN]'));
               break;
             }
           }

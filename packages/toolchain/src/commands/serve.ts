@@ -4,7 +4,7 @@ import inquirer from "inquirer";
 import Server from "../server";
 import Bundle from "./bundle";
 
-import chalk from "chalk";
+import pc from "picocolors"
 
 export default class Serve extends Command {
   static override description = "Build the sources and start a local server";
@@ -23,18 +23,18 @@ export default class Serve extends Command {
 
     console.clear();
 
-    this.log(chalk.blue("Building Sources"));
+    this.log(pc.blue("Building Sources"));
 
     // Make sure the repo is bundled
     await Bundle.run([]);
     this.log();
-    this.log(chalk.underline.blue("Starting Server on port " + flags.port));
+    this.log(pc.underline(pc.blue("Starting Server on port " + flags.port)));
 
     const server = new Server(flags.port);
 
     server.start();
     this.log();
-    this.log(chalk`For a list of commands do {green h} or {green help}`);
+    this.log(`For a list of commands do ${pc.green('h')} or ${pc.green('help')}`)
 
     let stopServer = false;
     while (!stopServer) {
@@ -49,7 +49,7 @@ export default class Serve extends Command {
       ]).then((answers) => answers.userInput);
 
       if (input === "h" || input === "help") {
-        this.log(chalk.underline.bold("Help"));
+        this.log(pc.underline(pc.bold("Help")));
         this.log("  h, help - Display this message");
         this.log("  s, stop - Stop the server");
         this.log(
@@ -66,17 +66,17 @@ export default class Serve extends Command {
 
         console.clear();
 
-        this.log(chalk.underline.blue("Building Sources"));
+        this.log(pc.underline(pc.blue("Building Sources")));
 
         // Make sure the repo is bundled
         // eslint-disable-next-line no-await-in-loop
         await Bundle.run([]);
         this.log();
-        this.log(chalk.underline.blue("Starting Server on port " + flags.port));
+        this.log(pc.underline(pc.blue("Starting Server on port " + flags.port)));
 
         server.start();
         this.log();
-        this.log(chalk`For a list of commands do {green h} or {green help}`);
+        this.log(`For a list of commands do ${pc.green('h')} or ${pc.green('help')}`)
       }
     }
 
@@ -92,6 +92,6 @@ export default class Serve extends Command {
     const seconds = this.fixedWidth(date.getSeconds(), 2);
     const milliseconds = this.fixedWidth(date.getMilliseconds(), 4);
     const time = `${hours}:${minutes}:${seconds}:${milliseconds}`;
-    return chalk`[{gray ${time}}] ${message}`;
+    return `[${pc.gray(time)}] ${message}`;
   }
 }
