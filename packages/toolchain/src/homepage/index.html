@@ -49,23 +49,50 @@
             alt="Repository logo"
           />
         </div>
+
         <h1
+          x-show="repository"
           x-text="repository?.name"
           class="text-xl mt-4 md:text-3xl font-bold"
         ></h1>
-        <p x-text="repository?.description" class="mt-4 text-center"></p>
+
+        <p
+          x-show="repository"
+          x-text="repository?.description"
+          class="mt-4 text-center"
+        ></p>
+
         <a
           class="addToPaperbackButton inline-block leading-7 mt-4 mx-1 py-2 px-4 text-white bg-[#f64b4b] border-b border-red-700 rounded-full transition-colors duration-100 hover:bg-[#f46565] hover:cursor-pointer"
           @click="addToPaperback()"
+          x-show="repository"
         >
           Add Repository to Paperback
         </a>
       </header>
 
       <div class="mx-auto text-left">
-        <div class="mt-4 space-y-4">
-          <div class="relative">
-            <label for="source-search" class="block text-sm font-medium text-gray-400">
+        <!-- Error message -->
+        <div
+          x-show="error"
+          class="bg-red-500 text-white p-4 rounded-lg mt-6 text-center"
+        >
+          <p class="font-bold">Error loading repository data</p>
+          <p x-text="error" class="mt-2"></p>
+          <button
+            @click="initialize()"
+            class="mt-2 bg-white text-red-500 px-4 py-1 rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+
+        <div class="mt-6 space-y-4" x-show="!error">
+          <div x-show="repository" class="relative">
+            <label
+              for="source-search"
+              class="block text-sm font-medium text-gray-400"
+            >
               Search
             </label>
             <input
@@ -78,12 +105,19 @@
           </div>
 
           <!-- Badge filters -->
-          <div class="relative">
+          <div x-show="repository" class="relative">
             <div class="overflow-x-auto" x-show="availableBadges.length">
-              <label id="badge-filter-label" class="block text-sm font-medium text-gray-400 mb-2">
+              <label
+                id="badge-filter-label"
+                class="block text-sm font-medium text-gray-400 mb-2"
+              >
                 Filter
               </label>
-              <div class="inline-flex gap-2 pb-2" role="group" aria-labelledby="badge-filter-label">
+              <div
+                class="inline-flex gap-2 pb-2"
+                role="group"
+                aria-labelledby="badge-filter-label"
+              >
                 <template x-for="badge in availableBadges" :key="badge.label">
                   <button
                     @click="toggleBadgeFilter(badge)"
@@ -98,19 +132,30 @@
             </div>
           </div>
 
-          <div>
-            <p class="font-bold">Available Sources:</p>
-            <p class="text-sm text-gray-400">
-              Click on sources to select them for installation
-            </p>
+          <!-- Sort controls -->
+          <div
+            x-show="repository"
+            class="flex justify-between items-center flex-wrap gap-3"
+          >
+            <div>
+              <p class="font-bold">Available Sources:</p>
+              <p class="text-sm text-gray-400">
+                Click on sources to select them for installation
+              </p>
+            </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            x-show="repository"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
             <template x-for="source in filteredSources" :key="source.id">
               <div
                 @click="toggleSource(source.id)"
                 class="bg-zinc-800 rounded-lg shadow-lg overflow-hidden hover:cursor-pointer transition-all duration-200 relative"
                 :class="selectedSources.has(source.id) ? 'ring-2 ring-[#5478db]' : ''"
+                @keydown.enter="toggleSource(source.id)"
+                tabindex="0"
               >
                 <!-- Desktop Layout -->
                 <div class="hidden md:block">
@@ -120,6 +165,8 @@
                         :src="`${baseUrl}/${source.id}/static/${source.icon}`"
                         :alt="`${source.name} icon`"
                         class="w-12 h-12 rounded-full"
+                        loading="lazy"
+                        onerror="this.src='https://paperback.moe/pb-placeholder.png';this.onerror='';"
                       />
                       <h3
                         class="text-xl font-semibold text-gray-200"
@@ -143,7 +190,7 @@
                   </div>
                   <div class="p-4 pt-0">
                     <div
-                      class="flex flex-nowrap gap-2 overflow-x-auto pb-2 hide-scrollbar"
+                      class="flex flex-nowrap gap-2 overflow-x-auto pb-2"
                       x-show="source.badges && source.badges.length"
                     >
                       <template
@@ -176,6 +223,8 @@
                         :src="`${baseUrl}/${source.id}/static/${source.icon}`"
                         :alt="`${source.name} icon`"
                         class="w-12 h-12 rounded-full"
+                        loading="lazy"
+                        onerror="this.src='https://paperback.moe/pb-placeholder.png';this.onerror='';"
                       />
                       <div class="flex flex-col space-y-1">
                         <h3
@@ -200,7 +249,7 @@
                   ></p>
                   <div class="mt-2">
                     <div
-                      class="flex flex-nowrap gap-2 overflow-x-auto pb-2 hide-scrollbar"
+                      class="flex flex-nowrap gap-2 overflow-x-auto pb-2"
                       x-show="source.badges && source.badges.length"
                     >
                       <template
@@ -225,6 +274,22 @@
                 </div>
               </div>
             </template>
+          </div>
+
+          <!-- Empty state when no sources match filter -->
+          <div
+            x-show="repository && filteredSources.length === 0"
+            class="p-10 text-center"
+          >
+            <p class="text-lg text-gray-400">
+              No sources found matching your filters
+            </p>
+            <button
+              @click="resetFilters()"
+              class="mt-3 bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Reset Filters
+            </button>
           </div>
         </div>
       </div>
@@ -291,6 +356,7 @@
         searchTerm: "",
         selectedBadges: [],
         availableBadges: [],
+        error: null,
 
         get filteredSources() {
           return this.sources.filter((source) => {
@@ -328,31 +394,31 @@
             MANGA_SEARCH: 64,
           };
 
-          // Not capabilties should be shown
+          // Show badges for capabilities that can be user-facing
           const capabilityLabels = {
             MANGA_CHAPTERS: {
               label: "Content Provider",
               textColor: "#FFFFFF",
               backgroundColor: "#4A90E2",
-              type: "capability"
+              type: "capability",
             },
             MANGA_PROGRESS: {
               label: "Tracker",
               textColor: "#FFFFFF",
               backgroundColor: "#50C878",
-              type: "capability"
+              type: "capability",
             },
             COLLECTION_MANAGEMENT: {
               label: "Collections Manager",
               textColor: "#FFFFFF",
               backgroundColor: "#E67E22",
-              type: "capability"
+              type: "capability",
             },
             CLOUDFLARE_BYPASS: {
               label: "Cloudflare",
               textColor: "#FFFFFF",
               backgroundColor: "#E74C3C",
-              type: "capability"
+              type: "capability",
             },
           };
 
@@ -373,33 +439,54 @@
         },
 
         async initialize() {
-          const response = await fetch(`${this.baseUrl}/versioning.json`);
-          const json = await response.json();
-          this.repository = json.repository;
+          try {
+            this.error = null;
+            const response = await fetch(`${this.baseUrl}/versioning.json`);
 
-          // Add capability badges to sources
-          this.sources = json.sources.map((source) => ({
-            ...source,
-            badges: [
-              ...this.getCapabilityBadges(source.capabilities),
-              ...(source.badges || []),
-            ],
-          }));
+            if (!response.ok) {
+              throw new Error(
+                `Failed to load repository data (${response.status})`
+              );
+            }
 
-          this.buildInfo = {
-            buildTime: json.buildTime,
-            builtWith: json.builtWith,
-          };
-          document.title = this.repository.name;
+            const json = await response.json();
+            this.repository = json.repository;
 
-          // Collect unique badges from all sources
-          const badgeSet = new Set();
-          this.sources.forEach((source) => {
-            source.badges?.forEach((badge) => {
-              badgeSet.add(JSON.stringify(badge));
+            // Add capability badges to sources
+            this.sources = json.sources.map((source) => ({
+              ...source,
+              badges: [
+                ...this.getCapabilityBadges(source.capabilities),
+                ...(source.badges || []),
+              ],
+            }));
+
+            this.buildInfo = {
+              buildTime: json.buildTime,
+              builtWith: json.builtWith,
+            };
+            document.title = this.repository.name;
+
+            // Collect unique badges from all sources by label
+            const badgeMap = new Map();
+            this.sources.forEach((source) => {
+              source.badges?.forEach((badge) => {
+                // If we already have a badge with this label, use the first occurrence
+                if (!badgeMap.has(badge.label)) {
+                  badgeMap.set(badge.label, badge);
+                }
+              });
             });
-          });
-          this.availableBadges = Array.from(badgeSet).map((b) => JSON.parse(b));
+            this.availableBadges = Array.from(badgeMap.values());
+          } catch (err) {
+            console.error("Error initializing repository data:", err);
+            this.error = err.message || "Failed to load repository data";
+          }
+        },
+
+        resetFilters() {
+          this.searchTerm = "";
+          this.selectedBadges = [];
         },
 
         toggleBadgeFilter(badge) {
