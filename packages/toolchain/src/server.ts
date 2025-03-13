@@ -2,7 +2,7 @@ import * as fs from 'node:fs'
 import * as http from 'node:http'
 import * as path from 'node:path'
 
-import chalk from 'chalk'
+import pc from "picocolors"
 
 import { getLocalIPv4Address } from './ip'
 
@@ -82,14 +82,14 @@ export default class Server {
             .listen(this.port)
 
         console.log(
-            `Server running at ${chalk.green(
+            `Server running at ${pc.green(
                 `http://127.0.0.1:${this.port}/`
             )}`
         )
 
         for (const ip of getLocalIPv4Address()) {
           console.log(
-            `Server running at ${chalk.green(
+            `Server running at ${pc.green(
               `http://${ip}:${this.port}/`
             )}`
           )

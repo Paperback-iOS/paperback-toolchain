@@ -1,4 +1,5 @@
 import type { SearchQuery } from "./SearchQuery"
+import { ContentRating } from "./SourceInfo";
 
 export interface FeaturedCarouselItem {
   type: "featuredCarouselItem";
@@ -7,6 +8,7 @@ export interface FeaturedCarouselItem {
   title: string;
   supertitle?: string;
   metadata?: unknown;
+  contentRating?: ContentRating;
 }
 
 export interface SimpleCarouselItem {
@@ -16,6 +18,7 @@ export interface SimpleCarouselItem {
   title: string;
   subtitle?: string;
   metadata?: unknown;
+  contentRating?: ContentRating;
 }
 
 export interface ProminentCarouselItem {
@@ -25,6 +28,7 @@ export interface ProminentCarouselItem {
   title: string;
   subtitle?: string;
   metadata?: unknown;
+  contentRating?: ContentRating;
 }
 
 export interface ChapterUpdatesCarouselItem {
@@ -36,6 +40,7 @@ export interface ChapterUpdatesCarouselItem {
   subtitle?: string;
   publishDate?: Date;
   metadata?: unknown;
+  contentRating?: ContentRating;
 }
 
 export interface GenresCarouselItem {
@@ -43,6 +48,7 @@ export interface GenresCarouselItem {
   searchQuery: SearchQuery;
   name: string;
   metadata?: unknown;
+  contentRating?: ContentRating;
 }
 
 export type DiscoverSectionItem =
