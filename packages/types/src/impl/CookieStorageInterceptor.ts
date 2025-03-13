@@ -240,3 +240,131 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
     );
   }
 }
+
+/**
+ * 
+ *  Test cases for testing cookies are behaving as expected
+ * 
+
+function assert(a: boolean, msg: string) {
+    if(!a) {
+        throw msg
+    }
+}
+
+(function runTests() {
+  const cookieStorage = new CookieStorageInterceptor();
+  const now = Date.now();
+
+  // Test 1: Basic set and retrieval
+  const cookie1: Cookie = {
+    name: "sessionId",
+    value: "abc123",
+    domain: "example.com",
+    path: "/",
+    expires: new Date(now + 10000) // expires in 10 seconds
+  };
+  cookieStorage.setCookie(cookie1);
+  let cookies = cookieStorage.cookiesForUrl("http://example.com/");
+  assert(cookies.length === 1, "Should retrieve one cookie for example.com root");
+
+  // Test 2: Domain matching with subdomain (RFC 6265: domain-match)
+  const cookie2: Cookie = {
+    name: "user",
+    value: "john",
+    domain: "example.com",
+    path: "/",
+    expires: new Date(now + 10000)
+  };
+  cookieStorage.setCookie(cookie2);
+  cookies = cookieStorage.cookiesForUrl("http://www.example.com/");
+  assert(
+    cookies.some(c => c.name === "user"),
+    "Cookie with domain example.com should match www.example.com"
+  );
+
+  // Test 3: Path matching
+  const cookie3: Cookie = {
+    name: "pref",
+    value: "dark",
+    domain: "example.com",
+    path: "/docs",
+    expires: new Date(now + 10000)
+  };
+  cookieStorage.setCookie(cookie3);
+  cookies = cookieStorage.cookiesForUrl("http://example.com/docs/index.html");
+  assert(
+    cookies.some(c => c.name === "pref"),
+    "Cookie with path /docs should match /docs/index.html"
+  );
+  cookies = cookieStorage.cookiesForUrl("http://example.com/about");
+  assert(
+    !cookies.some(c => c.name === "pref"),
+    "Cookie with path /docs should not match /about"
+  );
+
+  // Test 4: Expired cookie should not be stored or returned
+  const cookie4: Cookie = {
+    name: "expired",
+    value: "old",
+    domain: "example.com",
+    path: "/",
+    expires: new Date(now - 10000) // expired 10 seconds ago
+  };
+  cookieStorage.setCookie(cookie4);
+  cookies = cookieStorage.cookiesForUrl("http://example.com/");
+  assert(
+    !cookies.some(c => c.name === "expired"),
+    "Expired cookie should not be returned"
+  );
+
+  // Test 5: Cookie overwriting based on path specificity
+  // Cookie with name "id" and path "/" (less specific)
+  const cookieA: Cookie = {
+    name: "id",
+    value: "A",
+    domain: "example.com",
+    path: "/",
+    expires: new Date(now + 10000)
+  };
+  // Cookie with the same name but a more specific path "/docs"
+  const cookieB: Cookie = {
+    name: "id",
+    value: "B",
+    domain: "example.com",
+    path: "/docs",
+    expires: new Date(now + 10000)
+  };
+  cookieStorage.setCookie(cookieA);
+  cookieStorage.setCookie(cookieB);
+  cookies = cookieStorage.cookiesForUrl("http://example.com/docs");
+  const cookieId = cookies.find(c => c.name === "id");
+  assert(
+    cookieId?.value === "B",
+    "More specific cookie should be returned for URL /docs"
+  );
+
+  // Test 6: Deleting a cookie
+  cookieStorage.deleteCookie(cookieB);
+  cookies = cookieStorage.cookiesForUrl("http://example.com/docs");
+  const cookieIdAfterDelete = cookies.find(c => c.name === "id");
+  assert(
+    cookieIdAfterDelete?.value === "A",
+    "After deletion of the specific cookie, the less specific cookie should be returned"
+  );
+
+  // Test 7: Using the cookies setter (expired cookies filtered out)
+  cookieStorage.cookies = [cookie1, cookie4]; // cookie4 is expired
+  const storedCookies = cookieStorage.cookies;
+  assert(
+    storedCookies.some(c => c.name === "sessionId"),
+    "sessionId cookie should be stored via setter"
+  );
+  assert(
+    !storedCookies.some(c => c.name === "expired"),
+    "Expired cookie should be filtered out in the setter"
+  );
+
+  console.log("All tests passed successfully.");
+})();
+ */
