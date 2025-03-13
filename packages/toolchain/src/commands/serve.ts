@@ -1,5 +1,5 @@
 import { Command, Flags } from "@oclif/core";
-import * as readline from "readline";
+import * as readline from "readline/promises";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -56,42 +56,23 @@ export default class Serve extends Command {
       this.startFileWatcher(srcDir);
     }
 
-    // Function to create and configure a readline interface
-    const createReadlineInterface = () => {
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-      });
+    // Create readline interface with promises API
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
 
-      // Handle Ctrl-C gracefully
-      rl.on("SIGINT", () => {
-        this.log("\nStopping server...");
-        server.stop();
-        rl.close();
-        process.exit(0);
-      });
-
-      return rl;
-    };
-
-    // Create initial readline interface
-    let rl = createReadlineInterface();
-
-    // Promisify the readline question
-    const question = (
-      query: string,
-      currentRl: readline.Interface
-    ): Promise<string> => {
-      return new Promise((resolve) => {
-        currentRl.question(query, (answer) => {
-          resolve(answer.trim());
-        });
-      });
-    };
+    // Handle Ctrl-C gracefully
+    rl.on("SIGINT", () => {
+      this.log("\nStopping server...");
+      server.stop();
+      rl.close();
+      process.exit(0);
+    });
 
     let stopServer = false;
     while (!stopServer) {
-      const input = await question(this.prefixTime(""), rl);
+      const input = await rl.question(this.prefixTime(""));
 
       if (input === "h" || input === "help") {
         this.log(pc.underline(pc.bold("Help")));
@@ -108,8 +89,6 @@ export default class Serve extends Command {
       }
 
       if (input === "r" || input === "restart") {
-        // Close current readline interface before restart
-        rl.close();
         server.stop();
 
         await this.rebuildSources(flags.port);
@@ -119,9 +98,6 @@ export default class Serve extends Command {
         this.log(
           `For a list of commands do ${pc.green("h")} or ${pc.green("help")}`
         );
-
-        // Create a new readline interface after restart
-        rl = createReadlineInterface();
       }
     }
 
