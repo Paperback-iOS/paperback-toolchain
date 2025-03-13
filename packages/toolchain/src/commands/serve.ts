@@ -32,7 +32,7 @@ export default class Serve extends Command {
   async run() {
     const { flags } = await this.parse(Serve);
 
-    console.clear();
+    this.clearConsole();
 
     this.log(pc.blue("Building Sources"));
 
@@ -134,7 +134,7 @@ export default class Serve extends Command {
   }
 
   private async rebuildSources(port: number): Promise<void> {
-    console.clear();
+    this.clearConsole();
     this.log(pc.underline(pc.blue("Building Sources")));
     await Bundle.run([]);
     this.log();
@@ -180,6 +180,7 @@ export default class Serve extends Command {
         if (this.isRebuilding) return;
 
         this.isRebuilding = true;
+        this.clearConsole();
         this.log(pc.yellow(`File changed: ${filename}. Rebuilding...`));
 
         await Bundle.run([]);
@@ -202,5 +203,10 @@ export default class Serve extends Command {
     const milliseconds = this.fixedWidth(date.getMilliseconds(), 4);
     const time = `${hours}:${minutes}:${seconds}:${milliseconds}`;
     return `[${pc.gray(time)}] ${message}`;
+  }
+
+  private clearConsole() {
+    // Clear the console
+    process.stdout.write('\x1bc\x1b[3J');
   }
 }
