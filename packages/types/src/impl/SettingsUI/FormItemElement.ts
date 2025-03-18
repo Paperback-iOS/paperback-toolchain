@@ -30,6 +30,7 @@ export function InputRow(
 
 type ToggleRowProps = {
   title: string;
+  subtitle?: string;
   value: boolean;
   isHidden?: boolean;
   onValueChange: SelectorID<(value: boolean) => Promise<void>>;
@@ -71,6 +72,19 @@ export function ButtonRow(
   props: ButtonRowProps,
 ): Application.ButtonRowElement {
   return { ...props, id, type: "buttonRow", isHidden: props.isHidden ?? false };
+}
+
+type WebViewRowProps = {
+  title: string;
+  isHidden?: boolean;
+  onSelect: SelectorID<() => Promise<void>>;
+};
+
+export function WebViewRow(
+  id: string,
+  props: WebViewRowProps,
+): Application.WebViewRowElement {
+  return { ...props, id, type: "webViewRow", isHidden: props.isHidden ?? false };
 }
 
 type NavigationRowProps = {
@@ -149,16 +163,15 @@ declare global {
       isHidden: boolean;
     }
 
-    type LabelRowElement = FormItemElement<"labelRow"> & LabelRowProps;
-    type OAuthButtonRowElement =
-      & FormItemElement<"oauthButtonRow">
-      & OAuthButtonRowProps;
-    type NavigationRowElement =
-      & FormItemElement<"navigationRow">
-      & NavigationRowProps;
-    type ButtonRowElement = FormItemElement<"buttonRow"> & ButtonRowProps;
-    type SelectRowElement = FormItemElement<"selectRow"> & SelectRowProps;
-    type ToggleRowElement = FormItemElement<"toggleRow"> & ToggleRowProps;
-    type InputRowElement = FormItemElement<"inputRow"> & InputRowProps;
+    type TypedRowElement<T, P> = FormItemElement<T> & P
+
+    type LabelRowElement = TypedRowElement<"labelRow", LabelRowProps>;
+    type OAuthButtonRowElement = TypedRowElement<"oauthButtonRow", OAuthButtonRowProps>;
+    type NavigationRowElement = TypedRowElement<"navigationRow", NavigationRowProps>;
+    type ButtonRowElement = TypedRowElement<"buttonRow", ButtonRowProps>;
+    type SelectRowElement = TypedRowElement<"selectRow", SelectRowProps>;
+    type ToggleRowElement = TypedRowElement<"toggleRow", ToggleRowProps>;
+    type InputRowElement = TypedRowElement<"inputRow", InputRowProps>;
+    type WebViewRowElement = TypedRowElement<"webViewRow", WebViewRowProps>;
   }
 }

@@ -8,7 +8,7 @@ export interface Chapter {
   title?: string;
   version?: string;
   volume?: number;
-  metadata?: string;
+  additionalInfo?: Record<string, string>;
   publishDate?: Date;
   creationDate?: Date;
   sortingIndex?: number;
