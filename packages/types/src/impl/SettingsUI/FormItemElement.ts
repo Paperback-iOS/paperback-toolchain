@@ -1,3 +1,5 @@
+import { Cookie } from "../../Cookie"
+import { Request } from "../../Request"
 import { Form } from "./Form"
 
 type LabelRowProps = {
@@ -76,8 +78,10 @@ export function ButtonRow(
 
 type WebViewRowProps = {
   title: string;
+  request: Request;
   isHidden?: boolean;
-  onSelect: SelectorID<() => Promise<void>>;
+  onComplete: SelectorID<(cookies: Cookie[]) => Promise<void>>;
+  onCancel: SelectorID<() => Promise<void>>;
 };
 
 export function WebViewRow(
