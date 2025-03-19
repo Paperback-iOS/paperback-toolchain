@@ -107,9 +107,9 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
       { cookie: Cookie; pathMatches: number }
     > = {};
 
-    const pathname = url.pathname.startsWith("/")
-      ? url.pathname
-      : `/${url.pathname}`;
+    const pathname = url.path.startsWith("/")
+      ? url.path
+      : `/${url.path}`;
 
     const splitHostname = hostname.split(".");
     const splitUrlPath = pathname.split("/");
