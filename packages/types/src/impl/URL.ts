@@ -271,9 +271,9 @@ export class URL {
 
   addPathComponent(component: string): this {
     this.path =
-      (this.path ?? "") + component.startsWith("/")
+      (this.path ?? "") + (component.startsWith("/")
         ? component
-        : `/${component}`;
+        : `/${component}`);
     return this;
   }
 
