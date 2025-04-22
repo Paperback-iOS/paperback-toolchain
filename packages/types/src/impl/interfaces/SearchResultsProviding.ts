@@ -2,6 +2,7 @@ import type { PagedResults } from "../../PagedResults"
 import type { SearchFilter } from "../../SearchFilter"
 import type { SearchQuery } from "../../SearchQuery"
 import type { SearchResultItem } from "../../SearchResultItem"
+import type { SortingOption } from "../../SortingOption"
 import type { MangaProviding } from "./MangaProviding"
 
 /**
@@ -11,8 +12,12 @@ export type Searchable = SearchResultsProviding;
 
 export interface SearchResultsProviding extends MangaProviding {
   getSearchFilters(): Promise<SearchFilter[]>;
+
   getSearchResults(
     query: SearchQuery,
     metadata: unknown | undefined,
+    sortingOption: SortingOption | undefined,
   ): Promise<PagedResults<SearchResultItem>>;
+
+  getSortingOptions?(query: SearchQuery): Promise<SortingOption[]>
 }
