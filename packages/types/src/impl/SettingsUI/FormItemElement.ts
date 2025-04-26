@@ -2,7 +2,24 @@ import { Cookie } from "../../Cookie"
 import { Request } from "../../Request"
 import { Form } from "./Form"
 
-type LabelRowProps = {
+interface FormItemElement<T> {
+  id: string;
+  type: T;
+  isHidden: boolean;
+}
+
+type TypedRowElement<T, P> = FormItemElement<T> & P
+
+type LabelRowElement = TypedRowElement<"labelRow", LabelRowProps>;
+type OAuthButtonRowElement = TypedRowElement<"oauthButtonRow", OAuthButtonRowProps>;
+type NavigationRowElement = TypedRowElement<"navigationRow", NavigationRowProps>;
+type ButtonRowElement = TypedRowElement<"buttonRow", ButtonRowProps>;
+type SelectRowElement = TypedRowElement<"selectRow", SelectRowProps>;
+type ToggleRowElement = TypedRowElement<"toggleRow", ToggleRowProps>;
+type InputRowElement = TypedRowElement<"inputRow", InputRowProps>;
+type WebViewRowElement = TypedRowElement<"webViewRow", WebViewRowProps>;
+
+export type LabelRowProps = {
   title: string;
   subtitle?: string;
   value?: string;
@@ -12,11 +29,11 @@ type LabelRowProps = {
 export function LabelRow(
   id: string,
   props: LabelRowProps,
-): Application.LabelRowElement {
+): LabelRowElement {
   return { ...props, id, type: "labelRow", isHidden: props.isHidden ?? false };
 }
 
-type InputRowProps = {
+export type InputRowProps = {
   title: string;
   value: string;
   isHidden?: boolean;
@@ -26,11 +43,11 @@ type InputRowProps = {
 export function InputRow(
   id: string,
   props: InputRowProps,
-): Application.InputRowElement {
+): InputRowElement {
   return { ...props, id, type: "inputRow", isHidden: props.isHidden ?? false };
 }
 
-type ToggleRowProps = {
+export type ToggleRowProps = {
   title: string;
   subtitle?: string;
   value: boolean;
@@ -41,11 +58,11 @@ type ToggleRowProps = {
 export function ToggleRow(
   id: string,
   props: ToggleRowProps,
-): Application.ToggleRowElement {
+): ToggleRowElement {
   return { ...props, id, type: "toggleRow", isHidden: props.isHidden ?? false };
 }
 
-type SelectRowProps = {
+export type SelectRowProps = {
   title: string;
   subtitle?: string;
   value: string[];
@@ -59,11 +76,11 @@ type SelectRowProps = {
 export function SelectRow(
   id: string,
   props: SelectRowProps,
-): Application.SelectRowElement {
+): SelectRowElement {
   return { ...props, id, type: "selectRow", isHidden: props.isHidden ?? false };
 }
 
-type ButtonRowProps = {
+export type ButtonRowProps = {
   title: string;
   isHidden?: boolean;
   onSelect: SelectorID<() => Promise<void>>;
@@ -72,11 +89,11 @@ type ButtonRowProps = {
 export function ButtonRow(
   id: string,
   props: ButtonRowProps,
-): Application.ButtonRowElement {
+): ButtonRowElement {
   return { ...props, id, type: "buttonRow", isHidden: props.isHidden ?? false };
 }
 
-type WebViewRowProps = {
+export type WebViewRowProps = {
   title: string;
   request: Request;
   isHidden?: boolean;
@@ -87,11 +104,11 @@ type WebViewRowProps = {
 export function WebViewRow(
   id: string,
   props: WebViewRowProps,
-): Application.WebViewRowElement {
+): WebViewRowElement {
   return { ...props, id, type: "webViewRow", isHidden: props.isHidden ?? false };
 }
 
-type NavigationRowProps = {
+export type NavigationRowProps = {
   title: string;
   subtitle?: string;
   value?: string;
@@ -102,7 +119,7 @@ type NavigationRowProps = {
 export function NavigationRow(
   id: string,
   props: NavigationRowProps,
-): Application.NavigationRowElement {
+): NavigationRowElement {
   return {
     ...props,
     id,
@@ -111,7 +128,7 @@ export function NavigationRow(
   };
 }
 
-type OAuthButtonRowProps = {
+export type OAuthButtonRowProps = {
   title: string;
   subtitle?: string;
 
@@ -141,7 +158,7 @@ type OAuthButtonRowProps = {
 export function OAuthButtonRow(
   id: string,
   props: OAuthButtonRowProps,
-): Application.OAuthButtonRowElement {
+): OAuthButtonRowElement {
   return {
     ...props,
     id,
@@ -150,32 +167,11 @@ export function OAuthButtonRow(
   };
 }
 
-export function DeferredItem<V, T extends Application.FormItemElement<V>>(
+export function DeferredItem<V, T extends FormItemElement<V>>(
   work: () => T,
 ): T;
-export function DeferredItem<V, T extends Application.FormItemElement<V>>(
+export function DeferredItem<V, T extends FormItemElement<V>>(
   work: () => T | undefined,
 ): T | undefined {
   return work();
-}
-
-declare global {
-  namespace Application {
-    interface FormItemElement<T> {
-      id: string;
-      type: T;
-      isHidden: boolean;
-    }
-
-    type TypedRowElement<T, P> = FormItemElement<T> & P
-
-    type LabelRowElement = TypedRowElement<"labelRow", LabelRowProps>;
-    type OAuthButtonRowElement = TypedRowElement<"oauthButtonRow", OAuthButtonRowProps>;
-    type NavigationRowElement = TypedRowElement<"navigationRow", NavigationRowProps>;
-    type ButtonRowElement = TypedRowElement<"buttonRow", ButtonRowProps>;
-    type SelectRowElement = TypedRowElement<"selectRow", SelectRowProps>;
-    type ToggleRowElement = TypedRowElement<"toggleRow", ToggleRowProps>;
-    type InputRowElement = TypedRowElement<"inputRow", InputRowProps>;
-    type WebViewRowElement = TypedRowElement<"webViewRow", WebViewRowProps>;
-  }
 }
