@@ -12,6 +12,7 @@ import {
   EndOfPageResults,
   Extension,
   Form,
+  FormItemElement,
   InputRow,
   LabelRow,
   MangaProviding,
@@ -258,7 +259,7 @@ class _CompatSection implements Application.FormSectionElement {
   footer?: string
 
   bindingValueCache: Record<string, any> = {};
-  items: Application.FormItemElement<unknown>[] = [];
+  items: FormItemElement<unknown>[] = [];
   proxies: Record<string, any> = {};
 
   constructor(private form: _CompatForm, private section: DUISection) {
@@ -270,7 +271,7 @@ class _CompatSection implements Application.FormSectionElement {
   }
 
   reloadRows() {
-    const newItems: Application.FormItemElement<unknown>[] = [];
+    const newItems: FormItemElement<unknown>[] = [];
     this.items = newItems;
     console.log("reloadForm CALLED FROM reloadRows");
     this.form.reloadForm();
