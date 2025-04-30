@@ -2,7 +2,7 @@ import { Cookie } from "../../Cookie"
 import { Request } from "../../Request"
 import { Form } from "./Form"
 
-interface FormItemElement<T> {
+export interface FormItemElement<T> {
   id: string;
   type: T;
   isHidden: boolean;

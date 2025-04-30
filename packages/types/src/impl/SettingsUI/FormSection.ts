@@ -1,3 +1,5 @@
+import { FormItemElement } from "./FormItemElement"
+
 type SectionInfo = {
   id: string;
   header?: string;
@@ -6,7 +8,7 @@ type SectionInfo = {
 
 export function Section(
   params: string | SectionInfo,
-  items: (Application.FormItemElement<unknown> | undefined)[],
+  items: (FormItemElement<unknown> | undefined)[],
 ): Application.FormSectionElement {
   let info: SectionInfo;
   if (typeof params === "string") {
@@ -19,7 +21,7 @@ export function Section(
     ...info,
     items: items.filter(
       (x) => x,
-    ) as Application.FormItemElement<unknown>[],
+    ) as FormItemElement<unknown>[],
   };
 }
 
@@ -29,7 +31,7 @@ type ListSectionProps = {
   onRemove: SelectorID<() => Promise<void>>;
   allowAddition: boolean;
   onAdd: SelectorID<() => Promise<void>>;
-  rowBuilder: (item: unknown) => Application.FormItemElement<unknown>;
+  rowBuilder: (item: unknown) => FormItemElement<unknown>;
 };
 
 function ListSection(id: string, props: ListSectionProps) {
