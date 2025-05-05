@@ -1,3 +1,5 @@
+import { FormSectionElement } from "./FormSection"
+
 export abstract class Form {
   reloadForm() {
     // @ts-expect-error hidden field
@@ -9,7 +11,7 @@ export abstract class Form {
     Application.formDidChange(formId);
   }
 
-  abstract getSections(): Application.FormSectionElement[];
+  abstract getSections(): FormSectionElement[];
 
   /* Life cycle methods, always called, errors logged but ignored */
   formWillAppear?(): void

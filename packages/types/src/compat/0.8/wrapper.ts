@@ -13,6 +13,7 @@ import {
   Extension,
   Form,
   FormItemElement,
+  FormSectionElement,
   InputRow,
   LabelRow,
   MangaProviding,
@@ -253,7 +254,7 @@ class _CompatWrapper
   }
 }
 
-class _CompatSection implements Application.FormSectionElement {
+class _CompatSection implements FormSectionElement {
   id: string;
   header?: string
   footer?: string
@@ -440,13 +441,13 @@ class _CompatSection implements Application.FormSectionElement {
 }
 
 class _CompatForm extends Form {
-  private sections: Application.FormSectionElement[] = [];
+  private sections: FormSectionElement[] = [];
 
   constructor(private form: DUIForm) {
     super();
   }
 
-  override getSections(): Application.FormSectionElement[] {
+  override getSections(): FormSectionElement[] {
     if (this.sections.length == 0) {
       return [Section("loading", [
         LabelRow("loading", {
@@ -459,7 +460,7 @@ class _CompatForm extends Form {
   }
 
   reloadSections() {
-    const newSections: Application.FormSectionElement[] = [];
+    const newSections: FormSectionElement[] = [];
     this.sections = newSections;
     console.log("reloadForm CALLED FROM reloadSections");
     this.reloadForm();

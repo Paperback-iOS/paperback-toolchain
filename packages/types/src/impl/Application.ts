@@ -73,6 +73,9 @@ declare global {
     function arrayBufferToASCIIString(arrayBuffer: ArrayBuffer): string;
     function arrayBufferToUTF16String(arrayBuffer: ArrayBuffer): string;
 
+    function base64Encode<T extends string | ArrayBuffer>(value: T): T
+    function base64Decode<T extends string | ArrayBuffer>(value: T): T
+
     // Search Filters
     /**
      * @description If search filters are registered using this method the app will not call {@link SearchResultsProviding.getSearchFilters} unless {@link Application.invalidateSearchFilters} is called.

@@ -1,6 +1,13 @@
 import { FormItemElement } from "./FormItemElement"
 
-type SectionInfo = {
+export interface FormSectionElement {
+  id: string;
+  header?: string;
+  footer?: string;
+  items: FormItemElement<unknown>[];
+}
+
+export type SectionInfo = {
   id: string;
   header?: string;
   footer?: string;
@@ -9,7 +16,7 @@ type SectionInfo = {
 export function Section(
   params: string | SectionInfo,
   items: (FormItemElement<unknown> | undefined)[],
-): Application.FormSectionElement {
+): FormSectionElement {
   let info: SectionInfo;
   if (typeof params === "string") {
     info = { id: params };
@@ -48,15 +55,4 @@ function ListSection(id: string, props: ListSectionProps) {
   //         placeholder: 'Foo'
   //     })
   // })
-}
-
-declare global {
-  namespace Application {
-    interface FormSectionElement {
-      id: string;
-      header?: string;
-      footer?: string;
-      items: FormItemElement<unknown>[];
-    }
-  }
 }
