@@ -1,7 +1,7 @@
-import { lock, unlock } from "./Lock"
-import { PaperbackInterceptor } from "./PaperbackInterceptor"
-import { Request } from "../Request"
-import { Response } from "../Response"
+import { lock, unlock } from "./Lock";
+import { PaperbackInterceptor } from "./PaperbackInterceptor";
+import { Request } from "../Request";
+import { Response } from "../Response";
 
 export type BasicRateLimiterOptions = {
   numberOfRequests: number;
@@ -33,7 +33,7 @@ export class BasicRateLimiter extends PaperbackInterceptor {
   async interceptResponse(
     request: Request,
     response: Response,
-    data: ArrayBuffer,
+    data: ArrayBuffer
   ): Promise<ArrayBuffer> {
     return data;
   }
@@ -43,21 +43,21 @@ export class BasicRateLimiter extends PaperbackInterceptor {
 
     const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000;
     if (secondsSinceLastReset > this.options.bufferInterval) {
-        this.currentRequestsMade = 0;
-        this.lastReset = Date.now();
+      this.currentRequestsMade = 0;
+      this.lastReset = Date.now();
     }
 
     this.currentRequestsMade += 1;
 
     if (this.currentRequestsMade >= this.options.numberOfRequests) {
-        const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000;
-        if (secondsSinceLastReset <= this.options.bufferInterval) {
-            const sleepTime = this.options.bufferInterval - secondsSinceLastReset;
-            console.log(
-                `[BasicRateLimiter] rate limit hit, sleeping for ${sleepTime}`,
-            );
-            this.promise = Application.sleep(sleepTime)
-        }
+      const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000;
+      if (secondsSinceLastReset <= this.options.bufferInterval) {
+        const sleepTime = this.options.bufferInterval - secondsSinceLastReset;
+        console.log(
+          `[BasicRateLimiter] rate limit hit, sleeping for ${sleepTime}`
+        );
+        this.promise = Application.sleep(sleepTime);
+      }
     }
-}
+  }
 }
