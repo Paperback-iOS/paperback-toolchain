@@ -43,21 +43,21 @@ export class BasicRateLimiter extends PaperbackInterceptor {
 
     const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000;
     if (secondsSinceLastReset > this.options.bufferInterval) {
-      this.currentRequestsMade = 0;
-      this.lastReset = Date.now();
+        this.currentRequestsMade = 0;
+        this.lastReset = Date.now();
     }
 
     this.currentRequestsMade += 1;
 
     if (this.currentRequestsMade >= this.options.numberOfRequests) {
-      if (secondsSinceLastReset <= this.options.bufferInterval) {
-        const sleepTime = this.options.bufferInterval - secondsSinceLastReset;
-        console.log(
-          `[BasicRateLimiter] rate limit hit, sleeping for ${sleepTime}`,
-        );
-        this.promise = Application.sleep(sleepTime);
-        await this.promise;
-      }
+        const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000;
+        if (secondsSinceLastReset <= this.options.bufferInterval) {
+            const sleepTime = this.options.bufferInterval - secondsSinceLastReset;
+            console.log(
+                `[BasicRateLimiter] rate limit hit, sleeping for ${sleepTime}`,
+            );
+            this.promise = Application.sleep(sleepTime)
+        }
     }
-  }
+}
 }

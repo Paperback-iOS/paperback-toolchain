@@ -1,6 +1,6 @@
-import { Cookie } from "../../Cookie"
-import { Request } from "../../Request"
-import { Form } from "./Form"
+import { Cookie } from "../../Cookie";
+import { Request } from "../../Request";
+import { Form } from "./Form";
 
 export interface FormItemElement<T> {
   id: string;
@@ -8,15 +8,22 @@ export interface FormItemElement<T> {
   isHidden: boolean;
 }
 
-type TypedRowElement<T, P> = FormItemElement<T> & P
+type TypedRowElement<T, P> = FormItemElement<T> & P;
 
 type LabelRowElement = TypedRowElement<"labelRow", LabelRowProps>;
-type OAuthButtonRowElement = TypedRowElement<"oauthButtonRow", OAuthButtonRowProps>;
-type NavigationRowElement = TypedRowElement<"navigationRow", NavigationRowProps>;
+type OAuthButtonRowElement = TypedRowElement<
+  "oauthButtonRow",
+  OAuthButtonRowProps
+>;
+type NavigationRowElement = TypedRowElement<
+  "navigationRow",
+  NavigationRowProps
+>;
 type ButtonRowElement = TypedRowElement<"buttonRow", ButtonRowProps>;
 type SelectRowElement = TypedRowElement<"selectRow", SelectRowProps>;
 type ToggleRowElement = TypedRowElement<"toggleRow", ToggleRowProps>;
 type InputRowElement = TypedRowElement<"inputRow", InputRowProps>;
+type StepperRowElement = TypedRowElement<"stepperRow", StepperRowProps>;
 type WebViewRowElement = TypedRowElement<"webViewRow", WebViewRowProps>;
 
 export type LabelRowProps = {
@@ -26,10 +33,7 @@ export type LabelRowProps = {
   isHidden?: boolean;
 };
 
-export function LabelRow(
-  id: string,
-  props: LabelRowProps,
-): LabelRowElement {
+export function LabelRow(id: string, props: LabelRowProps): LabelRowElement {
   return { ...props, id, type: "labelRow", isHidden: props.isHidden ?? false };
 }
 
@@ -40,11 +44,36 @@ export type InputRowProps = {
   onValueChange: SelectorID<(value: string) => Promise<void>>;
 };
 
-export function InputRow(
-  id: string,
-  props: InputRowProps,
-): InputRowElement {
+export function InputRow(id: string, props: InputRowProps): InputRowElement {
   return { ...props, id, type: "inputRow", isHidden: props.isHidden ?? false };
+}
+
+export type StepperRowProps = {
+  title: string;
+  subtitle: string;
+
+  value: string;
+
+  minValue: number;
+  maxValue: number;
+  stepValue: number;
+  loopOver: boolean;
+  
+  isHidden?: boolean;
+
+  onValueChange: SelectorID<(value: number) => Promise<void>>;
+};
+
+export function StepperRow(
+  id: string,
+  props: StepperRowProps
+): StepperRowElement {
+  return {
+    ...props,
+    id,
+    type: "stepperRow",
+    isHidden: props.isHidden ?? false,
+  };
 }
 
 export type ToggleRowProps = {
@@ -55,10 +84,7 @@ export type ToggleRowProps = {
   onValueChange: SelectorID<(value: boolean) => Promise<void>>;
 };
 
-export function ToggleRow(
-  id: string,
-  props: ToggleRowProps,
-): ToggleRowElement {
+export function ToggleRow(id: string, props: ToggleRowProps): ToggleRowElement {
   return { ...props, id, type: "toggleRow", isHidden: props.isHidden ?? false };
 }
 
@@ -73,10 +99,7 @@ export type SelectRowProps = {
   onValueChange: SelectorID<(value: string[]) => Promise<void>>;
 };
 
-export function SelectRow(
-  id: string,
-  props: SelectRowProps,
-): SelectRowElement {
+export function SelectRow(id: string, props: SelectRowProps): SelectRowElement {
   return { ...props, id, type: "selectRow", isHidden: props.isHidden ?? false };
 }
 
@@ -86,10 +109,7 @@ export type ButtonRowProps = {
   onSelect: SelectorID<() => Promise<void>>;
 };
 
-export function ButtonRow(
-  id: string,
-  props: ButtonRowProps,
-): ButtonRowElement {
+export function ButtonRow(id: string, props: ButtonRowProps): ButtonRowElement {
   return { ...props, id, type: "buttonRow", isHidden: props.isHidden ?? false };
 }
 
@@ -103,9 +123,14 @@ export type WebViewRowProps = {
 
 export function WebViewRow(
   id: string,
-  props: WebViewRowProps,
+  props: WebViewRowProps
 ): WebViewRowElement {
-  return { ...props, id, type: "webViewRow", isHidden: props.isHidden ?? false };
+  return {
+    ...props,
+    id,
+    type: "webViewRow",
+    isHidden: props.isHidden ?? false,
+  };
 }
 
 export type NavigationRowProps = {
@@ -118,7 +143,7 @@ export type NavigationRowProps = {
 
 export function NavigationRow(
   id: string,
-  props: NavigationRowProps,
+  props: NavigationRowProps
 ): NavigationRowElement {
   return {
     ...props,
@@ -136,18 +161,21 @@ export type OAuthButtonRowProps = {
     (refreshToken: string, accessToken: string) => Promise<void>
   >;
   authorizeEndpoint: string;
-  responseType: {
-    type: "token";
-  } | {
-    type: "code";
-    tokenEndpoint: string;
-  } | {
-    type: "pkce";
-    tokenEndpoint: string;
-    pkceCodeLength: number;
-    pkceCodeMethod: "S256" | "plain";
-    formEncodeGrant: boolean;
-  };
+  responseType:
+    | {
+        type: "token";
+      }
+    | {
+        type: "code";
+        tokenEndpoint: string;
+      }
+    | {
+        type: "pkce";
+        tokenEndpoint: string;
+        pkceCodeLength: number;
+        pkceCodeMethod: "S256" | "plain";
+        formEncodeGrant: boolean;
+      };
   clientId?: string;
   redirectUri?: string;
   scopes?: string[];
@@ -157,7 +185,7 @@ export type OAuthButtonRowProps = {
 
 export function OAuthButtonRow(
   id: string,
-  props: OAuthButtonRowProps,
+  props: OAuthButtonRowProps
 ): OAuthButtonRowElement {
   return {
     ...props,
@@ -167,11 +195,9 @@ export function OAuthButtonRow(
   };
 }
 
+export function DeferredItem<V, T extends FormItemElement<V>>(work: () => T): T;
 export function DeferredItem<V, T extends FormItemElement<V>>(
-  work: () => T,
-): T;
-export function DeferredItem<V, T extends FormItemElement<V>>(
-  work: () => T | undefined,
+  work: () => T | undefined
 ): T | undefined {
   return work();
 }
