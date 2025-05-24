@@ -57,6 +57,7 @@
     "topicSeparator": " "
   },
   "repository": "FaizanDurrani/paperback-toolchain",
+  "type": "module",
   "scripts": {
     "build": "shx rm -rf dist && tsc -b && cp -r src/homepage dist/ && cp -r src/shims dist/",
     "postpack": "shx rm -f oclif.manifest.json",

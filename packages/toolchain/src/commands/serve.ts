@@ -3,8 +3,8 @@ import * as readline from "readline/promises";
 import * as fs from "fs";
 import * as path from "path";
 
-import Server from "../server";
-import Bundle from "./bundle";
+import Server from "../server.js";
+import Bundle from "./bundle.js";
 
 import pc from "picocolors";
 
