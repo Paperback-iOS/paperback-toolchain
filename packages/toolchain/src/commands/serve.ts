@@ -37,7 +37,7 @@ export default class Serve extends Command {
     this.log(pc.blue("Building Sources"));
 
     // Make sure the repo is bundled
-    await Bundle.run([]);
+    await Bundle.run(['--debug']);
     this.log();
     this.log(pc.underline(pc.blue("Starting Server on port " + flags.port)));
 
@@ -112,7 +112,7 @@ export default class Serve extends Command {
   private async rebuildSources(port: number): Promise<void> {
     this.clearConsole();
     this.log(pc.underline(pc.blue("Building Sources")));
-    await Bundle.run([]);
+    await Bundle.run(['--debug']);
     this.log();
     this.log(pc.underline(pc.blue(`Starting Server on port ${port}`)));
   }
@@ -159,7 +159,7 @@ export default class Serve extends Command {
         this.clearConsole();
         this.log(pc.yellow(`File changed: ${filename}. Rebuilding...`));
 
-        await Bundle.run([]);
+        await Bundle.run(['--debug']);
 
         this.log(pc.green("Rebuild completed. Server up-to-date."));
       } catch (error) {

@@ -50,15 +50,15 @@ export function InputRow(id: string, props: InputRowProps): InputRowElement {
 
 export type StepperRowProps = {
   title: string;
-  subtitle: string;
+  subtitle?: string;
 
-  value: string;
+  value: number;
 
   minValue: number;
   maxValue: number;
   stepValue: number;
   loopOver: boolean;
-  
+
   isHidden?: boolean;
 
   onValueChange: SelectorID<(value: number) => Promise<void>>;

@@ -13,10 +13,11 @@ export default class Bundle extends Command {
             description: 'Subfolder to output to',
             required: false
         }),
-        help: Flags.help({ char: 'h' })
+        help: Flags.help({ char: 'h' }),
+        debug: Flags.boolean()
     }
 
-    async bundleSources(folder = '') {
+    async bundleSources(folder = '', sourcemap = false) {
         const cwd = process.cwd()
 
         const srcDir = path.join(cwd, 'src')
@@ -53,8 +54,8 @@ export default class Bundle extends Command {
                         outdir: bundlesDirPath,
                         inject: [path.join(__dirname,'../shims/buffer.js')],
 
-                        // minify: true,
-                        // sourcemap: "inline"
+                        minify: !sourcemap,
+                        sourcemap: sourcemap ? 'inline' : undefined
                     })
 
                     fs.writeFileSync(path.join(bundlesDirPath, 'metafile.json'), JSON.stringify(result.metafile))
@@ -176,7 +177,7 @@ export default class Bundle extends Command {
         const tasks = new Listr(
             [
                 {
-                    task: async () => await this.bundleSources(flags.folder),
+                    task: async () => await this.bundleSources(flags.folder, flags.debug),
                     title: 'Bundle Sources'
                 },
                 {

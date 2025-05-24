@@ -1,13 +1,12 @@
 import type { SourceManga } from "../../SourceManga"
 
 export interface ManagedCollectionProviding {
-  prepareLibraryItems(
-    libraryItems: PartialLibraryItem[],
-  ): Promise<LibraryItemSourceLinkProposal[]>;
   getManagedLibraryCollections(): Promise<ManagedCollection[]>;
+
   commitManagedCollectionChanges(
     changeset: ManagedCollectionChangeset,
   ): Promise<void>;
+  
   getSourceMangaInManagedCollection(
     managedCollection: ManagedCollection,
   ): Promise<SourceManga[]>;
