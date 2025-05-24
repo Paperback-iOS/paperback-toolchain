@@ -1,4 +1,4 @@
-import { FormSectionElement } from "./FormSection"
+import type { FormSectionElement } from "./FormSection.js"
 
 export abstract class Form {
   reloadForm() {

@@ -1,5 +1,5 @@
-import type { SearchQuery } from "./SearchQuery"
-import { ContentRating } from "./SourceInfo";
+import type { SearchQuery } from "./SearchQuery.js"
+import type { ContentRating } from "./SourceInfo.js";
 
 export interface FeaturedCarouselItem {
   type: "featuredCarouselItem";

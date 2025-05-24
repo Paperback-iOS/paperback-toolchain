@@ -1,4 +1,3 @@
-
 export interface PBImage {
     readonly width: number
     readonly height: number

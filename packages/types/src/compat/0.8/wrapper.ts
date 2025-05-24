@@ -1,40 +1,38 @@
-// deno-lint-ignore-file ban-ts-comment no-unused-vars
 import {
   ButtonRow,
-  Chapter,
-  ChapterDetails,
-  ChapterProviding,
+  type Chapter,
+  type ChapterDetails,
+  type ChapterProviding,
   ContentRating,
-  DiscoverSection,
-  DiscoverSectionItem,
-  DiscoverSectionProviding,
+  type DiscoverSection,
+  type DiscoverSectionItem,
+  type DiscoverSectionProviding,
   DiscoverSectionType,
   EndOfPageResults,
-  Extension,
+  type Extension,
   Form,
-  FormItemElement,
-  FormSectionElement,
+  type FormItemElement,
+  type FormSectionElement,
   InputRow,
   LabelRow,
-  MangaProviding,
+  type MangaProviding,
   NavigationRow,
   OAuthButtonRow,
-  PagedResults,
-  SearchFilter,
-  SearchQuery,
-  SearchResultItem,
-  SearchResultsProviding,
+  type PagedResults,
+  type SearchFilter,
+  type SearchQuery,
+  type SearchResultItem,
+  type SearchResultsProviding,
   Section,
-  SettingsFormProviding,
-  SourceManga,
+  type SettingsFormProviding,
+  type SourceManga,
   ToggleRow,
-} from "../../index";
+} from "../../index.js";
 
-import {
+import type {
   ChapterProviding as LegacyChapterProviding,
   DUIButton,
   DUIForm,
-  DUIFormRow,
   DUIHeader,
   DUIInputField,
   DUILabel,
@@ -49,7 +47,7 @@ import {
   SearchRequest as LegacySearchRequest,
   SearchResultsProviding as LegacySearchResultsProviding,
   Source as LegacySource,
-} from "./types";
+} from "./types.js";
 
 type Source =
   & LegacySource
@@ -475,7 +473,7 @@ class _CompatForm extends Form {
     });
   }
 
-  formWillAppear(): void {
+  override formWillAppear(): void {
     this.reloadSections()
   }
 }

@@ -1,6 +1,5 @@
-import { Chapter } from "./Chapter";
-import { ManagedCollection } from "./impl/interfaces/ManagedCollectionProviding"
-import { SourceManga } from "./SourceManga";
+import type { Chapter } from "./Chapter.js";
+import type { SourceManga } from "./SourceManga.js";
 
 export interface MangaProgress {
   sourceManga: SourceManga;

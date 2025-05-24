@@ -1,4 +1,4 @@
-import type { Cookie } from "./Cookie"
+import type { Cookie } from "./Cookie.js"
 
 export interface Response {
   readonly url: string;

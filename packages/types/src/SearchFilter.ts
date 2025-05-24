@@ -1,4 +1,4 @@
-import type { TagSection } from "./TagSection"
+import type { TagSection } from "./TagSection.js"
 
 type FilterOption = { id: string; value: string };
 

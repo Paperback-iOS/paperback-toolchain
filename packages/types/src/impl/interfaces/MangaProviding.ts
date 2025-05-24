@@ -1,4 +1,4 @@
-import type { SourceManga } from "../../SourceManga"
+import type { SourceManga } from "../../SourceManga.js"
 
 export interface MangaProviding {
   /**

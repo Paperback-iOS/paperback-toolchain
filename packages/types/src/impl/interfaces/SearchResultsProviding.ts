@@ -1,9 +1,9 @@
-import type { PagedResults } from "../../PagedResults"
-import type { SearchFilter } from "../../SearchFilter"
-import type { SearchQuery } from "../../SearchQuery"
-import type { SearchResultItem } from "../../SearchResultItem"
-import type { SortingOption } from "../../SortingOption"
-import type { MangaProviding } from "./MangaProviding"
+import type { PagedResults } from "../../PagedResults.js"
+import type { SearchFilter } from "../../SearchFilter.js"
+import type { SearchQuery } from "../../SearchQuery.js"
+import type { SearchResultItem } from "../../SearchResultItem.js"
+import type { SortingOption } from "../../SortingOption.js"
+import type { MangaProviding } from "./MangaProviding.js"
 
 /**
  * @deprecated Use {@link SearchResultsProviding}

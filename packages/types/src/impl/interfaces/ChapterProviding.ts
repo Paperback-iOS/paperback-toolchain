@@ -1,7 +1,7 @@
-import type { Chapter } from "../../Chapter";
-import type { ChapterDetails } from "../../ChapterDetails";
-import type { SourceManga } from "../../SourceManga";
-import type { MangaProviding } from "./MangaProviding";
+import type { Chapter } from "../../Chapter.js";
+import type { ChapterDetails } from "../../ChapterDetails.js";
+import type { SourceManga } from "../../SourceManga.js";
+import type { MangaProviding } from "./MangaProviding.js";
 
 export interface ChapterProviding extends MangaProviding {
   /**

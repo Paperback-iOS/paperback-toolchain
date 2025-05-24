@@ -1,15 +1,15 @@
 import {
   BadgeColor,
   ContentRating as LegacyContentRating,
-  SourceInfo as LegacySourceInfo,
-} from "./types";
+  type SourceInfo as LegacySourceInfo,
+} from "./types.js";
 import {
   ContentRating,
-  SourceBadge,
-  SourceDeveloper,
-  SourceInfo,
-  SourceIntents,
-} from "../../SourceInfo";
+  type SourceBadge,
+  type SourceDeveloper,
+  type SourceInfo,
+  type SourceIntents,
+} from "../../SourceInfo.js";
 
 export class SourceInfoWrapper implements SourceInfo {
   version: string;

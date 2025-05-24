@@ -1,3 +1,11 @@
+import {
+  BasicRateLimiter,
+  CookieStorageInterceptor,
+  PaperbackInterceptor,
+  type Request as PBRequest,
+  type Response as PBResponse,
+} from "../../index.js";
+
 // deno-lint-ignore-file no-explicit-any prefer-const ban-ts-comment no-unused-vars require-await
 export interface DUIHeader extends DUIFormRow {
   id: string;
@@ -1237,14 +1245,6 @@ export interface SearchResultsProviding extends MangaProviding {
   supportsTagExclusion?(): Promise<boolean>;
   supportsSearchOperators?(): Promise<boolean>;
 }
-
-import {
-  BasicRateLimiter,
-  CookieStorageInterceptor,
-  PaperbackInterceptor,
-  Request as PBRequest,
-  Response as PBResponse,
-} from "../../index";
 
 const AppCompat = {} as typeof App;
 AppCompat.createSourceStateManager = function (): SourceStateManager {

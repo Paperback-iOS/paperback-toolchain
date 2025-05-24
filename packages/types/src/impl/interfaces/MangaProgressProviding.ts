@@ -1,8 +1,7 @@
-import { Chapter } from "../../Chapter"
-import { MangaProgress } from "../../MangaProgress"
-import { SourceManga } from "../../SourceManga"
-import { TrackedMangaChapterReadAction } from "../../TrackedMangaChapterReadAction"
-import { Form } from "../SettingsUI"
+import type { MangaProgress } from "../../MangaProgress.js"
+import type { SourceManga } from "../../SourceManga.js"
+import type { TrackedMangaChapterReadAction } from "../../TrackedMangaChapterReadAction.js"
+import { Form } from "../SettingsUI/Form.js"
 
 export type ChapterReadActionQueueProcessingResult = {
   successfulItems: string[]

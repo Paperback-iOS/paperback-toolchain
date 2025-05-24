@@ -1,4 +1,4 @@
-import { PBImage } from "./PBImage"
+import type { PBImage } from "./PBImage.js"
 
 export type Color = `#${string}`
 

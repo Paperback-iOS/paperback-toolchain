@@ -81,10 +81,11 @@ export function parseURL(url: string): URLComponents {
     for (const pair of pairs) {
       if (!pair) continue;
       const [rawKey, rawValue = ""] = pair.split("=");
+      if (rawKey === undefined) continue; // Skip if no key found
       const key = decodeURIComponent(rawKey);
       const value = decodeURIComponent(rawValue);
       if (key in query) {
-        const existing = query[key];
+        const existing = query[key]!; // Non-null assertion since we know key exists
         if (Array.isArray(existing)) {
           existing.push(value);
         } else {
@@ -195,7 +196,7 @@ export class URL {
                 `${encodeURIComponent(key)}=${encodeURIComponent(v)}`
               );
             }
-          } else {
+          } else if (value !== undefined) {
             params.push(
               `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
             );

@@ -1,4 +1,4 @@
-import { ContentRating } from "./SourceInfo";
+import type { ContentRating } from "./SourceInfo.js";
 
 export interface SearchResultItem {
   mangaId: string;
