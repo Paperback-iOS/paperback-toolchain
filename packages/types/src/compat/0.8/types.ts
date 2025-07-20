@@ -4,257 +4,252 @@ import {
   PaperbackInterceptor,
   type Request as PBRequest,
   type Response as PBResponse,
-} from "../../index.js";
+} from '../../index.js'
 
 // deno-lint-ignore-file no-explicit-any prefer-const ban-ts-comment no-unused-vars require-await
 export interface DUIHeader extends DUIFormRow {
-  id: string;
-  imageUrl: string;
-  title: string;
-  subtitle?: string;
+  id: string
+  imageUrl: string
+  title: string
+  subtitle?: string
 }
 declare global {
   namespace App {
-    function createDUIHeader(info: DUIHeader): DUIHeader;
+    function createDUIHeader(info: DUIHeader): DUIHeader
   }
 }
 export interface DUIMultilineLabel extends DUIFormRow {
-  id: string;
-  label: string;
-  value: string;
+  id: string
+  label: string
+  value: string
 }
 declare global {
   namespace App {
-    function createDUIMultilineLabel(
-      info: DUIMultilineLabel,
-    ): DUIMultilineLabel;
+    function createDUIMultilineLabel(info: DUIMultilineLabel): DUIMultilineLabel
   }
 }
 export interface DUIOAuthButton extends DUIFormRow {
-  id: string;
-  label: string;
-  authorizeEndpoint: string;
-  clientId: string;
-  responseType: {
-    type: "token";
-  } | {
-    type: "code";
-    tokenEndpoint: string;
-  } | {
-    type: "pkce";
-    tokenEndpoint: string;
-    pkceCodeLength: number;
-    pkceCodeMethod: "S256" | "plain";
-    formEncodeGrant: boolean;
-  };
-  redirectUri?: string;
-  scopes?: string[];
-  successHandler: (
-    arg0: string,
-    arg1: string | undefined,
-  ) => Promise<void>;
+  id: string
+  label: string
+  authorizeEndpoint: string
+  clientId: string
+  responseType:
+    | {
+        type: 'token'
+      }
+    | {
+        type: 'code'
+        tokenEndpoint: string
+      }
+    | {
+        type: 'pkce'
+        tokenEndpoint: string
+        pkceCodeLength: number
+        pkceCodeMethod: 'S256' | 'plain'
+        formEncodeGrant: boolean
+      }
+  redirectUri?: string
+  scopes?: string[]
+  successHandler: (arg0: string, arg1: string | undefined) => Promise<void>
 }
 declare global {
   namespace App {
-    function createDUIOAuthButton(info: DUIOAuthButton): DUIOAuthButton;
+    function createDUIOAuthButton(info: DUIOAuthButton): DUIOAuthButton
   }
 }
 export interface DUILabel extends DUIFormRow {
-  id: string;
-  label: string;
-  value?: string;
+  id: string
+  label: string
+  value?: string
 }
 declare global {
   namespace App {
-    function createDUILabel(info: DUILabel): DUILabel;
+    function createDUILabel(info: DUILabel): DUILabel
   }
 }
 export interface DUISwitch extends DUIFormRow {
-  id: string;
-  label: string;
-  value: DUIBinding;
+  id: string
+  label: string
+  value: DUIBinding
 }
 declare global {
   namespace App {
-    function createDUISwitch(info: DUISwitch): DUISwitch;
+    function createDUISwitch(info: DUISwitch): DUISwitch
   }
 }
 export interface DUIStepper extends DUIFormRow {
-  id: string;
-  label: string;
-  value: DUIBinding;
-  min?: number;
-  max?: number;
-  step?: number;
+  id: string
+  label: string
+  value: DUIBinding
+  min?: number
+  max?: number
+  step?: number
 }
 declare global {
   namespace App {
-    function createDUIStepper(info: DUIStepper): DUIStepper;
+    function createDUIStepper(info: DUIStepper): DUIStepper
   }
 }
 export interface DUINavigationButton extends DUIFormRow {
-  id: string;
-  label: string;
-  form: DUIForm;
+  id: string
+  label: string
+  form: DUIForm
 }
 declare global {
   namespace App {
     function createDUINavigationButton(
       info: DUINavigationButton,
-    ): DUINavigationButton;
+    ): DUINavigationButton
   }
 }
 export interface DUISecureInputField extends DUIFormRow {
-  id: string;
-  label: string;
-  value: DUIBinding;
+  id: string
+  label: string
+  value: DUIBinding
 }
 declare global {
   namespace App {
     function createDUISecureInputField(
       info: DUISecureInputField,
-    ): DUISecureInputField;
+    ): DUISecureInputField
   }
 }
 export interface DUIButton extends DUIFormRow {
-  id: string;
-  label: string;
-  onTap: () => Promise<void>;
+  id: string
+  label: string
+  onTap: () => Promise<void>
 }
 declare global {
   namespace App {
-    function createDUIButton(info: DUIButton): DUIButton;
+    function createDUIButton(info: DUIButton): DUIButton
   }
 }
 export interface DUIInputField extends DUIFormRow {
-  id: string;
-  label: string;
-  value: DUIBinding;
+  id: string
+  label: string
+  value: DUIBinding
 }
 declare global {
   namespace App {
-    function createDUIInputField(info: DUIInputField): DUIInputField;
+    function createDUIInputField(info: DUIInputField): DUIInputField
   }
 }
 export interface DUILink extends DUIFormRow {
-  id: string;
-  label: string;
-  value?: string;
+  id: string
+  label: string
+  value?: string
 }
 declare global {
   namespace App {
-    function createDUILink(info: DUILink): DUILink;
+    function createDUILink(info: DUILink): DUILink
   }
 }
 export interface DUISelect extends DUIFormRow {
-  id: string;
-  label: string;
-  options: string[];
-  value: DUIBinding;
-  allowsMultiselect: boolean;
-  labelResolver: (arg0: string) => Promise<string>;
+  id: string
+  label: string
+  options: string[]
+  value: DUIBinding
+  allowsMultiselect: boolean
+  labelResolver: (arg0: string) => Promise<string>
 }
 declare global {
   namespace App {
-    function createDUISelect(info: DUISelect): DUISelect;
+    function createDUISelect(info: DUISelect): DUISelect
   }
 }
 export interface DUIForm {
-  sections: () => Promise<DUISection[]>;
-  onSubmit?: (arg0: Record<any, any>) => Promise<void>;
+  sections: () => Promise<DUISection[]>
+  onSubmit?: (arg0: Record<any, any>) => Promise<void>
 }
 declare global {
   namespace App {
-    function createDUIForm(info: DUIForm): DUIForm;
+    function createDUIForm(info: DUIForm): DUIForm
   }
 }
 export interface DUIBinding {
-  get: () => Promise<any>;
-  set?: (arg0: any | undefined) => Promise<void>;
+  get: () => Promise<any>
+  set?: (arg0: any | undefined) => Promise<void>
 }
 declare global {
   namespace App {
-    function createDUIBinding(info: DUIBinding): DUIBinding;
+    function createDUIBinding(info: DUIBinding): DUIBinding
   }
 }
 export interface DUIFormRow {
-  readonly id: string;
+  readonly id: string
 }
 export interface DUISection {
-  id: string;
-  header?: string;
-  footer?: string;
-  isHidden: boolean;
-  rows: () => Promise<DUIFormRow[]>;
+  id: string
+  header?: string
+  footer?: string
+  isHidden: boolean
+  rows: () => Promise<DUIFormRow[]>
 }
 declare global {
   namespace App {
-    function createDUISection(info: DUISection): DUISection;
+    function createDUISection(info: DUISection): DUISection
   }
 }
 export interface Tag {
-  readonly id: string;
-  readonly label: string;
+  readonly id: string
+  readonly label: string
 }
 declare global {
   namespace App {
-    function createTag(info: {
-      id: string;
-      label: string;
-    }): Tag;
+    function createTag(info: { id: string; label: string }): Tag
   }
 }
 export interface SourceStateManager {
-  readonly keychain: SecureStateManager;
+  readonly keychain: SecureStateManager
   /*
    * internalName: _store
    */
-  store(key: string, value: any): Promise<void>;
+  store(key: string, value: any): Promise<void>
   /*
    * internalName: _retrieve
    */
-  retrieve(key: string): Promise<any>;
+  retrieve(key: string): Promise<any>
 }
 declare global {
   namespace App {
-    function createSourceStateManager(): SourceStateManager;
+    function createSourceStateManager(): SourceStateManager
   }
 }
 export interface TagSection {
-  readonly id: string;
-  label: string;
-  tags: Tag[];
+  readonly id: string
+  label: string
+  tags: Tag[]
 }
 declare global {
   namespace App {
     function createTagSection(info: {
-      id: string;
-      label: string;
-      tags: Tag[];
-    }): TagSection;
+      id: string
+      label: string
+      tags: Tag[]
+    }): TagSection
   }
 }
 export interface SecureStateManager {
   /*
    * internalName: _store
    */
-  store(key: string, value: any): Promise<void>;
+  store(key: string, value: any): Promise<void>
   /*
    * internalName: _retrieve
    */
-  retrieve(key: string): Promise<any>;
+  retrieve(key: string): Promise<any>
 }
 export interface PBCanvas {
-  readonly width: number;
-  readonly height: number;
+  readonly width: number
+  readonly height: number
   /*
    * internalName: _data
    */
-  readonly data?: RawData;
+  readonly data?: RawData
   /*
    * internalName: setSize
    */
-  setSize(width: number, height: number): void;
+  setSize(width: number, height: number): void
   /*
    * internalName: drawImage
    */
@@ -266,405 +261,398 @@ export interface PBCanvas {
     sh: number,
     dx: number,
     dy: number,
-  ): void;
+  ): void
   /*
    * internalName: _encode
    */
-  encode(format: string): RawData | undefined;
+  encode(format: string): RawData | undefined
 }
 declare global {
   namespace App {
-    function createPBCanvas(): PBCanvas;
+    function createPBCanvas(): PBCanvas
   }
 }
 export interface MangaProgress {
-  sourceId: string;
-  mangaId: string;
-  lastReadChapterNumber: number;
+  sourceId: string
+  mangaId: string
+  lastReadChapterNumber: number
   /*
    * internalName: _lastReadVolumeNumber
    */
-  lastReadVolumeNumber?: number;
-  trackedListName?: string;
-  lastReadTime?: Date;
+  lastReadVolumeNumber?: number
+  trackedListName?: string
+  lastReadTime?: Date
   /*
    * internalName: _userRating
    */
-  userRating?: number;
+  userRating?: number
 }
 declare global {
   namespace App {
     function createMangaProgress(info: {
-      mangaId: string;
-      lastReadChapterNumber: number;
-      lastReadVolumeNumber?: number;
-      trackedListName?: string;
-      lastReadTime?: Date;
-      userRating?: number;
-    }): MangaProgress;
+      mangaId: string
+      lastReadChapterNumber: number
+      lastReadVolumeNumber?: number
+      trackedListName?: string
+      lastReadTime?: Date
+      userRating?: number
+    }): MangaProgress
   }
 }
 export interface IconText {
-  icon?: string;
-  text: string;
+  icon?: string
+  text: string
 }
 export interface Cookie {
-  name: string;
-  value: string;
-  domain: string;
-  path?: string;
-  created?: Date;
-  expires?: Date;
+  name: string
+  value: string
+  domain: string
+  path?: string
+  created?: Date
+  expires?: Date
 }
 declare global {
   namespace App {
     function createCookie(info: {
-      name: string;
-      value: string;
-      domain: string;
-      path?: string;
-      created?: Date;
-      expires?: Date;
-    }): Cookie;
+      name: string
+      value: string
+      domain: string
+      path?: string
+      created?: Date
+      expires?: Date
+    }): Cookie
   }
 }
 export interface TrackerActionQueue {
   /*
    * internalName: _queuedChapterReadActions
    */
-  queuedChapterReadActions(): Promise<TrackedMangaChapterReadAction[]>;
+  queuedChapterReadActions(): Promise<TrackedMangaChapterReadAction[]>
   /*
    * internalName: _retryChapterReadAction
    */
   retryChapterReadAction(
     chapterReadAction: TrackedMangaChapterReadAction,
-  ): Promise<void>;
+  ): Promise<void>
   /*
    * internalName: _discardChapterReadAction
    */
   discardChapterReadAction(
     chapterReadAction: TrackedMangaChapterReadAction,
-  ): Promise<void>;
+  ): Promise<void>
 }
 export interface SourceManga {
   /*
    * internalName: mangaId
    */
-  id: string;
-  mangaInfo: MangaInfo;
+  id: string
+  mangaInfo: MangaInfo
 }
 declare global {
   namespace App {
     function createSourceManga(info: {
-      id: string;
-      mangaInfo: MangaInfo;
-    }): SourceManga;
+      id: string
+      mangaInfo: MangaInfo
+    }): SourceManga
   }
 }
 export interface Response {
-  readonly data?: string;
-  rawData?: RawData;
-  readonly status: number;
-  readonly headers: Record<any, any>;
-  readonly request: Request;
+  readonly data?: string
+  rawData?: RawData
+  readonly status: number
+  readonly headers: Record<any, any>
+  readonly request: Request
 }
 export interface Request {
-  url: string;
-  method: string;
-  headers: Record<string, string>;
-  data?: any;
-  param?: string;
-  cookies: Cookie[];
+  url: string
+  method: string
+  headers: Record<string, string>
+  data?: any
+  param?: string
+  cookies: Cookie[]
 }
 declare global {
   namespace App {
     function createRequest(info: {
-      url: string;
-      method: string;
-      headers?: Record<string, string>;
-      param?: string;
-      data?: any;
-      cookies?: Cookie[];
-    }): Request;
+      url: string
+      method: string
+      headers?: Record<string, string>
+      param?: string
+      data?: any
+      cookies?: Cookie[]
+    }): Request
   }
 }
 export interface PagedResults {
-  results: PartialSourceManga[];
-  metadata?: any;
+  results: PartialSourceManga[]
+  metadata?: any
 }
 declare global {
   namespace App {
     function createPagedResults(info: {
-      results?: PartialSourceManga[];
-      metadata?: any;
-    }): PagedResults;
+      results?: PartialSourceManga[]
+      metadata?: any
+    }): PagedResults
   }
 }
 export interface SearchRequest {
-  readonly title?: string;
-  readonly includedTags: Tag[];
-  readonly excludedTags: Tag[];
+  readonly title?: string
+  readonly includedTags: Tag[]
+  readonly excludedTags: Tag[]
   /*
    * internalName: _includeOperator
    */
-  readonly includeOperator?: string;
+  readonly includeOperator?: string
   /*
    * internalName: _excludeOperator
    */
-  readonly excludeOperator?: string;
-  readonly parameters: Record<string, any>;
+  readonly excludeOperator?: string
+  readonly parameters: Record<string, any>
 }
 export interface SourceInterceptor {
   /*
    * internalName: _interceptRequest
    */
-  interceptRequest(request: Request): Promise<Request>;
+  interceptRequest(request: Request): Promise<Request>
   /*
    * internalName: _interceptResponse
    */
-  interceptResponse(response: Response): Promise<Response>;
+  interceptResponse(response: Response): Promise<Response>
 }
 export interface TrackedMangaChapterReadAction {
-  readonly mangaId: string;
-  readonly sourceMangaId: string;
-  readonly sourceChapterId: string;
-  readonly sourceId: string;
-  readonly chapterNumber: number;
-  readonly volumeNumber: number;
-  readonly readTime: Date;
+  readonly mangaId: string
+  readonly sourceMangaId: string
+  readonly sourceChapterId: string
+  readonly sourceId: string
+  readonly chapterNumber: number
+  readonly volumeNumber: number
+  readonly readTime: Date
 }
 export interface RequestManager {
-  readonly cookieStore?: SourceCookieStore;
+  readonly cookieStore?: SourceCookieStore
   /*
    * internalName: _interceptor
    */
-  readonly interceptor?: SourceInterceptor;
-  readonly requestsPerSecond: number;
-  readonly requestTimeout: number;
-  getDefaultUserAgent(): Promise<string>;
+  readonly interceptor?: SourceInterceptor
+  readonly requestsPerSecond: number
+  readonly requestTimeout: number
+  getDefaultUserAgent(): Promise<string>
   /*
    * internalName: _schedule
    */
-  schedule(request: Request, retry: number): Promise<Response>;
+  schedule(request: Request, retry: number): Promise<Response>
 }
 declare global {
   namespace App {
     function createRequestManager(info: {
-      interceptor?: SourceInterceptor;
-      requestsPerSecond?: number;
-      requestTimeout?: number;
-    }): RequestManager;
+      interceptor?: SourceInterceptor
+      requestsPerSecond?: number
+      requestTimeout?: number
+    }): RequestManager
   }
 }
 export interface SourceCookieStore {
-  getAllCookies(): Cookie[];
-  addCookie(cookies: Cookie): void;
-  removeCookie(cookie: Cookie): void;
+  getAllCookies(): Cookie[]
+  addCookie(cookies: Cookie): void
+  removeCookie(cookie: Cookie): void
 }
 export interface PartialSourceManga {
-  mangaId: string;
-  title: string;
-  image: string;
-  subtitle?: string;
+  mangaId: string
+  title: string
+  image: string
+  subtitle?: string
 }
 declare global {
   namespace App {
     function createPartialSourceManga(info: {
-      mangaId: string;
-      image: string;
-      title: string;
-      subtitle?: string;
-    }): PartialSourceManga;
+      mangaId: string
+      image: string
+      title: string
+      subtitle?: string
+    }): PartialSourceManga
   }
 }
 export interface MangaInfo {
-  image: string;
-  artist: string;
-  author: string;
-  desc: string;
-  status: string;
-  hentai: boolean;
-  titles: string[];
-  banner?: string;
+  image: string
+  artist: string
+  author: string
+  desc: string
+  status: string
+  hentai: boolean
+  titles: string[]
+  banner?: string
   /*
    * internalName: _rating
    */
-  rating?: number;
-  tags: TagSection[];
-  covers: string[];
-  avgRating: number;
-  follows: number;
-  langFlag: string;
-  langName: string;
-  users: number;
-  views: number;
+  rating?: number
+  tags: TagSection[]
+  covers: string[]
+  avgRating: number
+  follows: number
+  langFlag: string
+  langName: string
+  users: number
+  views: number
 }
 declare global {
   namespace App {
     function createMangaInfo(info: {
-      image: string;
-      artist?: string;
-      author?: string;
-      desc: string;
-      status: string;
-      hentai?: boolean;
-      titles: string[];
-      banner?: string;
-      rating?: number;
-      tags?: TagSection[];
-      covers?: string[];
-      additionalInfo?: Record<string, string>;
-    }): MangaInfo;
+      image: string
+      artist?: string
+      author?: string
+      desc: string
+      status: string
+      hentai?: boolean
+      titles: string[]
+      banner?: string
+      rating?: number
+      tags?: TagSection[]
+      covers?: string[]
+      additionalInfo?: Record<string, string>
+    }): MangaInfo
   }
 }
 export interface ChapterDetails {
-  id: string;
-  mangaId: string;
-  pages: string[];
+  id: string
+  mangaId: string
+  pages: string[]
 }
 declare global {
   namespace App {
     function createChapterDetails(info: {
-      id: string;
-      mangaId: string;
-      pages: string[];
-    }): ChapterDetails;
+      id: string
+      mangaId: string
+      pages: string[]
+    }): ChapterDetails
   }
 }
 export interface SearchField {
-  readonly id: string;
-  readonly name: string;
-  readonly placeholder: string;
+  readonly id: string
+  readonly name: string
+  readonly placeholder: string
 }
 declare global {
   namespace App {
     function createSearchField(info: {
-      id: string;
-      name: string;
-      placeholder: string;
-    }): SearchField;
+      id: string
+      name: string
+      placeholder: string
+    }): SearchField
   }
 }
 export interface PBImage {
-  readonly width: number;
-  readonly height: number;
+  readonly width: number
+  readonly height: number
   /*
    * internalName: _data
    */
-  readonly data?: RawData;
+  readonly data?: RawData
 }
 declare global {
   namespace App {
-    function createPBImage(info: {
-      data: RawData;
-    }): PBImage;
+    function createPBImage(info: { data: RawData }): PBImage
   }
 }
 export interface MangaUpdates {
-  ids: string[];
+  ids: string[]
 }
 declare global {
   namespace App {
-    function createMangaUpdates(info: {
-      ids: string[];
-    }): MangaUpdates;
+    function createMangaUpdates(info: { ids: string[] }): MangaUpdates
   }
 }
 export interface RawData {
-  readonly length: number;
-  [index: number]: Byte;
-  toString(): string | undefined;
+  readonly length: number
+  [index: number]: Byte
+  toString(): string | undefined
 }
 declare global {
   namespace App {
-    function createRawData(info: {
-      byteArray: ByteArray;
-    }): RawData;
+    function createRawData(info: { byteArray: ByteArray }): RawData
   }
 }
 export interface HomeSection {
-  readonly id: string;
-  readonly title: string;
-  items: PartialSourceManga[];
-  containsMoreItems: boolean;
+  readonly id: string
+  readonly title: string
+  items: PartialSourceManga[]
+  containsMoreItems: boolean
 }
 declare global {
   namespace App {
     function createHomeSection(info: {
-      id: string;
-      title: string;
-      type: string;
-      items?: PartialSourceManga[];
-      containsMoreItems: boolean;
-    }): HomeSection;
+      id: string
+      title: string
+      type: string
+      items?: PartialSourceManga[]
+      containsMoreItems: boolean
+    }): HomeSection
   }
 }
 export interface Chapter {
-  id: string;
-  chapNum: number;
-  langCode: string;
-  name: string;
-  volume: number;
-  group: string;
-  time: Date;
-  sortingIndex: number;
+  id: string
+  chapNum: number
+  langCode: string
+  name: string
+  volume: number
+  group: string
+  time: Date
+  sortingIndex: number
 }
 declare global {
   namespace App {
     function createChapter(info: {
-      id: string;
-      chapNum: number;
-      volume?: number;
-      name?: string;
-      group?: string;
-      time?: Date;
-      langCode?: string;
-      sortingIndex?: number;
-    }): Chapter;
+      id: string
+      chapNum: number
+      volume?: number
+      name?: string
+      group?: string
+      time?: Date
+      langCode?: string
+      sortingIndex?: number
+    }): Chapter
   }
 }
 declare global {
   namespace App {
-    function createSection(info: DUISection): DUISection;
-    function createButton(info: DUIButton): DUIButton;
-    function createHeader(info: DUIHeader): DUIHeader;
-    function createInputField(info: DUIInputField): DUIInputField;
-    function createLabel(info: DUILabel): DUILabel;
-    function createLink(info: DUILink): DUILink;
-    function createMultilineLabel(
-      info: DUIMultilineLabel,
-    ): DUIMultilineLabel;
+    function createSection(info: DUISection): DUISection
+    function createButton(info: DUIButton): DUIButton
+    function createHeader(info: DUIHeader): DUIHeader
+    function createInputField(info: DUIInputField): DUIInputField
+    function createLabel(info: DUILabel): DUILabel
+    function createLink(info: DUILink): DUILink
+    function createMultilineLabel(info: DUIMultilineLabel): DUIMultilineLabel
     function createNavigationButton(
       info: DUINavigationButton,
-    ): DUINavigationButton;
-    function createOAuthButton(info: DUIOAuthButton): DUIOAuthButton;
+    ): DUINavigationButton
+    function createOAuthButton(info: DUIOAuthButton): DUIOAuthButton
     function createSecureInputField(
       info: DUISecureInputField,
-    ): DUISecureInputField;
-    function createSelect(info: DUISelect): DUISelect;
-    function createStepper(info: DUIStepper): DUIStepper;
-    function createSwitch(info: DUISwitch): DUISwitch;
+    ): DUISecureInputField
+    function createSelect(info: DUISelect): DUISelect
+    function createStepper(info: DUIStepper): DUIStepper
+    function createSwitch(info: DUISwitch): DUISwitch
   }
 }
 /**
  * @deprecated Use {@link PaperbackExtensionBase}
  */
 export abstract class Source
-  implements Searchable, MangaProviding, ChapterProviding {
-  abstract readonly requestManager: RequestManager;
+  implements Searchable, MangaProviding, ChapterProviding
+{
+  abstract readonly requestManager: RequestManager
   constructor(public cheerio: any) {}
   /**
    * Given a mangaID, this function should use a {@link RequestManager} object's {@link RequestManager.schedule} method
    * to grab and populate a {@link MangaInfo} object
    * @param mangaId The ID which this function is expected to grab data for
    */
-  abstract getMangaDetails(mangaId: string): Promise<SourceManga>;
+  abstract getMangaDetails(mangaId: string): Promise<SourceManga>
   /**
    * Given a mangaID, this function should use a {@link RequestManager} object's {@link RequestManager.schedule} method
    * to grab and populate a {@link Chapter} array.
    * @param mangaId The ID which this function is expected to grab data for
    */
-  abstract getChapters(mangaId: string): Promise<Chapter[]>;
+  abstract getChapters(mangaId: string): Promise<Chapter[]>
   /**
    * Given a mangaID, this function should use a {@link RequestManager} object's {@link RequestManager.schedule} method
    * to grab and populate a {@link ChapterDetails} object
@@ -673,7 +661,7 @@ export abstract class Source
   abstract getChapterDetails(
     mangaId: string,
     chapterId: string,
-  ): Promise<ChapterDetails>;
+  ): Promise<ChapterDetails>
   /**
    * Given a search request, this function should scan through the website's search page and
    * return relevent {@link MangaTile} objects to the given search parameters.
@@ -686,53 +674,53 @@ export abstract class Source
   abstract getSearchResults(
     query: SearchRequest,
     metadata: any,
-  ): Promise<PagedResults>;
+  ): Promise<PagedResults>
   /**
    * @deprecated use {@link Source.getSearchResults getSearchResults} instead
    */
   searchRequest(query: SearchRequest, metadata: any): Promise<PagedResults> {
-    return this.getSearchResults(query, metadata);
+    return this.getSearchResults(query, metadata)
   }
   // <-----------        OPTIONAL METHODS        -----------> //
-  getSearchFields?(): Promise<SearchField[]>;
+  getSearchFields?(): Promise<SearchField[]>
   /**
    * (OPTIONAL METHOD) A function which communicates with a given source, and returns a list of all possible tags which the source supports.
    * These tags are generic and depend on the source. They could be genres such as 'Isekai, Action, Drama', or they can be
    * listings such as 'Completed, Ongoing'
    * These tags must be tags which can be used in the {@link searchRequest} function to augment the searching capability of the application
    */
-  getSearchTags?(): Promise<TagSection[]>;
+  getSearchTags?(): Promise<TagSection[]>
   /**
    * @deprecated use {@link Source.getSearchTags} instead
    */
   async getTags(): Promise<TagSection[]> {
     // @ts-ignore
-    return this.getSearchTags?.();
+    return this.getSearchTags?.()
   }
-  supportsTagExclusion?(): Promise<boolean>;
-  supportsSearchOperators?(): Promise<boolean>;
+  supportsTagExclusion?(): Promise<boolean>
+  supportsSearchOperators?(): Promise<boolean>
   /**
    * A stateful source may require user input.
    * By supplying this value to the Source, the app will render your form to the user
    * in the application settings.
    */
-  getSourceMenu?(): Promise<DUISection>;
+  getSourceMenu?(): Promise<DUISection>
   /**
    * (OPTIONAL METHOD) Given a manga ID, return a URL which Safari can open in a browser to display.
    * @param mangaId
    */
-  getMangaShareUrl?(mangaId: string): string;
+  getMangaShareUrl?(mangaId: string): string
   /**
    * @deprecated use {@link Source.getCloudflareBypassRequestAsync} instead
    */
-  getCloudflareBypassRequest?(): Request;
+  getCloudflareBypassRequest?(): Request
   /**
    * If a source is secured by Cloudflare, this method should be filled out.
    * By returning a request to the website, this source will attempt to create a session
    * so that the source can load correctly.
    * Usually the {@link Request} url can simply be the base URL to the source.
    */
-  getCloudflareBypassRequestAsync?(): Promise<Request>;
+  getCloudflareBypassRequestAsync?(): Promise<Request>
   /**
    * (OPTIONAL METHOD) A function which should readonly allf the available homepage sections for a given source, and return a {@link HomeSection} object.
    * The sectionCallback is to be used for each given section on the website. This may include a 'Latest Updates' section, or a 'Hot Manga' section.
@@ -743,7 +731,7 @@ export abstract class Source
    */
   getHomePageSections?(
     sectionCallback: (section: HomeSection) => void,
-  ): Promise<void>;
+  ): Promise<void>
   /**
    * (OPTIONAL METHOD) This function will take a given homepageSectionId and metadata value, and with this information, should return
    * all of the manga tiles supplied for the given state of parameters. Most commonly, the metadata value will contain some sort of page information,
@@ -757,25 +745,25 @@ export abstract class Source
   getViewMoreItems?(
     homepageSectionId: string,
     metadata: any,
-  ): Promise<PagedResults>;
+  ): Promise<PagedResults>
 }
 // Many sites use '[x] time ago' - Figured it would be good to handle these cases in general
 export function convertTime(timeAgo: string): Date {
-  let time: Date;
-  let trimmed: number = Number((/\d*/.exec(timeAgo) ?? [])[0]);
-  trimmed = (trimmed == 0 && timeAgo.includes("a")) ? 1 : trimmed;
-  if (timeAgo.includes("minutes")) {
-    time = new Date(Date.now() - trimmed * 60000);
-  } else if (timeAgo.includes("hours")) {
-    time = new Date(Date.now() - trimmed * 3600000);
-  } else if (timeAgo.includes("days")) {
-    time = new Date(Date.now() - trimmed * 86400000);
-  } else if (timeAgo.includes("year") || timeAgo.includes("years")) {
-    time = new Date(Date.now() - trimmed * 31556952000);
+  let time: Date
+  let trimmed: number = Number((/\d*/.exec(timeAgo) ?? [])[0])
+  trimmed = trimmed == 0 && timeAgo.includes('a') ? 1 : trimmed
+  if (timeAgo.includes('minutes')) {
+    time = new Date(Date.now() - trimmed * 60000)
+  } else if (timeAgo.includes('hours')) {
+    time = new Date(Date.now() - trimmed * 3600000)
+  } else if (timeAgo.includes('days')) {
+    time = new Date(Date.now() - trimmed * 86400000)
+  } else if (timeAgo.includes('year') || timeAgo.includes('years')) {
+    time = new Date(Date.now() - trimmed * 31556952000)
   } else {
-    time = new Date(Date.now());
+    time = new Date(Date.now())
   }
-  return time;
+  return time
 }
 /**
  * When a function requires a POST body, it always should be defined as a JsonObject
@@ -783,17 +771,17 @@ export function convertTime(timeAgo: string): Date {
  * @param obj
  */
 export function urlEncodeObject(obj: { [x: string]: any }): any {
-  let ret: any = {};
+  let ret: any = {}
   for (const entry of Object.entries(obj)) {
-    ret[encodeURIComponent(entry[0])] = encodeURIComponent(entry[1]);
+    ret[encodeURIComponent(entry[0])] = encodeURIComponent(entry[1])
   }
-  return ret;
+  return ret
 }
 export enum HomeSectionType {
-  singleRowNormal = "singleRowNormal",
-  singleRowLarge = "singleRowLarge",
-  doubleRow = "doubleRow",
-  featured = "featured",
+  singleRowNormal = 'singleRowNormal',
+  singleRowLarge = 'singleRowLarge',
+  doubleRow = 'doubleRow',
+  featured = 'featured',
 }
 export enum SourceIntents {
   MANGA_CHAPTERS = 1 << 0,
@@ -811,12 +799,12 @@ export interface SourceInfo {
    * This is what the application uses to determine whether it needs to update it's local
    * version of the source, to a new version on the repository
    */
-  readonly version: string;
+  readonly version: string
   /**
    * The title of this source, this is what will show up in the application
    * to identify what Manga location is being targeted
    */
-  readonly name: string;
+  readonly name: string
   /**
    * An INTERNAL reference to an icon which is associated with this source.
    * This Icon should ideally be a matching aspect ratio (a cube)
@@ -825,18 +813,18 @@ export interface SourceInfo {
    * This {@link Source.icon} field would then be simply referenced as 'icon.png' and
    * the path will then resolve correctly internally
    */
-  readonly icon: string;
+  readonly icon: string
   /**
    * The author of this source. The string here will be shown off to the public on the application
    * interface, so only write what you're comfortable with showing
    */
-  readonly author: string;
+  readonly author: string
   /**
    * A brief description of what this source targets. This is additional content displayed to the user when
    * browsing sources.
    * What website does it target? What features are working? Etc.
    */
-  readonly description: string;
+  readonly description: string
   /**
    * A content rating attributed to each source. This can be one of three values, and should be set appropriately.
    * Everyone: This source does not have any sort of adult content available. Each title within is assumed safe for all audiences
@@ -846,48 +834,48 @@ export interface SourceInfo {
    * This rating helps us filter your source to users who have the necessary visibility rules toggled for their profile.
    * Naturally, only 'Everyone' sources will show up for users without an account, or without any mode toggles changed.
    */
-  readonly contentRating: ContentRating;
+  readonly contentRating: ContentRating
   /**
    * A required field which points to the source's front-page.
    * Eg. https://mangadex.org
    * This must be a fully qualified URL
    */
-  readonly websiteBaseURL: string;
+  readonly websiteBaseURL: string
   /**
    * An optional field where the author may put a link to their website
    */
-  readonly authorWebsite?: string;
+  readonly authorWebsite?: string
   /**
    * An optional field that defines the language of the extension's source
    */
-  readonly language?: string;
+  readonly language?: string
   /**
    * An optional field of source tags: Little bits of metadata which is rendered on the website
    * under your repositories section
    */
-  readonly sourceTags?: Badge[];
-  readonly intents?: SourceIntents;
+  readonly sourceTags?: Badge[]
+  readonly intents?: SourceIntents
 }
 /**
  * A content rating to be attributed to each source.
  */
 export enum ContentRating {
-  EVERYONE = "EVERYONE",
-  MATURE = "MATURE",
-  ADULT = "ADULT",
+  EVERYONE = 'EVERYONE',
+  MATURE = 'MATURE',
+  ADULT = 'ADULT',
 }
 export interface Badge {
-  readonly text: string;
-  readonly type: BadgeColor;
+  readonly text: string
+  readonly type: BadgeColor
 }
 export enum BadgeColor {
-  BLUE = "default",
-  GREEN = "success",
-  GREY = "info",
-  YELLOW = "warning",
-  RED = "danger",
+  BLUE = 'default',
+  GREEN = 'success',
+  GREY = 'info',
+  YELLOW = 'warning',
+  RED = 'danger',
 }
-export type PaperbackExtensionBase = Requestable & MangaProviding & Searchable;
+export type PaperbackExtensionBase = Requestable & MangaProviding & Searchable
 declare global {
   type Byte =
     | 0
@@ -1144,18 +1132,18 @@ declare global {
     | 251
     | 252
     | 253
-    | 254;
-  type ByteArray = Uint8Array;
+    | 254
+  type ByteArray = Uint8Array
   namespace App {
-    function createByteArray(info: RawData): ByteArray;
+    function createByteArray(info: RawData): ByteArray
   }
 }
 /**
  * @deprecated use {@link RequestManagerProviding}
  */
-export type Requestable = RequestManagerProviding;
+export type Requestable = RequestManagerProviding
 export interface RequestManagerProviding {
-  readonly requestManager: RequestManager;
+  readonly requestManager: RequestManager
 }
 export interface ChapterProviding extends MangaProviding {
   /**
@@ -1163,16 +1151,13 @@ export interface ChapterProviding extends MangaProviding {
    * to grab and populate a {@link Chapter} array.
    * @param mangaId The ID which this function is expected to grab data for
    */
-  getChapters(mangaId: string): Promise<Chapter[]>;
+  getChapters(mangaId: string): Promise<Chapter[]>
   /**
    * Given a mangaID, this function should use a {@link Request} object's {@link Request.perform} method
    * to grab and populate a {@link ChapterDetails} object
    * @param mangaId The ID which this function is expected to grab data for
    */
-  getChapterDetails(
-    mangaId: string,
-    chapterId: string,
-  ): Promise<ChapterDetails>;
+  getChapterDetails(mangaId: string, chapterId: string): Promise<ChapterDetails>
 }
 export interface MangaProviding extends RequestManagerProviding {
   /**
@@ -1180,12 +1165,12 @@ export interface MangaProviding extends RequestManagerProviding {
    * to grab and populate a {@link MangaInfo} object
    * @param mangaId The ID which this function is expected to grab data for
    */
-  getMangaDetails(mangaId: string): Promise<SourceManga>;
+  getMangaDetails(mangaId: string): Promise<SourceManga>
   /**
    * (OPTIONAL METHOD) Given a manga ID, return a URL which Safari can open in a browser to display.
    * @param mangaId
    */
-  getMangaShareUrl?(mangaId: string): string;
+  getMangaShareUrl?(mangaId: string): string
 }
 export interface HomePageSectionsProviding {
   /**
@@ -1198,7 +1183,7 @@ export interface HomePageSectionsProviding {
    */
   getHomePageSections(
     sectionCallback: (section: HomeSection) => void,
-  ): Promise<void>;
+  ): Promise<void>
   /**
    * This function will take a given homepageSectionId and metadata value, and with this information, should return
    * all of the manga tiles supplied for the given state of parameters. Most commonly, the metadata value will contain some sort of page information,
@@ -1212,14 +1197,12 @@ export interface HomePageSectionsProviding {
   getViewMoreItems(
     homepageSectionId: string,
     metadata: any,
-  ): Promise<PagedResults>;
+  ): Promise<PagedResults>
 }
 export interface MangaProgressProviding {
-  getMangaProgressManagementForm(mangaId: string): Promise<DUIForm>;
-  getMangaProgress(mangaId: string): Promise<MangaProgress | undefined>;
-  processChapterReadActionQueue(
-    actionQueue: TrackerActionQueue,
-  ): Promise<void>;
+  getMangaProgressManagementForm(mangaId: string): Promise<DUIForm>
+  getMangaProgress(mangaId: string): Promise<MangaProgress | undefined>
+  processChapterReadActionQueue(actionQueue: TrackerActionQueue): Promise<void>
 }
 export interface CloudflareBypassRequestProviding
   extends RequestManagerProviding {
@@ -1229,87 +1212,93 @@ export interface CloudflareBypassRequestProviding
    * so that the source can load correctly.
    * Usually the {@link Request} url can simply be the base URL to the source.
    */
-  getCloudflareBypassRequestAsync(): Promise<Request>;
+  getCloudflareBypassRequestAsync(): Promise<Request>
 }
 /**
  * @deprecated Use {@link SearchResultsProviding}
  */
-export type Searchable = SearchResultsProviding;
+export type Searchable = SearchResultsProviding
 export interface SearchResultsProviding extends MangaProviding {
   getSearchResults(
     query: SearchRequest,
     metadata: unknown | undefined,
-  ): Promise<PagedResults>;
-  getSearchTags?(): Promise<TagSection[]>;
-  getSearchFields?(): Promise<SearchField[]>;
-  supportsTagExclusion?(): Promise<boolean>;
-  supportsSearchOperators?(): Promise<boolean>;
+  ): Promise<PagedResults>
+  getSearchTags?(): Promise<TagSection[]>
+  getSearchFields?(): Promise<SearchField[]>
+  supportsTagExclusion?(): Promise<boolean>
+  supportsSearchOperators?(): Promise<boolean>
 }
 
-const AppCompat = {} as typeof App;
+const AppCompat = {} as typeof App
 AppCompat.createSourceStateManager = function (): SourceStateManager {
   return {
     keychain: {
       async store(key, value) {
-        Application.setSecureState(value, key);
+        Application.setSecureState(value, key)
       },
       async retrieve(key) {
-        return Application.getSecureState(key);
+        return Application.getSecureState(key)
       },
     },
     async store(key, value) {
-      Application.setState(value, key);
+      Application.setState(value, key)
     },
     async retrieve(key) {
-      return Application.getState(key);
+      return Application.getState(key)
     },
-  };
-};
+  }
+}
+
+export function convert08RequestTo09Request(request: Request): PBRequest {
+  let url = request.url
+  if (request.param) {
+    url += request.param
+  }
+
+  const cookies: Record<string, string> = {}
+  for (const cookie of request.cookies ?? []) {
+    cookies[cookie.name] = cookie.value
+  }
+
+  return {
+    url,
+    method: request.method,
+    body: request.data,
+    headers: request.headers,
+    cookies,
+  }
+}
+
+export function convert09RequestTo08Request(request: PBRequest): Request {
+  return {
+    url: request.url,
+    method: request.method,
+    headers: request.headers ?? {},
+    cookies: Object.keys(request.cookies ?? {}).map((x) => ({
+      name: x,
+      value: request.cookies![x]!,
+      domain: '',
+    })),
+    data: request.body,
+  }
+}
 
 AppCompat.createRequestManager = function (info): RequestManager {
-  const interceptor = new class extends PaperbackInterceptor {
+  const interceptor = new (class extends PaperbackInterceptor {
     constructor(private legacyInterceptor: SourceInterceptor | undefined) {
-      super("main");
+      super('main')
     }
 
-    override async interceptRequest(
-      request: PBRequest,
-    ): Promise<PBRequest> {
-      if (!this.legacyInterceptor) return request;
+    override async interceptRequest(request: PBRequest): Promise<PBRequest> {
+      if (!this.legacyInterceptor) return request
 
-      const oldRequest: Request = {
-        url: request.url,
-        method: request.method,
-        headers: request.headers ?? {},
-        cookies: Object.keys(request.cookies ?? {}).map((x) => ({
-          name: x,
-          value: request.cookies![x]!,
-          domain: "",
-        })),
-      };
+      const oldRequest = convert09RequestTo08Request(request)
 
-      const interceptedRequest = await this.legacyInterceptor
-        .interceptRequest(
-          oldRequest,
-        );
+      const interceptedRequest = await this.legacyInterceptor.interceptRequest(
+        oldRequest,
+      )
 
-      let url = interceptedRequest.url;
-      if (interceptedRequest.param) {
-        url += interceptedRequest.param;
-      }
-
-      const cookies: Record<string, string> = {};
-      for (const cookie of interceptedRequest.cookies ?? []) {
-        cookies[cookie.name] = cookie.value;
-      }
-
-      return {
-        url,
-        method: interceptedRequest.method,
-        body: interceptedRequest.data,
-        headers: interceptedRequest.headers,
-        cookies,
-      };
+      return convert08RequestTo09Request(interceptedRequest)
     }
 
     override async interceptResponse(
@@ -1317,22 +1306,22 @@ AppCompat.createRequestManager = function (info): RequestManager {
       response: PBResponse,
       data: ArrayBuffer,
     ): Promise<ArrayBuffer> {
-      if (!this.legacyInterceptor) return data;
-      return data;
+      if (!this.legacyInterceptor) return data
+      return data
     }
-  }(info.interceptor);
+  })(info.interceptor)
 
-  const rateLimiter = new BasicRateLimiter("rateLimit", {
+  const rateLimiter = new BasicRateLimiter('rateLimit', {
     numberOfRequests: info.requestsPerSecond ?? 2,
     bufferInterval: 1,
     ignoreImages: true,
-  });
+  })
 
-  const cookieStore = new CookieStorageInterceptor({ storage: "memory" });
+  const cookieStore = new CookieStorageInterceptor({ storage: 'memory' })
 
-  interceptor.registerInterceptor();
-  rateLimiter.registerInterceptor();
-  cookieStore.registerInterceptor();
+  interceptor.registerInterceptor()
+  rateLimiter.registerInterceptor()
+  cookieStore.registerInterceptor()
 
   return {
     __backing_interceptor: interceptor,
@@ -1342,39 +1331,25 @@ AppCompat.createRequestManager = function (info): RequestManager {
     cookieStore: {
       // @ts-expect-error
       getAllCookies() {
-        return cookieStore.cookies;
+        return cookieStore.cookies
       },
       addCookie(cookies) {
-        cookieStore.setCookie(cookies);
+        cookieStore.setCookie(cookies)
       },
       removeCookie(cookie) {
-        cookieStore.deleteCookie(cookie);
+        cookieStore.deleteCookie(cookie)
       },
     },
     async getDefaultUserAgent() {
-      return Application.getDefaultUserAgent();
+      return Application.getDefaultUserAgent()
     },
     requestsPerSecond: info.requestsPerSecond ?? 2,
     requestTimeout: info.requestTimeout ?? 30_000,
     async schedule(request, retry) {
-      const cookies: Record<string, string> = {};
-      for (const cookie of request.cookies ?? []) {
-        cookies[cookie.name] = cookie.value;
-      }
+      const finalRequest = convert08RequestTo09Request(request)
 
-      let url = request.url;
-      if (request.param) {
-        url += request.param;
-      }
-
-      console.log('[COMPAT] SCHEDULING REQUEST TO '+ url)
-      const [response, data] = await Application.scheduleRequest({
-        url,
-        method: request.method,
-        body: request.data,
-        headers: request.headers,
-        cookies,
-      });
+      console.log('[COMPAT] SCHEDULING REQUEST TO ' + finalRequest.url)
+      const [response, data] = await Application.scheduleRequest(finalRequest)
 
       return {
         request,
@@ -1382,35 +1357,35 @@ AppCompat.createRequestManager = function (info): RequestManager {
         status: response.status,
         data: Application.arrayBufferToUTF8String(data),
         get rawData() {
-          return new Uint8Array(data) as RawData;
+          return new Uint8Array(data) as RawData
         },
-      };
+      }
     },
-  };
-};
+  }
+}
 
 globalThis.App = new Proxy(AppCompat, {
   get(target, p) {
     // @ts-ignore //
     if (target[p]) {
       // @ts-ignore //
-      return target[p];
+      return target[p]
     }
 
-    if (typeof p === "string" && p.startsWith("create")) {
-      if (p.startsWith("createDUI")) {
-        const type = p.slice(6);
+    if (typeof p === 'string' && p.startsWith('create')) {
+      if (p.startsWith('createDUI')) {
+        const type = p.slice(6)
         return (anyProps: any) => {
-          return Object.defineProperty(anyProps, "type", {
+          return Object.defineProperty(anyProps, 'type', {
             enumerable: true,
             value: type,
-          });
-        };
+          })
+        }
       }
 
-      return (anyProps: any) => anyProps;
+      return (anyProps: any) => anyProps
     }
 
-    return undefined;
+    return undefined
   },
-});
+})
