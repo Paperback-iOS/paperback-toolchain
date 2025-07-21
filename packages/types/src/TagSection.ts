@@ -1,4 +1,4 @@
-import type { Tag } from "./Tag"
+import type { Tag } from "./Tag.js"
 
 export interface TagSection {
   readonly id: string;

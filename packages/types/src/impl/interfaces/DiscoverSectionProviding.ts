@@ -1,6 +1,6 @@
-import type { DiscoverSectionItem } from "../../DiscoverSectionItem"
-import type { DiscoverSection } from "../../HomeSection"
-import type { PagedResults } from "../../PagedResults"
+import type { DiscoverSectionItem } from "../../DiscoverSectionItem.js"
+import type { DiscoverSection } from "../../HomeSection.js"
+import type { PagedResults } from "../../PagedResults.js"
 
 export interface DiscoverSectionProviding {
   getDiscoverSections(): Promise<DiscoverSection[]>;

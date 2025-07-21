@@ -49,11 +49,11 @@ export default class Bundle extends Command {
                         bundle: true,
                         entryPoints: files,
                         format: 'iife',
+                        target: 'ios18',
                         globalName: 'source',
                         metafile: true,
                         outdir: bundlesDirPath,
-                        inject: [path.join(__dirname,'../shims/buffer.js')],
-
+                        inject: [path.join(import.meta.dirname,'../shims/buffer.js')],
                         minify: !sourcemap,
                         sourcemap: sourcemap ? 'inline' : undefined
                     })
@@ -96,7 +96,7 @@ export default class Bundle extends Command {
     }
 
     async generateHomepage(folder = '') {
-        const indexPath = path.join(__dirname, '../homepage/index.html')
+        const indexPath = path.join(import.meta.dirname, '../homepage/index.html')
 
         const basePath = process.cwd()
         const directoryPath = path.join(basePath, 'bundles', folder, 'index.html')
@@ -112,7 +112,7 @@ export default class Bundle extends Command {
         const configBundle = esbuild.buildSync({
             bundle: true,
             entryPoints: [configPath],
-            format: 'cjs',
+            format: 'esm',
             write: false,
             treeShaking: true
         })
@@ -125,8 +125,12 @@ export default class Bundle extends Command {
             return
         }
 
-        // eslint-disable-next-line no-eval
-        const config = eval(configBundle.outputFiles[0].text).default
+        const configModule = await import(
+          `data:text/javascript;base64,${Buffer.from(
+            configBundle.outputFiles[0]!.text
+          ).toString("base64")}`
+        );
+        const config = configModule.default
         config.id = sourceId
 
         // Write the JSON payload to file
@@ -140,19 +144,19 @@ export default class Bundle extends Command {
         // joining path of directory
         const basePath = process.cwd()
         const directoryPath = path.join(basePath, 'bundles', folder)
-        const cliInfo = require('../../package.json')
-        const commonsInfo = require(path.join(basePath, 'node_modules/@paperback/types/package.json'))
-        const projectInfo = require(path.join(basePath, 'package.json'))
+        const cliInfo = await import('../../package.json', { with: { type: 'json' } })
+        const commonsInfo = await import(path.join(basePath, 'node_modules/@paperback/types/package.json'), { with: { type: 'json' } })
+        const projectInfo = await import(path.join(basePath, 'package.json'), { with: { type: 'json' } })
 
         const jsonObject = {
             buildTime: new Date(),
             builtWith: {
-                toolchain: cliInfo.version,
-                types: commonsInfo.version
+                toolchain: cliInfo.default.version,
+                types: commonsInfo.default.version
             },
             repository: {
-                name: projectInfo?.repositoryName ?? 'Paperback Extension Repository',
-                description: projectInfo?.description ?? 'An extension repository for Paperback'
+                name: projectInfo.default?.repositoryName ?? 'Paperback Extension Repository',
+                description: projectInfo.default?.description ?? 'An extension repository for Paperback'
             },
             sources: [] as any[]
         }
@@ -162,7 +166,8 @@ export default class Bundle extends Command {
             const directoryContainsExtensionDefinition = fs.existsSync(infoJsonPath)
             if (!directoryContainsExtensionDefinition) continue
 
-            jsonObject.sources.push(require(infoJsonPath))
+            const infoModule = await import(`file://${infoJsonPath}`, { with: { type: 'json' } })
+            jsonObject.sources.push(infoModule.default)
         }
 
         // Write the JSON payload to file

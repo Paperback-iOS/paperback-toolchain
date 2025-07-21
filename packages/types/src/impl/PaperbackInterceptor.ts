@@ -1,5 +1,5 @@
-import { Request } from "../Request"
-import { Response } from "../Response"
+import type { Request } from "../Request.js"
+import type { Response } from "../Response.js"
 
 export abstract class PaperbackInterceptor {
   constructor(public id: string) {}

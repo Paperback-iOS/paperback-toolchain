@@ -4,7 +4,7 @@ import * as path from 'node:path'
 
 import pc from "picocolors"
 
-import { getLocalIPv4Address } from './ip'
+import { getLocalIPv4Address } from './ip.js'
 
 export default class Server {
     port: number

@@ -1,4 +1,4 @@
-import { PaperbackPolyfills } from "./PaperbackPolyfills"
+import { PaperbackPolyfills } from "./PaperbackPolyfills.js"
 import { } from "@paperback/types"
 
 class SelectorRef {

@@ -1,3 +1,3 @@
-export * from "./types";
-export * from "./wrapper";
-export * from "./sourceInfo";
+export * from "./types.js";
+export * from "./wrapper.js";
+export * from "./sourceInfo.js";

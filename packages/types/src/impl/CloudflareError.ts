@@ -1,4 +1,4 @@
-import { Request } from "..";
+import type { Request } from "../Request.js";
 
 export class CloudflareError extends Error {
   public readonly type = "cloudflareError";

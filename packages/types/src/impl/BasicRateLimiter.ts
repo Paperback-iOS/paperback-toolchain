@@ -1,7 +1,7 @@
-import { lock, unlock } from "./Lock";
-import { PaperbackInterceptor } from "./PaperbackInterceptor";
-import { Request } from "../Request";
-import { Response } from "../Response";
+import { lock, unlock } from "./Lock.js";
+import { PaperbackInterceptor } from "./PaperbackInterceptor.js";
+import type { Request } from "../Request.js";
+import type { Response } from "../Response.js";
 
 export type BasicRateLimiterOptions = {
   numberOfRequests: number;

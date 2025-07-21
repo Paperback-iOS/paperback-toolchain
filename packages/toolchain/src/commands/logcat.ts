@@ -1,19 +1,19 @@
 import { credentials } from "@grpc/grpc-js";
 import { Args, Command, Flags } from "@oclif/core";
 
-import { LogLevel, LogLine } from "../devtools/.generated/typescript/PDTLogger";
-import { PaperbackLoggerClient } from "../devtools/.generated/typescript/PDTLogger.grpc-client";
+import { LogLevel, LogLine } from "../devtools/.generated/typescript/PDTLogger.js";
+import { PaperbackLoggerClient } from "../devtools/.generated/typescript/PDTLogger.grpc-client.js";
 
 import pc from "picocolors"
 
 export default class Logcat extends Command {
-  static args = {
+  static override args = {
     file: Args.string({ description: "file to read" }),
   };
 
-  static description = "describe the command here";
+  static override description = "describe the command here";
 
-  static examples = ["<%= config.bin %> <%= command.id %>"];
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   static override flags = {
     ip: Flags.string({ default: "localhost", name: "ip" }),

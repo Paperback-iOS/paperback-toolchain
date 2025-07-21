@@ -1,5 +1,5 @@
-import type { ContentRating } from "./SourceInfo"
-import type { TagSection } from "./TagSection"
+import type { ContentRating } from "./SourceInfo.js"
+import type { TagSection } from "./TagSection.js"
 
 export interface MangaInfo {
   thumbnailUrl: string;

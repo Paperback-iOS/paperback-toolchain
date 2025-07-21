@@ -4,33 +4,33 @@
     "paperback-cli": "./bin/run.js"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.13.0",
-    "@oclif/core": "^4.2.10",
-    "@oclif/plugin-help": "^6.2.26",
-    "@oclif/plugin-plugins": "^5.4.34",
+    "@grpc/grpc-js": "^1.13.4",
+    "@oclif/core": "^4.3.0",
+    "@oclif/plugin-help": "^6.2.28",
+    "@oclif/plugin-plugins": "^5.4.38",
     "@paperback/runtime-polyfills": "*",
     "@paperback/types": "*",
-    "@protobuf-ts/runtime-rpc": "^2.9.5",
+    "@protobuf-ts/runtime-rpc": "^2.10.0",
     "@types/fs-extra": "^11.0.4",
     "buffer": "^6.0.3",
-    "esbuild": "^0.25.1",
+    "esbuild": "^0.25.4",
     "fs-extra": "^11.3.0",
-    "listr2": "^8.2.5",
+    "listr2": "^8.3.3",
     "picocolors": "^1.1.1"
   },
   "description": "The Paperback extension development toolchain",
   "devDependencies": {
-    "@oclif/test": "^4.1.12",
-    "@protobuf-ts/plugin": "^2.9.5",
-    "@protobuf-ts/protoc": "^2.9.5",
-    "@types/chai": "^5.2.0",
+    "@oclif/test": "^4.1.13",
+    "@protobuf-ts/plugin": "^2.10.0",
+    "@protobuf-ts/protoc": "^2.10.0",
+    "@types/chai": "^5.2.2",
     "@types/listr": "^0.14.9",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.13.10",
+    "@types/node": "^22.15.21",
     "chai": "^5.2.0",
     "grpc-tools": "^1.13.0",
-    "mocha": "^11.1.0",
-    "oclif": "^4.17.34",
+    "mocha": "^11.5.0",
+    "oclif": "^4.17.46",
     "shx": "^0.3.4",
     "ts-node": "^10.9.2"
   },
@@ -57,6 +57,7 @@
     "topicSeparator": " "
   },
   "repository": "FaizanDurrani/paperback-toolchain",
+  "type": "module",
   "scripts": {
     "build": "shx rm -rf dist && tsc -b && cp -r src/homepage dist/ && cp -r src/shims dist/",
     "postpack": "shx rm -f oclif.manifest.json",
@@ -70,5 +71,8 @@
     "oclif"
   ],
   "types": "dist/index.d.ts",
-  "gitHead": "14158af57f191721407565a300545c36db537a22"
+  "gitHead": "14158af57f191721407565a300545c36db537a22",
+  "ts-node": {
+    "esm": true
+  }
 }

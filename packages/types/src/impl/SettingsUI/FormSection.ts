@@ -1,4 +1,4 @@
-import { FormItemElement } from "./FormItemElement"
+import type { FormItemElement } from "./FormItemElement.js"
 
 export interface FormSectionElement {
   id: string;

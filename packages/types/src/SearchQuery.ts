@@ -1,4 +1,4 @@
-import type { SearchFilter } from "./SearchFilter"
+import type { SearchFilter } from "./SearchFilter.js"
 
 type SearchFilterValues = Pick<SearchFilter, "id" | "value">;
 

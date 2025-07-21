@@ -1,4 +1,4 @@
-import type { MangaInfo } from "./MangaInfo"
+import type { MangaInfo } from "./MangaInfo.js"
 
 export interface SourceManga {
   mangaId: string;

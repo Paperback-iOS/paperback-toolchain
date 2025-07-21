@@ -1,4 +1,4 @@
-import type { DiscoverSectionType } from "./DiscoverSectionType"
+import type { DiscoverSectionType } from "./DiscoverSectionType.js"
 
 export interface DiscoverSection {
   readonly id: string;

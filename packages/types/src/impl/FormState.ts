@@ -1,4 +1,4 @@
-import { Form } from "./SettingsUI/Form";
+import type { Form } from "./SettingsUI/Form.js";
 
 /**
  * Represents the state of a form field with type-safe value management and selector integration.

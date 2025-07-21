@@ -1,6 +1,5 @@
-import { PaperbackPolyfills } from "./PaperbackPolyfills"
+import { PaperbackPolyfills } from "./PaperbackPolyfills.js"
 import './RequestManager'
-import './SourceStateManager'
 
 // @ts-ignore
 globalThis.Application = new Proxy(PaperbackPolyfills, {

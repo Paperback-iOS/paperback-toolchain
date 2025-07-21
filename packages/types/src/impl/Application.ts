@@ -1,11 +1,10 @@
-import type { DiscoverSectionItem } from "../DiscoverSectionItem";
-import type { DiscoverSection } from "../HomeSection";
-import type { PagedResults } from "../PagedResults";
-import type { SearchFilter } from "../SearchFilter";
-import { Request } from "../Request";
-import { Response } from "../Response";
-import { Cookie } from "../Cookie";
-import { TrackedMangaChapterReadAction } from "../TrackedMangaChapterReadAction"
+import type { DiscoverSectionItem } from "../DiscoverSectionItem.js";
+import type { DiscoverSection } from "../HomeSection.js";
+import type { PagedResults } from "../PagedResults.js";
+import type { SearchFilter } from "../SearchFilter.js";
+import type { Request } from "../Request.js";
+import type { Response } from "../Response.js";
+import type { Cookie } from "../Cookie.js";
 
 export {};
 

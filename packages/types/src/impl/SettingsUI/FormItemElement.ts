@@ -1,6 +1,6 @@
-import { Cookie } from "../../Cookie";
-import { Request } from "../../Request";
-import { Form } from "./Form";
+import type { Cookie } from "../../Cookie.js";
+import type { Request } from "../../Request.js";
+import { Form } from "./Form.js";
 
 export interface FormItemElement<T> {
   id: string;

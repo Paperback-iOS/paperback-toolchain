@@ -1,5 +1,5 @@
-import { Chapter } from "./Chapter";
-import { SourceManga } from "./SourceManga";
+import type { Chapter } from "./Chapter.js";
+import type { SourceManga } from "./SourceManga.js";
 
 export interface TrackedMangaChapterReadAction {
    // Internal object id
