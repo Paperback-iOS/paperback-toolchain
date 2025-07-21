@@ -1,17 +1,17 @@
-import type { FormSectionElement } from "./FormSection.js"
+import type { FormSectionElement } from './FormSection.js'
 
 export abstract class Form {
   reloadForm() {
     // @ts-expect-error hidden field
-    const formId = this["__underlying_formId"] as string | undefined;
+    const formId = this['__underlying_formId'] as string | undefined
 
-    if (!formId) return;
+    if (!formId) return
 
     // @ts-expect-error hidden function
-    Application.formDidChange(formId);
+    Application.formDidChange(formId)
   }
 
-  abstract getSections(): FormSectionElement[];
+  abstract getSections(): FormSectionElement[]
 
   /* Life cycle methods, always called, errors logged but ignored */
   formWillAppear?(): void
@@ -21,7 +21,9 @@ export abstract class Form {
 
   // If this returns true, the app will display `Submit` and `Cancel` buttons
   // and call the relevant methods when they are pressed
-  get requiresExplicitSubmission(): boolean { return false }
+  get requiresExplicitSubmission(): boolean {
+    return false
+  }
 
   // The app calls this method when the user presses `Submit`
   // Throw an error here to halt the dismissal and display an alert popup

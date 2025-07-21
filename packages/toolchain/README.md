@@ -1,5 +1,4 @@
-oclif-hello-world
-=================
+# oclif-hello-world
 
 oclif example Hello World CLI
 
@@ -8,11 +7,15 @@ oclif example Hello World CLI
 [![GitHub license](https://img.shields.io/github/license/oclif/hello-world)](https://github.com/oclif/hello-world/blob/main/LICENSE)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
@@ -24,23 +27,27 @@ USAGE
   $ paperback-cli COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
-* [`paperback-cli bundle`](#paperback-cli-bundle)
-* [`paperback-cli help [COMMAND]`](#paperback-cli-help-command)
-* [`paperback-cli logcat [FILE]`](#paperback-cli-logcat-file)
-* [`paperback-cli plugins`](#paperback-cli-plugins)
-* [`paperback-cli plugins add PLUGIN`](#paperback-cli-plugins-add-plugin)
-* [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
-* [`paperback-cli plugins install PLUGIN`](#paperback-cli-plugins-install-plugin)
-* [`paperback-cli plugins link PATH`](#paperback-cli-plugins-link-path)
-* [`paperback-cli plugins remove [PLUGIN]`](#paperback-cli-plugins-remove-plugin)
-* [`paperback-cli plugins reset`](#paperback-cli-plugins-reset)
-* [`paperback-cli plugins uninstall [PLUGIN]`](#paperback-cli-plugins-uninstall-plugin)
-* [`paperback-cli plugins unlink [PLUGIN]`](#paperback-cli-plugins-unlink-plugin)
-* [`paperback-cli plugins update`](#paperback-cli-plugins-update)
-* [`paperback-cli serve`](#paperback-cli-serve)
+
+- [`paperback-cli bundle`](#paperback-cli-bundle)
+- [`paperback-cli help [COMMAND]`](#paperback-cli-help-command)
+- [`paperback-cli logcat [FILE]`](#paperback-cli-logcat-file)
+- [`paperback-cli plugins`](#paperback-cli-plugins)
+- [`paperback-cli plugins add PLUGIN`](#paperback-cli-plugins-add-plugin)
+- [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
+- [`paperback-cli plugins install PLUGIN`](#paperback-cli-plugins-install-plugin)
+- [`paperback-cli plugins link PATH`](#paperback-cli-plugins-link-path)
+- [`paperback-cli plugins remove [PLUGIN]`](#paperback-cli-plugins-remove-plugin)
+- [`paperback-cli plugins reset`](#paperback-cli-plugins-reset)
+- [`paperback-cli plugins uninstall [PLUGIN]`](#paperback-cli-plugins-uninstall-plugin)
+- [`paperback-cli plugins unlink [PLUGIN]`](#paperback-cli-plugins-unlink-plugin)
+- [`paperback-cli plugins update`](#paperback-cli-plugins-update)
+- [`paperback-cli serve`](#paperback-cli-serve)
 
 ## `paperback-cli bundle`
 
@@ -413,4 +420,5 @@ DESCRIPTION
 ```
 
 _See code: [dist/commands/serve.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.53/dist/commands/serve.js)_
+
 <!-- commandsstop -->

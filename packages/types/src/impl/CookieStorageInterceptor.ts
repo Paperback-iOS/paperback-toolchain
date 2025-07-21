@@ -1,40 +1,40 @@
-import type { Cookie } from "../Cookie.js";
-import { PaperbackInterceptor } from "./PaperbackInterceptor.js";
-import type { Request } from "../Request.js";
-import type { Response } from "../Response.js";
-import { URL } from "./URL.js";
+import type { Cookie } from '../Cookie.js'
+import { PaperbackInterceptor } from './PaperbackInterceptor.js'
+import type { Request } from '../Request.js'
+import type { Response } from '../Response.js'
+import { URL } from './URL.js'
 
 type CookieStorageOptions = {
-  storage: "stateManager" | "memory";
-};
+  storage: 'stateManager' | 'memory'
+}
 
-const cookieStateKey = "cookie_store_cookies";
+const cookieStateKey = 'cookie_store_cookies'
 
 export class CookieStorageInterceptor extends PaperbackInterceptor {
-  private _cookies: Record<string, Cookie> = {};
+  private _cookies: Record<string, Cookie> = {}
 
   get cookies(): Readonly<Cookie[]> {
-    return Object.freeze(Object.values(this._cookies));
+    return Object.freeze(Object.values(this._cookies))
   }
 
   set cookies(newValue: Cookie[]) {
-    const cookies: Record<string, Cookie> = {};
+    const cookies: Record<string, Cookie> = {}
     for (const cookie of newValue) {
       // If the cookie is already expired, skip
       if (this.isCookieExpired(cookie)) {
-        continue;
+        continue
       }
 
-      cookies[this.cookieIdentifier(cookie)] = cookie;
+      cookies[this.cookieIdentifier(cookie)] = cookie
     }
 
-    this._cookies = cookies;
-    this.saveCookiesToStorage();
+    this._cookies = cookies
+    this.saveCookiesToStorage()
   }
 
   constructor(public readonly options: CookieStorageOptions) {
-    super("cookie_store");
-    this.loadCookiesFromStorage();
+    super('cookie_store')
+    this.loadCookiesFromStorage()
   }
 
   async interceptRequest(request: Request): Promise<Request> {
@@ -43,13 +43,16 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
       ...(request.cookies ?? {}),
 
       // Inject all the cookies as { name: value }
-      ...this.cookiesForUrl(request.url).reduce((v, c) => {
-        v[c.name] = c.value;
-        return v;
-      }, {} as Record<string, string>),
-    };
+      ...this.cookiesForUrl(request.url).reduce(
+        (v, c) => {
+          v[c.name] = c.value
+          return v
+        },
+        {} as Record<string, string>
+      ),
+    }
 
-    return request;
+    return request
   }
 
   async interceptResponse(
@@ -57,187 +60,185 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
     response: Response,
     data: ArrayBuffer
   ): Promise<ArrayBuffer> {
-    const cookies: Record<string, Cookie> = this._cookies;
+    const cookies: Record<string, Cookie> = this._cookies
 
     for (const cookie of response.cookies) {
-      const identifier = this.cookieIdentifier(cookie);
+      const identifier = this.cookieIdentifier(cookie)
 
       // If the cookie is already expired, delete it
       // Usually backends "delete" a cookie by setting its
       // expiry in the past
       if (this.isCookieExpired(cookie)) {
-        delete cookies[identifier];
-        continue;
+        delete cookies[identifier]
+        continue
       }
 
-      cookies[identifier] = cookie;
+      cookies[identifier] = cookie
     }
 
-    this._cookies = cookies;
-    this.saveCookiesToStorage();
+    this._cookies = cookies
+    this.saveCookiesToStorage()
 
-    return data;
+    return data
   }
 
   setCookie(cookie: Cookie) {
     // If the cookie is already expired, skip
     if (this.isCookieExpired(cookie)) {
-      return;
+      return
     }
 
-    this._cookies[this.cookieIdentifier(cookie)] = cookie;
-    this.saveCookiesToStorage();
+    this._cookies[this.cookieIdentifier(cookie)] = cookie
+    this.saveCookiesToStorage()
   }
 
   deleteCookie(cookie: Cookie) {
-    delete this._cookies[this.cookieIdentifier(cookie)];
+    delete this._cookies[this.cookieIdentifier(cookie)]
   }
 
   cookiesForUrl(urlString: string): Cookie[] {
-    console.log("[COMPAT] COOKIES FOR URL");
-    const url = new URL(urlString);
-    const hostname = url.hostname;
+    console.log('[COMPAT] COOKIES FOR URL')
+    const url = new URL(urlString)
+    const hostname = url.hostname
 
     if (!hostname) {
-      return [];
+      return []
     }
 
     const matchedCookies: Record<
       string,
       { cookie: Cookie; pathMatches: number }
-    > = {};
+    > = {}
 
-    const pathname = url.path.startsWith("/")
-      ? url.path
-      : `/${url.path}`;
+    const pathname = url.path.startsWith('/') ? url.path : `/${url.path}`
 
-    const splitHostname = hostname.split(".");
-    const splitUrlPath = pathname.split("/");
-    splitUrlPath.shift();
+    const splitHostname = hostname.split('.')
+    const splitUrlPath = pathname.split('/')
+    splitUrlPath.shift()
 
-    const cookies = this.cookies;
+    const cookies = this.cookies
     for (const cookie of cookies) {
       if (this.isCookieExpired(cookie)) {
-        delete this._cookies[this.cookieIdentifier(cookie)];
-        continue;
+        delete this._cookies[this.cookieIdentifier(cookie)]
+        continue
       }
 
-      const cookieDomain = this.cookieSanitizedDomain(cookie);
-      const splitCookieDomain = cookieDomain.split(".");
+      const cookieDomain = this.cookieSanitizedDomain(cookie)
+      const splitCookieDomain = cookieDomain.split('.')
       if (
         splitHostname.length < splitCookieDomain.length ||
         splitCookieDomain.length == 0
       ) {
-        continue;
+        continue
       }
 
-      let cookieDomainMatches = true;
+      let cookieDomainMatches = true
       for (let i = 0; i < splitCookieDomain.length; i++) {
-        let splitCookieIndex = splitCookieDomain.length - 1 - i;
-        let splitHostnameIndex = splitHostname.length - 1 - i;
+        let splitCookieIndex = splitCookieDomain.length - 1 - i
+        let splitHostnameIndex = splitHostname.length - 1 - i
         if (
           splitCookieDomain[splitCookieIndex] !=
           splitHostname[splitHostnameIndex]
         ) {
-          cookieDomainMatches = false;
-          break;
+          cookieDomainMatches = false
+          break
         }
       }
 
       if (!cookieDomainMatches) {
-        continue;
+        continue
       }
 
-      const cookiePath = this.cookieSanitizedPath(cookie);
-      const splitCookiePath = cookiePath.split("/");
-      splitCookiePath.shift();
+      const cookiePath = this.cookieSanitizedPath(cookie)
+      const splitCookiePath = cookiePath.split('/')
+      splitCookiePath.shift()
 
-      let pathMatches = 0;
+      let pathMatches = 0
       if (pathname === cookiePath) {
-        pathMatches = Number.MAX_SAFE_INTEGER;
-      } else if (splitCookiePath.length === 0 || cookiePath === "/") {
-        pathMatches = 1;
+        pathMatches = Number.MAX_SAFE_INTEGER
+      } else if (splitCookiePath.length === 0 || cookiePath === '/') {
+        pathMatches = 1
       } else if (
         pathname.startsWith(cookiePath) &&
         splitUrlPath.length >= splitCookiePath.length
       ) {
         for (let i = 0; i < splitCookiePath.length; i++) {
           if (splitCookiePath[i] === splitUrlPath[i]) {
-            pathMatches += 1;
+            pathMatches += 1
           } else {
-            break;
+            break
           }
         }
       }
 
       if (pathMatches <= 0) {
-        continue;
+        continue
       }
 
       if ((matchedCookies[cookie.name]?.pathMatches ?? 0) < pathMatches) {
-        matchedCookies[cookie.name] = { cookie, pathMatches };
+        matchedCookies[cookie.name] = { cookie, pathMatches }
       }
     }
 
-    return Object.values(matchedCookies).map((x) => x.cookie);
+    return Object.values(matchedCookies).map((x) => x.cookie)
   }
 
   private cookieIdentifier(cookie: Cookie): string {
     return `${cookie.name}-${this.cookieSanitizedDomain(
       cookie
-    )}-${this.cookieSanitizedPath(cookie)}`;
+    )}-${this.cookieSanitizedPath(cookie)}`
   }
 
   private cookieSanitizedPath(cookie: Cookie): string {
-    return cookie.path?.startsWith("/")
+    return cookie.path?.startsWith('/')
       ? cookie.path
-      : "/" + (cookie.path ?? "");
+      : '/' + (cookie.path ?? '')
   }
 
   private cookieSanitizedDomain(cookie: Cookie): string {
-    return cookie.domain.replace(/^(www)?\.?/gi, "").toLowerCase();
+    return cookie.domain.replace(/^(www)?\.?/gi, '').toLowerCase()
   }
 
   private isCookieExpired(cookie: Cookie): boolean {
     if (cookie.expires && cookie.expires.getTime() <= Date.now()) {
-      return true;
+      return true
     } else {
-      return false;
+      return false
     }
   }
 
   private loadCookiesFromStorage() {
     // If this stores in memory, we probably already have the latest cookies
-    if (this.options.storage == "memory") return;
+    if (this.options.storage == 'memory') return
 
     const cookieData = Application.getState(cookieStateKey) as
       | Cookie[]
-      | undefined;
+      | undefined
     if (!cookieData) {
-      this._cookies = {};
-      return;
+      this._cookies = {}
+      return
     }
 
-    const cookies: Record<string, Cookie> = {};
+    const cookies: Record<string, Cookie> = {}
     for (const cookie of cookieData) {
       // ignore session cookies and expired cookies
-      if (!cookie.expires || this.isCookieExpired(cookie)) continue;
+      if (!cookie.expires || this.isCookieExpired(cookie)) continue
 
-      cookies[this.cookieIdentifier(cookie)] = cookie;
+      cookies[this.cookieIdentifier(cookie)] = cookie
     }
 
-    this._cookies = cookies;
+    this._cookies = cookies
   }
 
   private saveCookiesToStorage() {
     // If this stores in memory, we probably already have the latest cookies
-    if (this.options.storage == "memory") return;
+    if (this.options.storage == 'memory') return
 
     // TODO: handle secure cookies differently maybe?
     Application.setState(
       this.cookies.filter((x) => x.expires),
       cookieStateKey
-    );
+    )
   }
 }
 

@@ -1,5 +1,5 @@
-import type { Form } from "../SettingsUI/Form.js"
+import type { Form } from '../SettingsUI/Form.js'
 
 export interface SettingsFormProviding {
-  getSettingsForm(): Promise<Form>;
+  getSettingsForm(): Promise<Form>
 }

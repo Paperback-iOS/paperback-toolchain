@@ -1,18 +1,18 @@
-import type { Chapter } from "../../Chapter.js";
-import type { ChapterDetails } from "../../ChapterDetails.js";
-import type { SourceManga } from "../../SourceManga.js";
-import type { MangaProviding } from "./MangaProviding.js";
+import type { Chapter } from '../../Chapter.js'
+import type { ChapterDetails } from '../../ChapterDetails.js'
+import type { SourceManga } from '../../SourceManga.js'
+import type { MangaProviding } from './MangaProviding.js'
 
 export interface ChapterProviding extends MangaProviding {
   /**
    * @param sourceManga The sourceManga for which the chapters should be fetched
    */
-  getChapters(sourceManga: SourceManga, sinceDate?: Date): Promise<Chapter[]>;
+  getChapters(sourceManga: SourceManga, sinceDate?: Date): Promise<Chapter[]>
 
   /**
    * @param chapter The chapter listing for which the details should be fetched
    */
-  getChapterDetails(chapter: Chapter): Promise<ChapterDetails>;
+  getChapterDetails(chapter: Chapter): Promise<ChapterDetails>
 
   /**
    * Implement this ONLY if the source can determine, in bulk, which title has been updated
@@ -23,18 +23,18 @@ export interface ChapterProviding extends MangaProviding {
    */
   processTitlesForUpdates?(
     updateManager: UpdateManager,
-    lastUpdateDate?: Date,
-  ): Promise<void>;
+    lastUpdateDate?: Date
+  ): Promise<void>
 }
 
 export interface UpdateManager {
-  getQueuedItems(): SourceManga[];
+  getQueuedItems(): SourceManga[]
   setUpdatePriority(
     mangaId: string,
-    updatePriority: "high" | "low" | "skip",
-  ): Promise<void>;
+    updatePriority: 'high' | 'low' | 'skip'
+  ): Promise<void>
 
-  getNumberOfChapters(mangaId: string): Promise<number>;
+  getNumberOfChapters(mangaId: string): Promise<number>
 
   /**
    * This can potentially be a really expensive call, only perform this when you know you'll be saving many requests.
@@ -43,7 +43,7 @@ export interface UpdateManager {
    *
    * A potential use-case for this method is determining what the sort-index is for the new chapters
    */
-  getChapters(mangaId: string): Promise<Chapter[]>;
+  getChapters(mangaId: string): Promise<Chapter[]>
 
   /**
    * Provide new chapters for the given manga upfront, skipping its `getChapters` call.
@@ -54,6 +54,6 @@ export interface UpdateManager {
    */
   setNewChapters(
     mangaId: string,
-    chapters: Chapter[] | undefined,
-  ): Promise<void>;
+    chapters: Chapter[] | undefined
+  ): Promise<void>
 }

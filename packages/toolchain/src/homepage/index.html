@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta name="robots" content="noindex" />
@@ -29,7 +29,8 @@
         <div
           class="absolute w-28 h-28 md:w-40 md:h-40 -top-4 left-1/2 -translate-x-1/2 rounded-full"
           style="
-            background: radial-gradient(
+            background:
+              radial-gradient(
                 circle at 30% 30%,
                 rgba(84, 120, 219, 0.4) 0%,
                 transparent 70%
@@ -343,17 +344,17 @@
   </body>
 
   <script>
-    document.addEventListener("alpine:init", () => {
-      Alpine.data("repositoryData", () => ({
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('repositoryData', () => ({
         baseUrl: window.location
           .toString()
-          .replace("index.html", "")
-          .replace(/\/$/, ""),
+          .replace('index.html', '')
+          .replace(/\/$/, ''),
         repository: null,
         sources: [],
         selectedSources: new Set(),
         buildInfo: null,
-        searchTerm: "",
+        searchTerm: '',
         selectedBadges: [],
         availableBadges: [],
         error: null,
@@ -367,7 +368,7 @@
                 .includes(this.searchTerm.toLowerCase()) ||
               source.description
                 .toLowerCase()
-                .includes(this.searchTerm.toLowerCase());
+                .includes(this.searchTerm.toLowerCase())
 
             // Badge filter
             const matchesBadges =
@@ -376,14 +377,14 @@
                 source.badges?.some(
                   (badge) => badge.label === selectedBadge.label
                 )
-              );
+              )
 
-            return matchesSearch && matchesBadges;
-          });
+            return matchesSearch && matchesBadges
+          })
         },
 
         getCapabilityBadges(capabilities) {
-          const badges = [];
+          const badges = []
           const intents = {
             MANGA_CHAPTERS: 1,
             MANGA_PROGRESS: 2,
@@ -392,65 +393,65 @@
             CLOUDFLARE_BYPASS: 16,
             SETTINGS_UI: 32,
             MANGA_SEARCH: 64,
-          };
+          }
 
           // Show badges for capabilities that can be user-facing
           const capabilityLabels = {
             MANGA_CHAPTERS: {
-              label: "Content Provider",
-              textColor: "#FFFFFF",
-              backgroundColor: "#4A90E2",
-              type: "capability",
+              label: 'Content Provider',
+              textColor: '#FFFFFF',
+              backgroundColor: '#4A90E2',
+              type: 'capability',
             },
             MANGA_PROGRESS: {
-              label: "Tracker",
-              textColor: "#FFFFFF",
-              backgroundColor: "#50C878",
-              type: "capability",
+              label: 'Tracker',
+              textColor: '#FFFFFF',
+              backgroundColor: '#50C878',
+              type: 'capability',
             },
             COLLECTION_MANAGEMENT: {
-              label: "Collections Manager",
-              textColor: "#FFFFFF",
-              backgroundColor: "#E67E22",
-              type: "capability",
+              label: 'Collections Manager',
+              textColor: '#FFFFFF',
+              backgroundColor: '#E67E22',
+              type: 'capability',
             },
             CLOUDFLARE_BYPASS: {
-              label: "Cloudflare",
-              textColor: "#FFFFFF",
-              backgroundColor: "#E74C3C",
-              type: "capability",
+              label: 'Cloudflare',
+              textColor: '#FFFFFF',
+              backgroundColor: '#E74C3C',
+              type: 'capability',
             },
-          };
+          }
 
           // Handle both bit string and array formats
           const capabilityValues = Array.isArray(capabilities)
             ? capabilities
             : Object.entries(intents)
                 .filter(([_, value]) => (capabilities & value) === value)
-                .map(([_, value]) => value);
+                .map(([_, value]) => value)
 
           for (const [key, value] of Object.entries(intents)) {
             if (capabilityValues.includes(value) && capabilityLabels[key]) {
-              badges.push(capabilityLabels[key]);
+              badges.push(capabilityLabels[key])
             }
           }
 
-          return badges;
+          return badges
         },
 
         async initialize() {
           try {
-            this.error = null;
-            const response = await fetch(`${this.baseUrl}/versioning.json`);
+            this.error = null
+            const response = await fetch(`${this.baseUrl}/versioning.json`)
 
             if (!response.ok) {
               throw new Error(
                 `Failed to load repository data (${response.status})`
-              );
+              )
             }
 
-            const json = await response.json();
-            this.repository = json.repository;
+            const json = await response.json()
+            this.repository = json.repository
 
             // Add capability badges to sources
             this.sources = json.sources.map((source) => ({
@@ -459,99 +460,99 @@
                 ...this.getCapabilityBadges(source.capabilities),
                 ...(source.badges || []),
               ],
-            }));
+            }))
 
             this.buildInfo = {
               buildTime: json.buildTime,
               builtWith: json.builtWith,
-            };
-            document.title = this.repository.name;
+            }
+            document.title = this.repository.name
 
             // Collect unique badges from all sources by label
-            const badgeMap = new Map();
+            const badgeMap = new Map()
             this.sources.forEach((source) => {
               source.badges?.forEach((badge) => {
                 // If we already have a badge with this label, use the first occurrence
                 if (!badgeMap.has(badge.label)) {
-                  badgeMap.set(badge.label, badge);
+                  badgeMap.set(badge.label, badge)
                 }
-              });
-            });
-            this.availableBadges = Array.from(badgeMap.values());
+              })
+            })
+            this.availableBadges = Array.from(badgeMap.values())
           } catch (err) {
-            console.error("Error initializing repository data:", err);
-            this.error = err.message || "Failed to load repository data";
+            console.error('Error initializing repository data:', err)
+            this.error = err.message || 'Failed to load repository data'
           }
         },
 
         resetFilters() {
-          this.searchTerm = "";
-          this.selectedBadges = [];
+          this.searchTerm = ''
+          this.selectedBadges = []
         },
 
         toggleBadgeFilter(badge) {
           const index = this.selectedBadges.findIndex(
             (b) => b.label === badge.label
-          );
+          )
           if (index === -1) {
-            this.selectedBadges.push(badge);
+            this.selectedBadges.push(badge)
           } else {
-            this.selectedBadges.splice(index, 1);
+            this.selectedBadges.splice(index, 1)
           }
         },
 
         getContentRatingClass(rating) {
           const classes = {
-            MATURE: "bg-yellow-500 text-yellow-900",
-            ADULT: "bg-red-500 text-red-100",
-            SAFE: "bg-green-500 text-green-100",
-          };
-          return classes[rating.toUpperCase()] || "bg-gray-500 text-gray-100";
+            MATURE: 'bg-yellow-500 text-yellow-900',
+            ADULT: 'bg-red-500 text-red-100',
+            SAFE: 'bg-green-500 text-green-100',
+          }
+          return classes[rating.toUpperCase()] || 'bg-gray-500 text-gray-100'
         },
 
         toggleSource(sourceId) {
           if (this.selectedSources.has(sourceId)) {
-            this.selectedSources.delete(sourceId);
+            this.selectedSources.delete(sourceId)
           } else {
-            this.selectedSources.add(sourceId);
+            this.selectedSources.add(sourceId)
           }
         },
 
         installSelectedSources() {
           if (this.selectedSources.size === 0) {
-            alert("Please select at least one source");
-            return;
+            alert('Please select at least one source')
+            return
           }
           const sourcesToInstall = Array.from(this.selectedSources).map(
             (id) => [id, this.baseUrl]
-          );
+          )
           window.location.href = `paperback://installExtensions?data=${btoa(
             JSON.stringify(sourcesToInstall)
-          )}`;
+          )}`
         },
 
         addToPaperback() {
           if (!this.repository) {
-            alert("Versioning info is not loaded");
-            return;
+            alert('Versioning info is not loaded')
+            return
           }
           window.location.href = `paperback://addRepo?displayName=${encodeURI(
             this.repository.name
-          )}&url=${encodeURI(this.baseUrl)}`;
+          )}&url=${encodeURI(this.baseUrl)}`
         },
 
         sortBadges(badges) {
           return [...badges].sort((a, b) => {
             const aSelected = this.selectedBadges.some(
               (s) => s.label === a.label
-            );
+            )
             const bSelected = this.selectedBadges.some(
               (s) => s.label === b.label
-            );
-            return bSelected - aSelected;
-          });
+            )
+            return bSelected - aSelected
+          })
         },
-      }));
-    });
+      }))
+    })
   </script>
 </html>

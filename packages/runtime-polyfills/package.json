@@ -12,7 +12,8 @@
   "author": "Faizan Durrani",
   "license": "ISC",
   "devDependencies": {
-    "@paperback/types": "*"
+    "@paperback/types": "*",
+    "entities": "^6.0.1"
   },
   "publishConfig": {
     "access": "public"

@@ -1,21 +1,21 @@
-import type { ContentRating } from "./SourceInfo.js"
-import type { TagSection } from "./TagSection.js"
+import type { ContentRating } from './SourceInfo.js'
+import type { TagSection } from './TagSection.js'
 
 export interface MangaInfo {
-  thumbnailUrl: string;
-  synopsis: string;
-  primaryTitle: string;
-  secondaryTitles: string[];
-  contentRating: ContentRating;
+  thumbnailUrl: string
+  synopsis: string
+  primaryTitle: string
+  secondaryTitles: string[]
+  contentRating: ContentRating
 
-  status?: string;
-  artist?: string;
-  author?: string;
-  bannerUrl?: string;
-  rating?: number;
-  tagGroups?: TagSection[];
-  artworkUrls?: string[];
-  additionalInfo?: Record<string, string>;
+  status?: string
+  artist?: string
+  author?: string
+  bannerUrl?: string
+  rating?: number
+  tagGroups?: TagSection[]
+  artworkUrls?: string[]
+  additionalInfo?: Record<string, string>
 
-  shareUrl?: string;
+  shareUrl?: string
 }

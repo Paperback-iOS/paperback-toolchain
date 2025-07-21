@@ -1,10 +1,10 @@
-import type { Chapter } from "./Chapter.js";
-import type { SourceManga } from "./SourceManga.js";
+import type { Chapter } from './Chapter.js'
+import type { SourceManga } from './SourceManga.js'
 
 export interface MangaProgress {
-  sourceManga: SourceManga;
-  lastReadChapter: Chapter;
+  sourceManga: SourceManga
+  lastReadChapter: Chapter
 
-  lastReadTime?: Date;
-  userRating?: number;
+  lastReadTime?: Date
+  userRating?: number
 }

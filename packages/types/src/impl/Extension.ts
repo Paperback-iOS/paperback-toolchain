@@ -1,3 +1,3 @@
 export interface Extension {
-  initialise(): Promise<void>;
+  initialise(): Promise<void>
 }

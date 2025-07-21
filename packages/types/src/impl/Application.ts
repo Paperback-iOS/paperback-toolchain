@@ -1,36 +1,23 @@
-import type { DiscoverSectionItem } from "../DiscoverSectionItem.js";
-import type { DiscoverSection } from "../HomeSection.js";
-import type { PagedResults } from "../PagedResults.js";
-import type { SearchFilter } from "../SearchFilter.js";
-import type { Request } from "../Request.js";
-import type { Response } from "../Response.js";
-import type { Cookie } from "../Cookie.js";
-
-export {};
-
-type RequestInterceptor = (request: Request) => Promise<Request>;
-type ResponseInterceptor = (
-  request: Request,
-  response: Response,
-  data: ArrayBuffer,
-) => Promise<ArrayBuffer>;
-
-/**
- * @param proposedRequest The `Request` to the new location specified by the redirect response.
- * @param redirectedResponse The `Response` containing the server's response to the original request.
- * @returns Return the proposed request or a modified request to follow the redirect, or undefined to cancel the redirect
- */
-type RedirectHandler = (
-  proposedRequest: Request,
-  redirectedResponse: Response,
-) => Promise<Request | undefined>;
+import type { DiscoverSectionItem } from '../DiscoverSectionItem.js'
+import type { DiscoverSection } from '../HomeSection.js'
+import type { PagedResults } from '../PagedResults.js'
+import type { SearchFilter } from '../SearchFilter.js'
+import type {
+  Request,
+  RequestInterceptor,
+  RedirectHandler,
+} from '../Request.js'
+import type { Response, ResponseInterceptor } from '../Response.js'
+import type { Cookie } from '../Cookie.js'
+import type { SelectorID } from './Selector.js'
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Application {
     // Global
-    const isResourceLimited: boolean;
-    function decodeHTMLEntities(str: string): string;
-    function sleep(seconds: number): Promise<void>;
+    const isResourceLimited: boolean
+    function decodeHTMLEntities(str: string): string
+    function sleep(seconds: number): Promise<void>
 
     // Discover Section
     /**
@@ -43,34 +30,32 @@ declare global {
       selector?: SelectorID<
         (
           section: DiscoverSection,
-          metadata: any | undefined,
+          metadata: unknown | undefined
         ) => Promise<PagedResults<DiscoverSectionItem>>
-      >,
-    ): void;
-    function unregisterDiscoverSection(sectionId: string): void;
-    function registeredDiscoverSections(): DiscoverSection[];
+      >
+    ): void
+    function unregisterDiscoverSection(sectionId: string): void
+    function registeredDiscoverSections(): DiscoverSection[]
     /** Invalidate discover section cache (removes all discover sections) */
-    function invalidateDiscoverSections(): void;
+    function invalidateDiscoverSections(): void
 
     // Request Manager
     function registerInterceptor(
       interceptorId: string,
       interceptRequestSelectorId: SelectorID<RequestInterceptor>,
-      interceptResponseSelectorId: SelectorID<ResponseInterceptor>,
-    ): void;
-    function unregisterInterceptor(interceptorId: string): void;
+      interceptResponseSelectorId: SelectorID<ResponseInterceptor>
+    ): void
+    function unregisterInterceptor(interceptorId: string): void
     function setRedirectHandler(
-      redirectHandlerSelectorId: SelectorID<RedirectHandler>,
-    ): void;
-    function getDefaultUserAgent(): Promise<string>;
-    function scheduleRequest(
-      request: Request,
-    ): Promise<[Response, ArrayBuffer]>;
+      redirectHandlerSelectorId: SelectorID<RedirectHandler>
+    ): void
+    function getDefaultUserAgent(): Promise<string>
+    function scheduleRequest(request: Request): Promise<[Response, ArrayBuffer]>
 
     // Raw Data
-    function arrayBufferToUTF8String(arrayBuffer: ArrayBuffer): string;
-    function arrayBufferToASCIIString(arrayBuffer: ArrayBuffer): string;
-    function arrayBufferToUTF16String(arrayBuffer: ArrayBuffer): string;
+    function arrayBufferToUTF8String(arrayBuffer: ArrayBuffer): string
+    function arrayBufferToASCIIString(arrayBuffer: ArrayBuffer): string
+    function arrayBufferToUTF16String(arrayBuffer: ArrayBuffer): string
 
     function base64Encode<T extends string | ArrayBuffer>(value: T): T
     function base64Decode<T extends string | ArrayBuffer>(value: T): T
@@ -80,43 +65,43 @@ declare global {
      * @description If search filters are registered using this method the app will not call {@link SearchResultsProviding.getSearchFilters} unless {@link Application.invalidateSearchFilters} is called.
      * @deprecated register search filters in {@link SearchResultsProviding.getSearchFilters} by implementing {@link SearchResultsProviding}
      */
-    function registerSearchFilter(searchFilter: SearchFilter): void;
-    function unregisterSearchFilter(id: string): void;
-    function registeredSearchFilters(): SearchFilter[];
+    function registerSearchFilter(searchFilter: SearchFilter): void
+    function unregisterSearchFilter(id: string): void
+    function registeredSearchFilters(): SearchFilter[]
     /** Invalidate search filter cache (removes all search filters) */
-    function invalidateSearchFilters(): void;
+    function invalidateSearchFilters(): void
 
     // State Manager
-    function getSecureState(key: string): unknown | undefined;
-    function setSecureState(value: unknown, key: string): void;
-    function getState(key: string): unknown | undefined;
-    function setState(value: unknown, key: string): void;
+    function getSecureState(key: string): unknown | undefined
+    function setSecureState(value: unknown, key: string): void
+    function getState(key: string): unknown | undefined
+    function setState(value: unknown, key: string): void
     /**
      * Clears all saved state.
      *
      * *Note: Does not clear secure state.*
      */
-    function resetAllState(): void;
+    function resetAllState(): void
 
     // Webview
     type ExecuteInWebViewContext = {
       source: {
-        html: string;
-        baseUrl: string;
-        loadCSS: boolean;
-        loadImages: boolean;
-      };
-      inject: string;
-      storage: { cookies: Cookie[] };
-    };
+        html: string
+        baseUrl: string
+        loadCSS: boolean
+        loadImages: boolean
+      }
+      inject: string
+      storage: { cookies: Cookie[] }
+    }
 
     type WebViewExecutionResult = {
-      result: unknown;
-      storage: { cookies: Cookie[] };
-    };
+      result: unknown
+      storage: { cookies: Cookie[] }
+    }
 
     function executeInWebView(
-      context: ExecuteInWebViewContext,
-    ): Promise<WebViewExecutionResult>;
+      context: ExecuteInWebViewContext
+    ): Promise<WebViewExecutionResult>
   }
 }

@@ -1,33 +1,36 @@
-import { lock, unlock } from "./Lock.js";
-import { PaperbackInterceptor } from "./PaperbackInterceptor.js";
-import type { Request } from "../Request.js";
-import type { Response } from "../Response.js";
+import { lock, unlock } from './Lock.js'
+import { PaperbackInterceptor } from './PaperbackInterceptor.js'
+import type { Request } from '../Request.js'
+import type { Response } from '../Response.js'
 
 export type BasicRateLimiterOptions = {
-  numberOfRequests: number;
-  bufferInterval: number;
-  ignoreImages: boolean;
-};
+  numberOfRequests: number
+  bufferInterval: number
+  ignoreImages: boolean
+}
 
 export class BasicRateLimiter extends PaperbackInterceptor {
-  private promise?: Promise<void>;
-  private currentRequestsMade: number = 0;
-  private lastReset: number = Date.now();
-  private readonly imageRegex = new RegExp(/\.(png|gif|jpeg|jpg|webp)(\?|$)/i);
+  private promise?: Promise<void>
+  private currentRequestsMade: number = 0
+  private lastReset: number = Date.now()
+  private readonly imageRegex = new RegExp(/\.(png|gif|jpeg|jpg|webp)(\?|$)/i)
 
-  constructor(id: string, readonly options: BasicRateLimiterOptions) {
-    super(id);
+  constructor(
+    id: string,
+    readonly options: BasicRateLimiterOptions
+  ) {
+    super(id)
   }
 
   async interceptRequest(request: Request): Promise<Request> {
     if (this.options.ignoreImages && this.imageRegex.test(request.url)) {
-      return request;
+      return request
     }
 
-    await lock(this.id);
-    await this.incrementRequestCount();
-    unlock(this.id);
-    return request;
+    await lock(this.id)
+    await this.incrementRequestCount()
+    unlock(this.id)
+    return request
   }
 
   async interceptResponse(
@@ -35,28 +38,28 @@ export class BasicRateLimiter extends PaperbackInterceptor {
     response: Response,
     data: ArrayBuffer
   ): Promise<ArrayBuffer> {
-    return data;
+    return data
   }
 
   async incrementRequestCount() {
-    await this.promise;
+    await this.promise
 
-    const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000;
+    const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000
     if (secondsSinceLastReset > this.options.bufferInterval) {
-      this.currentRequestsMade = 0;
-      this.lastReset = Date.now();
+      this.currentRequestsMade = 0
+      this.lastReset = Date.now()
     }
 
-    this.currentRequestsMade += 1;
+    this.currentRequestsMade += 1
 
     if (this.currentRequestsMade >= this.options.numberOfRequests) {
-      const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000;
+      const secondsSinceLastReset = (Date.now() - this.lastReset) / 1000
       if (secondsSinceLastReset <= this.options.bufferInterval) {
-        const sleepTime = this.options.bufferInterval - secondsSinceLastReset;
+        const sleepTime = this.options.bufferInterval - secondsSinceLastReset
         console.log(
           `[BasicRateLimiter] rate limit hit, sleeping for ${sleepTime}`
-        );
-        this.promise = Application.sleep(sleepTime);
+        )
+        this.promise = Application.sleep(sleepTime)
       }
     }
   }

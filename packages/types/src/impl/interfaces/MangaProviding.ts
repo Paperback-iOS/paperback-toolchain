@@ -1,4 +1,4 @@
-import type { SourceManga } from "../../SourceManga.js"
+import type { SourceManga } from '../../SourceManga.js'
 
 export interface MangaProviding {
   /**
@@ -6,5 +6,5 @@ export interface MangaProviding {
    * to grab and populate a {@link MangaInfo} object
    * @param mangaId The ID which this function is expected to grab data for
    */
-  getMangaDetails(mangaId: string): Promise<SourceManga>;
+  getMangaDetails(mangaId: string): Promise<SourceManga>
 }

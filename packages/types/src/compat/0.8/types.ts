@@ -98,7 +98,7 @@ export interface DUINavigationButton extends DUIFormRow {
 declare global {
   namespace App {
     function createDUINavigationButton(
-      info: DUINavigationButton,
+      info: DUINavigationButton
     ): DUINavigationButton
   }
 }
@@ -110,7 +110,7 @@ export interface DUISecureInputField extends DUIFormRow {
 declare global {
   namespace App {
     function createDUISecureInputField(
-      info: DUISecureInputField,
+      info: DUISecureInputField
     ): DUISecureInputField
   }
 }
@@ -260,7 +260,7 @@ export interface PBCanvas {
     sw: number,
     sh: number,
     dx: number,
-    dy: number,
+    dy: number
   ): void
   /*
    * internalName: _encode
@@ -332,13 +332,13 @@ export interface TrackerActionQueue {
    * internalName: _retryChapterReadAction
    */
   retryChapterReadAction(
-    chapterReadAction: TrackedMangaChapterReadAction,
+    chapterReadAction: TrackedMangaChapterReadAction
   ): Promise<void>
   /*
    * internalName: _discardChapterReadAction
    */
   discardChapterReadAction(
-    chapterReadAction: TrackedMangaChapterReadAction,
+    chapterReadAction: TrackedMangaChapterReadAction
   ): Promise<void>
 }
 export interface SourceManga {
@@ -622,11 +622,11 @@ declare global {
     function createLink(info: DUILink): DUILink
     function createMultilineLabel(info: DUIMultilineLabel): DUIMultilineLabel
     function createNavigationButton(
-      info: DUINavigationButton,
+      info: DUINavigationButton
     ): DUINavigationButton
     function createOAuthButton(info: DUIOAuthButton): DUIOAuthButton
     function createSecureInputField(
-      info: DUISecureInputField,
+      info: DUISecureInputField
     ): DUISecureInputField
     function createSelect(info: DUISelect): DUISelect
     function createStepper(info: DUIStepper): DUIStepper
@@ -660,7 +660,7 @@ export abstract class Source
    */
   abstract getChapterDetails(
     mangaId: string,
-    chapterId: string,
+    chapterId: string
   ): Promise<ChapterDetails>
   /**
    * Given a search request, this function should scan through the website's search page and
@@ -673,7 +673,7 @@ export abstract class Source
    */
   abstract getSearchResults(
     query: SearchRequest,
-    metadata: any,
+    metadata: any
   ): Promise<PagedResults>
   /**
    * @deprecated use {@link Source.getSearchResults getSearchResults} instead
@@ -730,7 +730,7 @@ export abstract class Source
    * @param sectionCallback A callback which is run for each independant HomeSection.
    */
   getHomePageSections?(
-    sectionCallback: (section: HomeSection) => void,
+    sectionCallback: (section: HomeSection) => void
   ): Promise<void>
   /**
    * (OPTIONAL METHOD) This function will take a given homepageSectionId and metadata value, and with this information, should return
@@ -744,7 +744,7 @@ export abstract class Source
    */
   getViewMoreItems?(
     homepageSectionId: string,
-    metadata: any,
+    metadata: any
   ): Promise<PagedResults>
 }
 // Many sites use '[x] time ago' - Figured it would be good to handle these cases in general
@@ -1182,7 +1182,7 @@ export interface HomePageSectionsProviding {
    * @param sectionCallback A callback which is run for each independant HomeSection.
    */
   getHomePageSections(
-    sectionCallback: (section: HomeSection) => void,
+    sectionCallback: (section: HomeSection) => void
   ): Promise<void>
   /**
    * This function will take a given homepageSectionId and metadata value, and with this information, should return
@@ -1196,7 +1196,7 @@ export interface HomePageSectionsProviding {
    */
   getViewMoreItems(
     homepageSectionId: string,
-    metadata: any,
+    metadata: any
   ): Promise<PagedResults>
 }
 export interface MangaProgressProviding {
@@ -1221,7 +1221,7 @@ export type Searchable = SearchResultsProviding
 export interface SearchResultsProviding extends MangaProviding {
   getSearchResults(
     query: SearchRequest,
-    metadata: unknown | undefined,
+    metadata: unknown | undefined
   ): Promise<PagedResults>
   getSearchTags?(): Promise<TagSection[]>
   getSearchFields?(): Promise<SearchField[]>
@@ -1294,9 +1294,8 @@ AppCompat.createRequestManager = function (info): RequestManager {
 
       const oldRequest = convert09RequestTo08Request(request)
 
-      const interceptedRequest = await this.legacyInterceptor.interceptRequest(
-        oldRequest,
-      )
+      const interceptedRequest =
+        await this.legacyInterceptor.interceptRequest(oldRequest)
 
       return convert08RequestTo09Request(interceptedRequest)
     }
@@ -1304,7 +1303,7 @@ AppCompat.createRequestManager = function (info): RequestManager {
     override async interceptResponse(
       request: PBRequest,
       response: PBResponse,
-      data: ArrayBuffer,
+      data: ArrayBuffer
     ): Promise<ArrayBuffer> {
       if (!this.legacyInterceptor) return data
       return data

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ButtonRow,
   type Chapter,
@@ -30,6 +32,7 @@ import {
   type SearchResultItem,
   type SearchResultsProviding,
   Section,
+  type SelectorID,
   type SettingsFormProviding,
   type SourceManga,
   ToggleRow,
@@ -64,7 +67,9 @@ class CloudflareInterceptor extends PaperbackInterceptor {
 
   cloudflareRequestProvider: LegacyCloudflareBypassRequestProviding
 
-  constructor(cloudflareRequestProvider: LegacyCloudflareBypassRequestProviding) {
+  constructor(
+    cloudflareRequestProvider: LegacyCloudflareBypassRequestProviding
+  ) {
     super('cloudflareInterceptor')
     this.cloudflareRequestProvider = cloudflareRequestProvider
   }
@@ -76,11 +81,11 @@ class CloudflareInterceptor extends PaperbackInterceptor {
   override async interceptResponse(
     request: Request,
     response: Response,
-    data: ArrayBuffer,
+    data: ArrayBuffer
   ): Promise<ArrayBuffer> {
     // check cloudflare
     const isCloudflare = this.SERVER_CHECK.includes(
-      response.headers['Server'] ?? '',
+      response.headers['Server'] ?? ''
     )
 
     const isError = this.ERROR_CODES.includes(response.status)
@@ -127,7 +132,7 @@ class _CompatWrapper
   async initialise() {
     if ('getCloudflareBypassRequestAsync' in this.legacySource) {
       this.cloudflareInterceptor = new CloudflareInterceptor(
-        this.legacySource as LegacyCloudflareBypassRequestProviding,
+        this.legacySource as LegacyCloudflareBypassRequestProviding
       )
 
       this.cloudflareInterceptor.registerInterceptor()
@@ -166,7 +171,7 @@ class _CompatWrapper
 
   async getDiscoverSectionItems(
     section: DiscoverSection,
-    metadata: unknown | undefined,
+    metadata: unknown | undefined
   ): Promise<PagedResults<DiscoverSectionItem>> {
     const cachedItems = this.homepageItemCache[section.id]
     if (cachedItems) {
@@ -175,7 +180,7 @@ class _CompatWrapper
 
     const result = await this.legacySource.getViewMoreItems?.(
       section.id,
-      metadata,
+      metadata
     )
 
     if (result) {
@@ -238,7 +243,7 @@ class _CompatWrapper
 
   async getSearchResults(
     query: SearchQuery,
-    metadata: unknown | undefined,
+    metadata: unknown | undefined
   ): Promise<PagedResults<SearchResultItem>> {
     const legacyQuery: LegacySearchRequest = {
       title: query.title,
@@ -263,7 +268,7 @@ class _CompatWrapper
 
     const legacyResults = await this.legacySource.getSearchResults(
       legacyQuery,
-      metadata,
+      metadata
     )
 
     return {
@@ -281,10 +286,9 @@ class _CompatWrapper
 
   async getChapters(
     sourceManga: SourceManga,
-    sinceDate?: Date,
   ): Promise<Chapter[]> {
     const legacyChapters = await this.legacySource.getChapters(
-      sourceManga.mangaId,
+      sourceManga.mangaId
     )
 
     return legacyChapters.map((x) => {
@@ -305,13 +309,13 @@ class _CompatWrapper
   async getChapterDetails(chapter: Chapter): Promise<ChapterDetails> {
     return await this.legacySource.getChapterDetails(
       chapter.sourceManga.mangaId,
-      chapter.chapterId,
+      chapter.chapterId
     )
   }
 
   async getSettingsForm(): Promise<Form> {
     if (this.legacySource.getSourceMenu) {
-      let rootSection = await this.legacySource.getSourceMenu()
+      const rootSection = await this.legacySource.getSourceMenu()
       return new _CompatForm({
         async sections() {
           return [rootSection]
@@ -338,7 +342,10 @@ class _CompatSection implements FormSectionElement {
   items: FormItemElement<unknown>[] = []
   proxies: Record<string, any> = {}
 
-  constructor(private form: _CompatForm, private section: DUISection) {
+  constructor(
+    private form: _CompatForm,
+    private section: DUISection
+  ) {
     this.id = section.id
     this.header = section.header
     this.footer = section.footer
@@ -390,7 +397,7 @@ class _CompatSection implements FormSectionElement {
                   onSuccess: this.proxifiedClosureSelector(
                     rowId,
                     button,
-                    'successHandler',
+                    'successHandler'
                   ),
                 })
               }
@@ -402,7 +409,7 @@ class _CompatSection implements FormSectionElement {
                   onSelect: this.proxifiedClosureSelector(
                     rowId,
                     button,
-                    'onTap',
+                    'onTap'
                   ),
                 })
               }
@@ -415,7 +422,7 @@ class _CompatSection implements FormSectionElement {
                   .then((value) => {
                     if (this.bindingValueCache[rowId] !== value) {
                       console.log(
-                        `NEW VALUE BY ${rowId}, ${this.bindingValueCache[rowId]}, ${value}`,
+                        `NEW VALUE BY ${rowId}, ${this.bindingValueCache[rowId]}, ${value}`
                       )
                       this.bindingValueCache[rowId] = value
                       this.reloadRows()
@@ -431,7 +438,7 @@ class _CompatSection implements FormSectionElement {
                   onValueChange: this.proxifiedClosureSelector(
                     rowId,
                     input.value,
-                    'set',
+                    'set'
                   ),
                 })
               }
@@ -452,7 +459,7 @@ class _CompatSection implements FormSectionElement {
                     console.log('NEW VALUE: ' + value)
                     if (this.bindingValueCache[rowId] !== value) {
                       console.log(
-                        `NEW VALUE BY ${rowId}, ${this.bindingValueCache[rowId]}, ${value}`,
+                        `NEW VALUE BY ${rowId}, ${this.bindingValueCache[rowId]}, ${value}`
                       )
                       this.bindingValueCache[rowId] = value
                       this.reloadRows()
@@ -468,7 +475,7 @@ class _CompatSection implements FormSectionElement {
                   onValueChange: this.proxifiedClosureSelector(
                     rowId,
                     toggle.value,
-                    'set',
+                    'set'
                   ),
                 })
               }
@@ -480,7 +487,7 @@ class _CompatSection implements FormSectionElement {
                 })
               }
             }
-          }),
+          })
         )
         this.form.reloadForm()
       })
@@ -492,19 +499,23 @@ class _CompatSection implements FormSectionElement {
   proxifiedClosureSelector<T>(
     id: string,
     obj: any,
-    method: string,
+    method: string
   ): SelectorID<T> {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const form = this
 
     const key = '__proxied_' + method
     this.proxies[id] = Object.defineProperty(obj, key, {
       enumerable: true,
       value: function () {
+        // eslint-disable-next-line prefer-rest-params
         const ret = obj[method](...arguments)
+
+        // eslint-disable-next-line prefer-rest-params
         console.log(`CALLING ${method} WITH ${JSON.stringify(arguments)}`)
 
         if (ret.then) {
-          ret.then((_: any) => form.reloadRows())
+          ret.then(() => form.reloadRows())
         } else {
           form.reloadRows()
         }
@@ -549,7 +560,7 @@ class _CompatForm extends Form {
       this.sections.push(
         ...sections.map((section) => {
           return new _CompatSection(this, section)
-        }),
+        })
       )
 
       this.reloadForm()
@@ -568,35 +579,35 @@ type CompatWrapperInfo = {
 export function CompatWrapper(
   info: CompatWrapperInfo,
   legacySource: Source,
-  newSource: Extension | undefined = undefined,
+  newSource: Extension | undefined = undefined
 ): Extension {
   const wrapper = new _CompatWrapper(legacySource)
 
-  // @ts-ignore
+  // @ts-expect-error proxy shenanigans
   return new Proxy(newSource ?? {}, {
     has(target, p) {
       console.log(`[COMPAT] has CALLED WITH '${p.toString()}'`)
-      // @ts-ignore
+      // @ts-expect-error proxy shenanigans
       return target[p] !== undefined || wrapper[p] !== undefined
     },
-    get(target, p, receiver) {
+    get(target, p) {
       console.log(`[COMPAT] get CALLED WITH '${p.toString()}'`)
 
       if (typeof p === 'string' && p === 'initialise') {
         return async () => {
           await wrapper.initialise()
-          // @ts-ignore
+          // @ts-expect-error proxy shenanigans
           await target[p]?.()
         }
       }
 
-      // @ts-ignore
+      // @ts-expect-error proxy shenanigans
       if (target[p]) {
-        // @ts-ignore
+        // @ts-expect-error proxy shenanigans
         return target[p]
-      } // @ts-ignore
+      } // @ts-expect-error proxy shenanigans
       else if (wrapper[p]) {
-        // @ts-ignore
+        // @ts-expect-error proxy shenanigans
         return wrapper[p]
       }
 
