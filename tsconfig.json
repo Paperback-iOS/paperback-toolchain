@@ -1,17 +1,15 @@
 {
-    "files": [],
-    "exclude": [
-        "node_modules"
-    ],
-    "references": [
-        {
-            "path": "./packages/toolchain/tsconfig.json"
-        },
-        {
-            "path": "./packages/types/tsconfig.json"
-        },
-        {
-            "path": "./packages/runtime-polyfills/tsconfig.json"
-        },
-    ],
+  "files": [],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./packages/toolchain/tsconfig.json"
+    },
+    {
+      "path": "./packages/types/tsconfig.json"
+    },
+    {
+      "path": "./packages/runtime-polyfills/tsconfig.json"
+    }
+  ]
 }

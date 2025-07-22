@@ -1,4 +1,3 @@
-
 /**
  * Internal method to parse a URL string and update the current components.
  *

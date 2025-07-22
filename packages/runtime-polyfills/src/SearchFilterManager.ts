@@ -1,7 +1,4 @@
-
-import type {
-  SearchFilter,
-} from '@paperback/types'
+import type { SearchFilter } from '@paperback/types'
 
 type SearchFilterManager = Pick<
   typeof Application,
@@ -18,9 +15,7 @@ export class MockSearchFilterManager implements SearchFilterManager {
     this._registeredSearchFilters = []
   }
 
-  registerSearchFilter(
-    filter: SearchFilter,
-  ): void {
+  registerSearchFilter(filter: SearchFilter): void {
     this.unregisterSearchFilter(filter.id)
     this._registeredSearchFilters.push(filter)
   }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type SelectorID, type SelectorRegistry } from "@paperback/types"
+import { type SelectorID, type SelectorRegistry } from '@paperback/types'
 
 class SelectorRef {
   private objRef: WeakRef<any>

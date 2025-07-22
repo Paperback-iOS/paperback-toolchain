@@ -102,7 +102,7 @@ export default class Serve extends Command {
     // Close the readline interface before exiting
     rl.close()
     server.stop()
-    
+
     process.exit(0)
   }
 

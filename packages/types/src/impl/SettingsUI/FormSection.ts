@@ -40,17 +40,17 @@ export function Section(
 // }
 
 // function ListSection(id: string, props: ListSectionProps) {
-  // TODO
-  // ListSection('mySection', {
-  //     items: [{ value: 'hello', id: 'world' }],
-  //     allowDeletion: true,
-  //     onRemove: Application.selector(this, 'myItemDidRemove'),
-  //     allowAddition: true,
-  //     onAdd: Application.selector(this, 'myItemDidAdd'),
-  //     rowBuilder: (element) => InputRow('myRow', {
-  //         id: element.id,
-  //         value: element.value,
-  //         placeholder: 'Foo'
-  //     })
-  // })
+// TODO
+// ListSection('mySection', {
+//     items: [{ value: 'hello', id: 'world' }],
+//     allowDeletion: true,
+//     onRemove: Application.selector(this, 'myItemDidRemove'),
+//     allowAddition: true,
+//     onAdd: Application.selector(this, 'myItemDidAdd'),
+//     rowBuilder: (element) => InputRow('myRow', {
+//         id: element.id,
+//         value: element.value,
+//         placeholder: 'Foo'
+//     })
+// })
 // }

@@ -1,4 +1,3 @@
-
 import type {
   DiscoverSection,
   DiscoverSectionItem,
@@ -43,7 +42,8 @@ export class MockDiscoverSectionManager implements DiscoverSectionManager {
   ): void {
     this.unregisterDiscoverSection(section.id)
     this._registeredDiscoverSections.push({
-      section, selector
+      section,
+      selector,
     })
   }
 
@@ -63,6 +63,6 @@ export class MockDiscoverSectionManager implements DiscoverSectionManager {
   }
 
   registeredDiscoverSections(): DiscoverSection[] {
-    return this._registeredDiscoverSections.map(x => x.section)
+    return this._registeredDiscoverSections.map((x) => x.section)
   }
 }

@@ -12,7 +12,9 @@ export function ApplicationPolyfill(): typeof Application {
   const secureStateStorage: Record<string, unknown> = {}
   const selectorRegistry = new MockSelectorRegistry()
   const requestManager = new MockRequestManager(selectorRegistry)
-  const discoverSectionManager = new MockDiscoverSectionManager(selectorRegistry)
+  const discoverSectionManager = new MockDiscoverSectionManager(
+    selectorRegistry
+  )
   const searchFilterManager = new MockSearchFilterManager()
 
   return {
@@ -24,20 +26,39 @@ export function ApplicationPolyfill(): typeof Application {
       })
     },
 
-    registerDiscoverSection: discoverSectionManager.registerDiscoverSection.bind(discoverSectionManager),
-    unregisterDiscoverSection: discoverSectionManager.unregisterDiscoverSection.bind(discoverSectionManager),
-    registeredDiscoverSections: discoverSectionManager.registeredDiscoverSections.bind(discoverSectionManager),
-    invalidateDiscoverSections: discoverSectionManager.invalidateDiscoverSections.bind(discoverSectionManager),
+    registerDiscoverSection:
+      discoverSectionManager.registerDiscoverSection.bind(
+        discoverSectionManager
+      ),
+    unregisterDiscoverSection:
+      discoverSectionManager.unregisterDiscoverSection.bind(
+        discoverSectionManager
+      ),
+    registeredDiscoverSections:
+      discoverSectionManager.registeredDiscoverSections.bind(
+        discoverSectionManager
+      ),
+    invalidateDiscoverSections:
+      discoverSectionManager.invalidateDiscoverSections.bind(
+        discoverSectionManager
+      ),
 
-    registerSearchFilter: searchFilterManager.registerSearchFilter.bind(searchFilterManager),
-    unregisterSearchFilter: searchFilterManager.unregisterSearchFilter.bind(searchFilterManager),
-    registeredSearchFilters: searchFilterManager.registeredSearchFilters.bind(searchFilterManager),
-    invalidateSearchFilters: searchFilterManager.invalidateSearchFilters.bind(searchFilterManager),
+    registerSearchFilter:
+      searchFilterManager.registerSearchFilter.bind(searchFilterManager),
+    unregisterSearchFilter:
+      searchFilterManager.unregisterSearchFilter.bind(searchFilterManager),
+    registeredSearchFilters:
+      searchFilterManager.registeredSearchFilters.bind(searchFilterManager),
+    invalidateSearchFilters:
+      searchFilterManager.invalidateSearchFilters.bind(searchFilterManager),
 
-    registerInterceptor: requestManager.registerInterceptor.bind(requestManager),
-    unregisterInterceptor: requestManager.unregisterInterceptor.bind(requestManager),
+    registerInterceptor:
+      requestManager.registerInterceptor.bind(requestManager),
+    unregisterInterceptor:
+      requestManager.unregisterInterceptor.bind(requestManager),
     setRedirectHandler: requestManager.setRedirectHandler.bind(requestManager),
-    getDefaultUserAgent: requestManager.getDefaultUserAgent.bind(requestManager),
+    getDefaultUserAgent:
+      requestManager.getDefaultUserAgent.bind(requestManager),
     scheduleRequest: requestManager.scheduleRequest.bind(requestManager),
 
     arrayBufferToUTF8String: function (arrayBuffer) {

@@ -1,4 +1,3 @@
-
 import { Command, Flags } from '@oclif/core'
 import { Listr, color } from 'listr2'
 

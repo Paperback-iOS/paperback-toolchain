@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ButtonRow,
@@ -284,9 +283,7 @@ class _CompatWrapper
     }
   }
 
-  async getChapters(
-    sourceManga: SourceManga,
-  ): Promise<Chapter[]> {
+  async getChapters(sourceManga: SourceManga): Promise<Chapter[]> {
     const legacyChapters = await this.legacySource.getChapters(
       sourceManga.mangaId
     )

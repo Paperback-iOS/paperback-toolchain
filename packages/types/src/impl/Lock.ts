@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-dynamic-delete */
 const promises: Record<string, Promise<void> | undefined> = {},
   resolvers: Record<string, (() => void) | undefined> = {}
