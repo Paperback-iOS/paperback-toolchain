@@ -86,10 +86,10 @@ class LogLine$Type extends MessageType<LogLine> {
     options: BinaryReadOptions,
     target?: LogLine
   ): LogLine {
-    let message = target ?? this.create(),
+    const message = target ?? this.create(),
       end = reader.pos + length
     while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag()
+      const [fieldNo, wireType] = reader.tag()
       switch (fieldNo) {
         case /* LogLevel level */ 1:
           message.level = reader.int32()
@@ -109,12 +109,12 @@ class LogLine$Type extends MessageType<LogLine> {
           )
           break
         default:
-          let u = options.readUnknownField
+          const u = options.readUnknownField
           if (u === 'throw')
             throw new globalThis.Error(
               `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
             )
-          let d = reader.skip(wireType)
+          const d = reader.skip(wireType)
           if (u !== false)
             (u === true ? UnknownFieldHandler.onRead : u)(
               this.typeName,
@@ -147,7 +147,7 @@ class LogLine$Type extends MessageType<LogLine> {
         writer.tag(4, WireType.LengthDelimited).fork(),
         options
       ).join()
-    let u = options.writeUnknownFields
+    const u = options.writeUnknownFields
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
         this.typeName,
@@ -178,18 +178,18 @@ class LogFilter$Type extends MessageType<LogFilter> {
     options: BinaryReadOptions,
     target?: LogFilter
   ): LogFilter {
-    let message = target ?? this.create(),
+    const message = target ?? this.create(),
       end = reader.pos + length
     while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag()
+      const [fieldNo, wireType] = reader.tag()
       switch (fieldNo) {
         default:
-          let u = options.readUnknownField
+          const u = options.readUnknownField
           if (u === 'throw')
             throw new globalThis.Error(
               `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
             )
-          let d = reader.skip(wireType)
+          const d = reader.skip(wireType)
           if (u !== false)
             (u === true ? UnknownFieldHandler.onRead : u)(
               this.typeName,
@@ -207,7 +207,7 @@ class LogFilter$Type extends MessageType<LogFilter> {
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    let u = options.writeUnknownFields
+    const u = options.writeUnknownFields
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
         this.typeName,

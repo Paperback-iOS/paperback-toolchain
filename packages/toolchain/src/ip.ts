@@ -5,7 +5,7 @@ import * as os from 'node:os'
  * @returns {string} The IPv4 address or '0.0.0.0' if no public address is found.
  */
 function getLocalIPv4Address(): string[] {
-  let ips: string[] = []
+  const ips: string[] = []
   const interfaces = os.networkInterfaces()
 
   Object.keys(interfaces).forEach((_interface) => {

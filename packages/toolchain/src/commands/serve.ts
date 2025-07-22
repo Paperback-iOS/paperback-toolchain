@@ -102,8 +102,7 @@ export default class Serve extends Command {
     // Close the readline interface before exiting
     rl.close()
     server.stop()
-
-    // eslint-disable-next-line no-process-exit, unicorn/no-process-exit
+    
     process.exit(0)
   }
 

@@ -1,3 +1,4 @@
+
 import { Command, Flags } from '@oclif/core'
 import { Listr, color } from 'listr2'
 
@@ -187,7 +188,7 @@ export default class Bundle extends Command {
           projectInfo.default?.description ??
           'An extension repository for Paperback',
       },
-      sources: [] as any[],
+      sources: [] as unknown[],
     }
 
     for (const file of fs.readdirSync(directoryPath)) {

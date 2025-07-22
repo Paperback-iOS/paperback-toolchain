@@ -137,10 +137,10 @@ class SourceInstallRequest$Type extends MessageType<SourceInstallRequest> {
     options: BinaryReadOptions,
     target?: SourceInstallRequest
   ): SourceInstallRequest {
-    let message = target ?? this.create(),
+    const message = target ?? this.create(),
       end = reader.pos + length
     while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag()
+      const [fieldNo, wireType] = reader.tag()
       switch (fieldNo) {
         case /* string sourceId */ 1:
           message.sourceId = reader.string()
@@ -149,12 +149,12 @@ class SourceInstallRequest$Type extends MessageType<SourceInstallRequest> {
           message.repoBaseUrl = reader.string()
           break
         default:
-          let u = options.readUnknownField
+          const u = options.readUnknownField
           if (u === 'throw')
             throw new globalThis.Error(
               `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
             )
-          let d = reader.skip(wireType)
+          const d = reader.skip(wireType)
           if (u !== false)
             (u === true ? UnknownFieldHandler.onRead : u)(
               this.typeName,
@@ -178,7 +178,7 @@ class SourceInstallRequest$Type extends MessageType<SourceInstallRequest> {
     /* string repoBaseUrl = 2; */
     if (message.repoBaseUrl !== '')
       writer.tag(2, WireType.LengthDelimited).string(message.repoBaseUrl)
-    let u = options.writeUnknownFields
+    const u = options.writeUnknownFields
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
         this.typeName,
@@ -209,18 +209,18 @@ class SourceInstallResponse$Type extends MessageType<SourceInstallResponse> {
     options: BinaryReadOptions,
     target?: SourceInstallResponse
   ): SourceInstallResponse {
-    let message = target ?? this.create(),
+    const message = target ?? this.create(),
       end = reader.pos + length
     while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag()
+      const [fieldNo, wireType] = reader.tag()
       switch (fieldNo) {
         default:
-          let u = options.readUnknownField
+          const u = options.readUnknownField
           if (u === 'throw')
             throw new globalThis.Error(
               `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
             )
-          let d = reader.skip(wireType)
+          const d = reader.skip(wireType)
           if (u !== false)
             (u === true ? UnknownFieldHandler.onRead : u)(
               this.typeName,
@@ -238,7 +238,7 @@ class SourceInstallResponse$Type extends MessageType<SourceInstallResponse> {
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    let u = options.writeUnknownFields
+    const u = options.writeUnknownFields
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
         this.typeName,
@@ -307,10 +307,10 @@ class SearchData$Type extends MessageType<SearchData> {
     options: BinaryReadOptions,
     target?: SearchData
   ): SearchData {
-    let message = target ?? this.create(),
+    const message = target ?? this.create(),
       end = reader.pos + length
     while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag()
+      const [fieldNo, wireType] = reader.tag()
       switch (fieldNo) {
         case /* optional string query */ 1:
           message.query = reader.string()
@@ -328,12 +328,12 @@ class SearchData$Type extends MessageType<SearchData> {
           message.itemId = reader.string()
           break
         default:
-          let u = options.readUnknownField
+          const u = options.readUnknownField
           if (u === 'throw')
             throw new globalThis.Error(
               `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
             )
-          let d = reader.skip(wireType)
+          const d = reader.skip(wireType)
           if (u !== false)
             (u === true ? UnknownFieldHandler.onRead : u)(
               this.typeName,
@@ -366,7 +366,7 @@ class SearchData$Type extends MessageType<SearchData> {
     /* optional string itemId = 5; */
     if (message.itemId !== undefined)
       writer.tag(5, WireType.LengthDelimited).string(message.itemId)
-    let u = options.writeUnknownFields
+    const u = options.writeUnknownFields
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
         this.typeName,
@@ -414,10 +414,10 @@ class TestData$Type extends MessageType<TestData> {
     options: BinaryReadOptions,
     target?: TestData
   ): TestData {
-    let message = target ?? this.create(),
+    const message = target ?? this.create(),
       end = reader.pos + length
     while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag()
+      const [fieldNo, wireType] = reader.tag()
       switch (fieldNo) {
         case /* optional string mangaId */ 1:
           message.mangaId = reader.string()
@@ -442,12 +442,12 @@ class TestData$Type extends MessageType<TestData> {
           )
           break
         default:
-          let u = options.readUnknownField
+          const u = options.readUnknownField
           if (u === 'throw')
             throw new globalThis.Error(
               `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
             )
-          let d = reader.skip(wireType)
+          const d = reader.skip(wireType)
           if (u !== false)
             (u === true ? UnknownFieldHandler.onRead : u)(
               this.typeName,
@@ -485,7 +485,7 @@ class TestData$Type extends MessageType<TestData> {
         writer.tag(4, WireType.LengthDelimited).fork(),
         options
       ).join()
-    let u = options.writeUnknownFields
+    const u = options.writeUnknownFields
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
         this.typeName,
@@ -520,10 +520,10 @@ class SourceTestRequest$Type extends MessageType<SourceTestRequest> {
     options: BinaryReadOptions,
     target?: SourceTestRequest
   ): SourceTestRequest {
-    let message = target ?? this.create(),
+    const message = target ?? this.create(),
       end = reader.pos + length
     while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag()
+      const [fieldNo, wireType] = reader.tag()
       switch (fieldNo) {
         case /* string sourceId */ 1:
           message.sourceId = reader.string()
@@ -537,12 +537,12 @@ class SourceTestRequest$Type extends MessageType<SourceTestRequest> {
           )
           break
         default:
-          let u = options.readUnknownField
+          const u = options.readUnknownField
           if (u === 'throw')
             throw new globalThis.Error(
               `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
             )
-          let d = reader.skip(wireType)
+          const d = reader.skip(wireType)
           if (u !== false)
             (u === true ? UnknownFieldHandler.onRead : u)(
               this.typeName,
@@ -570,7 +570,7 @@ class SourceTestRequest$Type extends MessageType<SourceTestRequest> {
         writer.tag(2, WireType.LengthDelimited).fork(),
         options
       ).join()
-    let u = options.writeUnknownFields
+    const u = options.writeUnknownFields
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
         this.typeName,
@@ -620,10 +620,10 @@ class SourceTestResponse$Type extends MessageType<SourceTestResponse> {
     options: BinaryReadOptions,
     target?: SourceTestResponse
   ): SourceTestResponse {
-    let message = target ?? this.create(),
+    const message = target ?? this.create(),
       end = reader.pos + length
     while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag()
+      const [fieldNo, wireType] = reader.tag()
       switch (fieldNo) {
         case /* string testCase */ 1:
           message.testCase = reader.string()
@@ -635,12 +635,12 @@ class SourceTestResponse$Type extends MessageType<SourceTestResponse> {
           message.failures.push(reader.string())
           break
         default:
-          let u = options.readUnknownField
+          const u = options.readUnknownField
           if (u === 'throw')
             throw new globalThis.Error(
               `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
             )
-          let d = reader.skip(wireType)
+          const d = reader.skip(wireType)
           if (u !== false)
             (u === true ? UnknownFieldHandler.onRead : u)(
               this.typeName,
@@ -667,7 +667,7 @@ class SourceTestResponse$Type extends MessageType<SourceTestResponse> {
     /* repeated string failures = 4; */
     for (let i = 0; i < message.failures.length; i++)
       writer.tag(4, WireType.LengthDelimited).string(message.failures[i])
-    let u = options.writeUnknownFields
+    const u = options.writeUnknownFields
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
         this.typeName,

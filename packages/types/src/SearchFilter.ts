@@ -21,6 +21,7 @@ interface SelectSearchFilter {
   maximum: number | undefined
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface TagSearchFilter {
   type: 'tags'
   id: string

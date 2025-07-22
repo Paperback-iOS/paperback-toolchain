@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-literal-enum-member */
 export enum SourceIntents {
   MANGA_CHAPTERS = 1 << 0,
 

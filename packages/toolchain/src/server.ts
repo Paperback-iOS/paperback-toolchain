@@ -35,7 +35,7 @@ export default class Server {
         }
 
         const extname = String(path.extname(filePath)).toLowerCase()
-        const mimeTypes: any = {
+        const mimeTypes: Record<string, string> = {
           '.css': 'text/css',
           '.eot': 'application/vnd.ms-fontobject',
           '.gif': 'image/gif',

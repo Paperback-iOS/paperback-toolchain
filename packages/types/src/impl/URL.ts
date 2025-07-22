@@ -1,3 +1,4 @@
+
 /**
  * Internal method to parse a URL string and update the current components.
  *
@@ -11,7 +12,7 @@ export function parseURL(url: string): URLComponents {
   // Capture groups:
   //   1: protocol, 2: authority, 3: pathname, 4: query, 5: hash.
   const regex =
-    /^(?:([a-zA-Z][a-zA-Z\d+\-.]*):)?(?:\/\/([^\/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?$/
+    /^(?:([a-zA-Z][a-zA-Z\d+\-.]*):)?(?:\/\/([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?$/
   const match = url.match(regex)
   if (!match) {
     throw new Error('Invalid URL string provided.')
@@ -24,7 +25,7 @@ export function parseURL(url: string): URLComponents {
 
   if (match[2] !== undefined && match[2] !== '') {
     // Parse authority into username, password, hostname, and port.
-    let authority = match[2]
+    const authority = match[2]
     let userInfo = ''
     let hostPort = ''
     const atIndex = authority.indexOf('@')

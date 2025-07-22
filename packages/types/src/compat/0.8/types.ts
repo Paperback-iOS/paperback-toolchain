@@ -1,3 +1,8 @@
+
+/* eslint-disable @typescript-eslint/prefer-literal-enum-member */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-namespace */
 import {
   BasicRateLimiter,
   CookieStorageInterceptor,
@@ -771,7 +776,7 @@ export function convertTime(timeAgo: string): Date {
  * @param obj
  */
 export function urlEncodeObject(obj: { [x: string]: any }): any {
-  let ret: any = {}
+  const ret: any = {}
   for (const entry of Object.entries(obj)) {
     ret[encodeURIComponent(entry[0])] = encodeURIComponent(entry[1])
   }
@@ -1344,7 +1349,7 @@ AppCompat.createRequestManager = function (info): RequestManager {
     },
     requestsPerSecond: info.requestsPerSecond ?? 2,
     requestTimeout: info.requestTimeout ?? 30_000,
-    async schedule(request, retry) {
+    async schedule(request) {
       const finalRequest = convert08RequestTo09Request(request)
 
       console.log('[COMPAT] SCHEDULING REQUEST TO ' + finalRequest.url)

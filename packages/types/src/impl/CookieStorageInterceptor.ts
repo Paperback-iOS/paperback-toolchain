@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-dynamic-delete */
 import type { Cookie } from '../Cookie.js'
 import { PaperbackInterceptor } from './PaperbackInterceptor.js'
 import type { Request } from '../Request.js'
@@ -134,8 +135,8 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
 
       let cookieDomainMatches = true
       for (let i = 0; i < splitCookieDomain.length; i++) {
-        let splitCookieIndex = splitCookieDomain.length - 1 - i
-        let splitHostnameIndex = splitHostname.length - 1 - i
+        const splitCookieIndex = splitCookieDomain.length - 1 - i
+        const splitHostnameIndex = splitHostname.length - 1 - i
         if (
           splitCookieDomain[splitCookieIndex] !=
           splitHostname[splitHostnameIndex]
