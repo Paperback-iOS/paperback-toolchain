@@ -7,47 +7,45 @@ oclif example Hello World CLI
 [![GitHub license](https://img.shields.io/github/license/oclif/hello-world)](https://github.com/oclif/hello-world/blob/main/LICENSE)
 
 <!-- toc -->
-
-- [Usage](#usage)
-- [Commands](#commands)
+* [oclif-hello-world](#oclif-hello-world)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-@paperback/toolchain/1.0.0-alpha.53 darwin-arm64 node-v22.15.1
+@paperback/toolchain/1.0.0-alpha.54 darwin-arm64 node-v22.16.0
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`paperback-cli bundle`](#paperback-cli-bundle)
-- [`paperback-cli help [COMMAND]`](#paperback-cli-help-command)
-- [`paperback-cli logcat [FILE]`](#paperback-cli-logcat-file)
-- [`paperback-cli plugins`](#paperback-cli-plugins)
-- [`paperback-cli plugins add PLUGIN`](#paperback-cli-plugins-add-plugin)
-- [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
-- [`paperback-cli plugins install PLUGIN`](#paperback-cli-plugins-install-plugin)
-- [`paperback-cli plugins link PATH`](#paperback-cli-plugins-link-path)
-- [`paperback-cli plugins remove [PLUGIN]`](#paperback-cli-plugins-remove-plugin)
-- [`paperback-cli plugins reset`](#paperback-cli-plugins-reset)
-- [`paperback-cli plugins uninstall [PLUGIN]`](#paperback-cli-plugins-uninstall-plugin)
-- [`paperback-cli plugins unlink [PLUGIN]`](#paperback-cli-plugins-unlink-plugin)
-- [`paperback-cli plugins update`](#paperback-cli-plugins-update)
-- [`paperback-cli serve`](#paperback-cli-serve)
+* [`paperback-cli bundle`](#paperback-cli-bundle)
+* [`paperback-cli help [COMMAND]`](#paperback-cli-help-command)
+* [`paperback-cli logcat [FILE]`](#paperback-cli-logcat-file)
+* [`paperback-cli plugins`](#paperback-cli-plugins)
+* [`paperback-cli plugins add PLUGIN`](#paperback-cli-plugins-add-plugin)
+* [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
+* [`paperback-cli plugins install PLUGIN`](#paperback-cli-plugins-install-plugin)
+* [`paperback-cli plugins link PATH`](#paperback-cli-plugins-link-path)
+* [`paperback-cli plugins remove [PLUGIN]`](#paperback-cli-plugins-remove-plugin)
+* [`paperback-cli plugins reset`](#paperback-cli-plugins-reset)
+* [`paperback-cli plugins uninstall [PLUGIN]`](#paperback-cli-plugins-uninstall-plugin)
+* [`paperback-cli plugins unlink [PLUGIN]`](#paperback-cli-plugins-unlink-plugin)
+* [`paperback-cli plugins update`](#paperback-cli-plugins-update)
+* [`paperback-cli serve`](#paperback-cli-serve)
+* [`paperback-cli test [EXTENSION]`](#paperback-cli-test-extension)
 
 ## `paperback-cli bundle`
 
@@ -55,18 +53,19 @@ Builds all the sources in the repository and generates a versioning file
 
 ```
 USAGE
-  $ paperback-cli bundle [--folder <value>] [-h] [--debug]
+  $ paperback-cli bundle [--folder <value>] [-h] [--debug] [--tests]
 
 FLAGS
   -h, --help            Show CLI help.
   --debug
       --folder=<value>  Subfolder to output to
+  --tests
 
 DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [dist/commands/bundle.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.53/dist/commands/bundle.js)_
+_See code: [dist/commands/bundle.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.54/dist/commands/bundle.js)_
 
 ## `paperback-cli help [COMMAND]`
 
@@ -110,7 +109,7 @@ EXAMPLES
   $ paperback-cli logcat
 ```
 
-_See code: [dist/commands/logcat.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.53/dist/commands/logcat.js)_
+_See code: [dist/commands/logcat.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.54/dist/commands/logcat.js)_
 
 ## `paperback-cli plugins`
 
@@ -419,6 +418,29 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [dist/commands/serve.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.53/dist/commands/serve.js)_
+_See code: [dist/commands/serve.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.54/dist/commands/serve.js)_
 
+## `paperback-cli test [EXTENSION]`
+
+describe the command here
+
+```
+USAGE
+  $ paperback-cli test [EXTENSION] [--testCase <value>] [--dryRun]
+
+ARGUMENTS
+  EXTENSION  The ID for the extension that should be tested
+
+FLAGS
+  --dryRun            dry run
+  --testCase=<value>  test case
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ paperback-cli test
+```
+
+_See code: [dist/commands/test.js](https://github.com/FaizanDurrani/paperback-toolchain/blob/v1.0.0-alpha.54/dist/commands/test.js)_
 <!-- commandsstop -->
