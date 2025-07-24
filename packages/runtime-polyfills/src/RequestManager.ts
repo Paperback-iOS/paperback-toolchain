@@ -9,6 +9,8 @@ import {
   type SelectorID,
 } from '@paperback/types'
 
+import UserAgent from 'user-agents'
+
 type RequestManager = Pick<
   typeof Application,
   | 'registerInterceptor'
@@ -26,9 +28,12 @@ export class MockRequestManager implements RequestManager {
     interceptResponseSelectorId: SelectorID<ResponseInterceptor>
   }[]
 
+  private userAgent: string
+
   constructor(selectorRegistry: SelectorRegistry) {
     this.selectorRegistry = selectorRegistry
     this.registeredInterceptors = []
+    this.userAgent = new UserAgent({deviceCategory: 'mobile'}).toString()
   }
 
   registerInterceptor(
@@ -59,7 +64,7 @@ export class MockRequestManager implements RequestManager {
   setRedirectHandler(): void {}
 
   async getDefaultUserAgent(): Promise<string> {
-    return ''
+    return this.userAgent
   }
 
   async scheduleRequest(request: Request): Promise<[Response, ArrayBuffer]> {
@@ -110,7 +115,7 @@ export class MockRequestManager implements RequestManager {
         )
         .trim()
     }
-
+    
     const fetchResponse = await fetch(finalRequest.url, {
       method: finalRequest.method,
       body: requestBody,

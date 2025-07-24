@@ -1,26 +1,48 @@
 /* eslint-disable @typescript-eslint/prefer-literal-enum-member */
 export enum SourceIntents {
+  NONE = 0,
+
+  /**
+   * @deprecated use {@link CHAPTER_PROVIDING}
+   */
   MANGA_CHAPTERS = 1 << 0,
+  CHAPTER_PROVIDING = 1 << 0,
 
   /**
-   * @deprecated use {@link MANGA_PROGRESS}
+   * @deprecated use {@link MANGA_PROGRESS_PROVIDING}
    */
-  MANGA_TRACKING = 1 << 1,
   MANGA_PROGRESS = 1 << 1,
+  MANGA_PROGRESS_PROVIDING = 1 << 1,
 
   /**
-   * @deprecated use {@link DISCOVER_SECIONS}
+   * @deprecated use {@link DISCOVER_SECIONS_PROVIDING}
    */
-  HOMEPAGE_SECTIONS = 1 << 2,
   DISCOVER_SECIONS = 1 << 2,
+  DISCOVER_SECIONS_PROVIDING = 1 << 2,
 
+  /**
+   * @deprecated use {@link MANAGED_COLLECTION_PROVIDING}
+   */
   COLLECTION_MANAGEMENT = 1 << 3,
+  MANAGED_COLLECTION_PROVIDING = 1 << 3,
 
+  /**
+   * @deprecated use {@link CLOUDFLARE_BYPASS_PROVIDING}
+   */
   CLOUDFLARE_BYPASS_REQUIRED = 1 << 4,
+  CLOUDFLARE_BYPASS_PROVIDING = 1 << 4,
 
+  /**
+   * @deprecated use {@link SETTINGS_FORM_PROVIDING}
+   */
   SETTINGS_UI = 1 << 5,
+  SETTINGS_FORM_PROVIDING = 1 << 5,
 
+  /**
+   * @deprecated use {@link SEARCH_RESULTS_PROVIDING}
+   */
   MANGA_SEARCH = 1 << 6,
+  SEARCH_RESULTS_PROVIDING = 1 << 6,
 }
 
 export interface SourceDeveloper {
@@ -44,7 +66,12 @@ export enum ContentRating {
   ADULT = 'ADULT',
 }
 
-export interface SourceInfo {
+/**
+ * @deprecated use {@link ExtensionInfo}
+ */
+export type SourceInfo = ExtensionInfo
+
+export interface ExtensionInfo {
   /**
    * Required class variable which denotes the current version of the application.
    * This is what the application uses to determine whether it needs to update it's local

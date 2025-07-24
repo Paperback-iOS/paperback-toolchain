@@ -1,6 +1,7 @@
 import type { Chapter } from '../../Chapter.js'
 import type { ChapterDetails } from '../../ChapterDetails.js'
 import type { SourceManga } from '../../SourceManga.js'
+import { hasPropertiesOf } from './index.js'
 import type { MangaProviding } from './MangaProviding.js'
 
 export interface ChapterProviding extends MangaProviding {
@@ -56,4 +57,13 @@ export interface UpdateManager {
     mangaId: string,
     chapters: Chapter[] | undefined
   ): Promise<void>
+}
+
+export function implementsChapterProviding(
+  extension: MangaProviding
+): extension is ChapterProviding {
+  return hasPropertiesOf<ChapterProviding>(
+    ['getChapters', 'getMangaDetails'],
+    extension
+  )
 }

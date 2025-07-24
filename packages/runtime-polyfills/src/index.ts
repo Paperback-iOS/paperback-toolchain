@@ -1,5 +1,5 @@
 import {} from '@paperback/types'
-import { Selector, MockSelectorRegistry } from './SelectorRegistry.js'
+import { MockSelectorRegistry } from './SelectorRegistry.js'
 import { decodeHTMLStrict } from 'entities'
 import { MockRequestManager } from './RequestManager.js'
 import { MockDiscoverSectionManager } from './DiscoverSectionManager.js'
@@ -135,7 +135,7 @@ export function ApplicationPolyfill(): typeof Application {
 
     isResourceLimited: false,
 
-    Selector,
+    Selector: selectorRegistry.Selector.bind(selectorRegistry),
     SelectorRegistry: selectorRegistry,
   }
 }

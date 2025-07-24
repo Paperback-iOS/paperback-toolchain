@@ -16,9 +16,10 @@ export default class Bundle extends Command {
     }),
     help: Flags.help({ char: 'h' }),
     debug: Flags.boolean(),
+    tests: Flags.boolean(),
   }
 
-  async bundleSources(folder = '', sourcemap = false) {
+  async bundleSources(folder = '', sourcemap = false, tests = false) {
     const cwd = process.cwd()
 
     const srcDir = path.join(cwd, 'src')
@@ -31,31 +32,67 @@ export default class Bundle extends Command {
           // await fs.remove(tmpDir)
           await fs.remove(bundlesDirPath)
 
-          const files = fs
-            .readdirSync(srcDir)
-            .filter(
-              (file) =>
-                fs.existsSync(path.join(srcDir, file, 'pbconfig.ts')) &&
-                fs.existsSync(path.join(srcDir, file, 'main.ts'))
-            )
-            .flatMap((file) => [
-              {
-                in: path.join(srcDir, file, 'main.ts'),
-                out: path.join(file, 'index'),
-              },
-            ])
+          const files: { in: string; out: string }[] = []
+          for (const file of fs.readdirSync(srcDir)) {
+            const pbConfigPath = path.join(srcDir, file, 'pbconfig.ts')
+            const hasPBConfig = fs.existsSync(pbConfigPath)
+
+            const mainFilePath = path.join(srcDir, file, 'main.ts')
+            const hasMainFile = fs.existsSync(mainFilePath)
+
+            if (!hasMainFile || !hasPBConfig) {
+              continue
+            }
+
+            files.push({
+              in: mainFilePath,
+              out: path.join(file, 'index'),
+            })
+
+            if (tests) {
+              const testDir = path.join(srcDir, 'test')
+              if (!fs.existsSync(testDir)) {
+                fs.mkdirSync(testDir)
+              }
+
+              const testFilePath = path.join(testDir, `${file}.ts`)
+              const hasTestFile = fs.existsSync(testFilePath)
+              if (!hasTestFile) {
+                const defaultTestFile = `
+import { TestSuite, registerDefaultTests } from '@paperback/types'
+import { ${file} } from '../${file}/main'
+import sourceInfo from '../${file}/pbconfig'
+
+export async function runTests() {
+  const suite = new TestSuite('${file} tests')
+  registerDefaultTests(suite, ${file}, sourceInfo)
+  
+  await suite.run()
+}
+                `
+
+                fs.writeFileSync(testFilePath, defaultTestFile)
+              }
+
+              files.push({
+                in: testFilePath,
+                out: path.join(file, 'test'),
+              })
+            }
+          }
 
           const result = await esbuild.build({
             bundle: true,
             entryPoints: files,
             format: 'iife',
-            target: 'ios18',
+            target: 'ES2020',
             globalName: 'source',
             metafile: true,
             outdir: bundlesDirPath,
             inject: [path.join(import.meta.dirname, '../shims/buffer.js')],
             minify: !sourcemap,
             sourcemap: sourcemap ? 'inline' : undefined,
+            absWorkingDir: cwd,
           })
 
           fs.writeFileSync(
@@ -216,7 +253,8 @@ export default class Bundle extends Command {
     const tasks = new Listr(
       [
         {
-          task: async () => await this.bundleSources(flags.folder, flags.debug),
+          task: async () =>
+            await this.bundleSources(flags.folder, flags.debug, flags.tests),
           title: 'Bundle Sources',
         },
         {

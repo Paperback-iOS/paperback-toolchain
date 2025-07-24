@@ -41,26 +41,26 @@ export class MockSelectorRegistry implements SelectorRegistry {
   selector<K>(id: SelectorID<K>): K {
     return this.registry[id as string]?.value
   }
-}
 
-export const Selector: typeof Application.Selector = (obj, symbol) => {
-  function relative_uuid() {
-    return `${Date.now()}-${Math.random().toString().slice(2)}`
-  }
-
-  const canonicalId = (function (obj, symbol) {
-    const key = `$__selector_${String(symbol)}`
-    const existingCanonicalId = (obj as any)[key]
-
-    if (existingCanonicalId) {
-      return existingCanonicalId
-    } else {
-      const id = relative_uuid()
-      Object.defineProperty(obj, key, { enumerable: true, value: id })
-      return id
+  Selector: typeof Application.Selector = (obj, symbol) => {
+    function relative_uuid() {
+      return `${Date.now()}-${Math.random().toString().slice(2)}`
     }
-  })(obj, symbol)
 
-  Application.SelectorRegistry.registerSelector(canonicalId, obj, symbol)
-  return canonicalId
+    const canonicalId = (function (obj, symbol) {
+      const key = `$__selector_${String(symbol)}`
+      const existingCanonicalId = (obj as any)[key]
+
+      if (existingCanonicalId) {
+        return existingCanonicalId
+      } else {
+        const id = relative_uuid()
+        Object.defineProperty(obj, key, { enumerable: true, value: id })
+        return id
+      }
+    })(obj, symbol)
+
+    this.registerSelector(canonicalId, obj, symbol)
+    return canonicalId
+  }
 }

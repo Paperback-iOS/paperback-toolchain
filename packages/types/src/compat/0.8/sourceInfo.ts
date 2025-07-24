@@ -9,7 +9,7 @@ import {
   type SourceDeveloper,
   type SourceInfo,
   type SourceIntents,
-} from '../../SourceInfo.js'
+} from '../../impl/SourceInfo.js'
 
 export class SourceInfoWrapper implements SourceInfo {
   version: string
@@ -88,6 +88,7 @@ export class SourceInfoWrapper implements SourceInfo {
       textColor: '#ffffff',
     })
 
+    // @ts-expect-error bitset shenanigans
     this.capabilities = legacySourceInfo.intents ?? []
   }
 }
