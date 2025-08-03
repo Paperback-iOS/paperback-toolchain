@@ -15,7 +15,7 @@
     "@paperback/types": "*",
     "@types/user-agents": "^1.0.4",
     "entities": "^6.0.1",
-    "user-agents": "^1.1.610"
+    "user-agents": "^1.1.620"
   },
   "publishConfig": {
     "access": "public"

@@ -19,9 +19,11 @@ import {
   type FormSectionElement,
   InputRow,
   LabelRow,
+  type LabelRowProps,
   type MangaProviding,
   NavigationRow,
   OAuthButtonRow,
+  type OAuthButtonRowProps,
   type PagedResults,
   PaperbackInterceptor,
   type Request,
@@ -160,7 +162,7 @@ class _CompatWrapper
             subtitle: x.subtitle,
             mangaId: x.mangaId,
             imageUrl: x.image,
-          }
+          } as DiscoverSectionItem
         })
       }
     })
@@ -191,7 +193,7 @@ class _CompatWrapper
             subtitle: x.subtitle,
             mangaId: x.mangaId,
             imageUrl: x.image,
-          }
+          } as DiscoverSectionItem
         }),
         metadata: result.metadata,
       }
@@ -277,7 +279,7 @@ class _CompatWrapper
           title: x.title,
           mangaId: x.mangaId,
           subtitle: x.subtitle,
-        }
+        } as SearchResultItem
       }),
       metadata: legacyResults.metadata,
     }
@@ -344,8 +346,8 @@ class _CompatSection implements FormSectionElement {
     private section: DUISection
   ) {
     this.id = section.id
-    this.header = section.header
-    this.footer = section.footer
+    if (section.header) this.header = section.header
+    if (section.footer) this.footer = section.footer
 
     this.reloadRows()
   }
@@ -370,7 +372,7 @@ class _CompatSection implements FormSectionElement {
                 return LabelRow(rowId, {
                   title: header.title,
                   subtitle: header.subtitle,
-                })
+                } as LabelRowProps)
               }
 
               case 'DUILabel':
@@ -379,7 +381,7 @@ class _CompatSection implements FormSectionElement {
                 return LabelRow(rowId, {
                   title: label.label,
                   subtitle: label.value,
-                })
+                } as LabelRowProps)
               }
 
               case 'DUIOAuthButton': {
@@ -396,7 +398,7 @@ class _CompatSection implements FormSectionElement {
                     button,
                     'successHandler'
                   ),
-                })
+                } as OAuthButtonRowProps)
               }
 
               case 'DUIButton': {

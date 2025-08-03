@@ -18,12 +18,14 @@ export class MockDiscoverSectionManager implements DiscoverSectionManager {
   private selectorRegistry: SelectorRegistry
   private _registeredDiscoverSections: {
     section: DiscoverSection
-    selector?: SelectorID<
-      (
-        section: DiscoverSection,
-        metadata: unknown | undefined
-      ) => Promise<PagedResults<DiscoverSectionItem>>
-    >
+    selector?:
+      | SelectorID<
+          (
+            section: DiscoverSection,
+            metadata: unknown | undefined
+          ) => Promise<PagedResults<DiscoverSectionItem>>
+        >
+      | undefined
   }[]
 
   constructor(selectorRegistry: SelectorRegistry) {
