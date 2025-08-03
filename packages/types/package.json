@@ -16,7 +16,10 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "gitHead": "14158af57f191721407565a300545c36db537a22",
-  "devDependencies": {
+  "dependencies": {
     "chai": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^5.2.2"
   }
 }
