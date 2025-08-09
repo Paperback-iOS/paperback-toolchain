@@ -500,9 +500,6 @@ class _CompatSection implements FormSectionElement {
     obj: any,
     method: string
   ): SelectorID<T> {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const form = this
-
     const key = '__proxied_' + method
     this.proxies[id] = Object.defineProperty(obj, key, {
       enumerable: true,
@@ -514,9 +511,9 @@ class _CompatSection implements FormSectionElement {
         console.log(`CALLING ${method} WITH ${JSON.stringify(arguments)}`)
 
         if (ret.then) {
-          ret.then(() => form.reloadRows())
+          ret.then(() => this.reloadRows())
         } else {
-          form.reloadRows()
+          this.reloadRows()
         }
 
         return ret

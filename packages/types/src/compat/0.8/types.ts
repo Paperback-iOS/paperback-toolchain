@@ -10,7 +10,6 @@ import {
   type Response as PBResponse,
 } from '../../index.js'
 
-// deno-lint-ignore-file no-explicit-any prefer-const ban-ts-comment no-unused-vars require-await
 export interface DUIHeader extends DUIFormRow {
   id: string
   imageUrl: string
@@ -698,8 +697,7 @@ export abstract class Source
    * @deprecated use {@link Source.getSearchTags} instead
    */
   async getTags(): Promise<TagSection[]> {
-    // @ts-ignore
-    return this.getSearchTags?.()
+    return this.getSearchTags?.() ?? []
   }
   supportsTagExclusion?(): Promise<boolean>
   supportsSearchOperators?(): Promise<boolean>
@@ -1369,10 +1367,8 @@ AppCompat.createRequestManager = function (info): RequestManager {
 
 globalThis.App = new Proxy(AppCompat, {
   get(target, p) {
-    // @ts-ignore //
-    if (target[p]) {
-      // @ts-ignore //
-      return target[p]
+    if ((target as any)[p]) {
+      return (target as any)[p]
     }
 
     if (typeof p === 'string' && p.startsWith('create')) {
