@@ -130,11 +130,11 @@ export class URL {
   hostname: string
   path: string
 
-  username?: string | undefined
-  password?: string | undefined
-  port?: string | undefined
+  username?: string
+  password?: string
+  port?: string
   queryItems?: Record<string, string | string[]> | undefined
-  fragment?: string | undefined
+  fragment?: string
 
   /**
    * Creates a new SimpleURL instance.

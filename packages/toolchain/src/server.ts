@@ -9,7 +9,7 @@ import { getLocalIPv4Address } from './ip.js'
 export default class Server {
   port: number
 
-  server?: http.Server | undefined
+  server?: http.Server
 
   constructor(port: number) {
     this.port = port
