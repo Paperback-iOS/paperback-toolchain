@@ -4,7 +4,7 @@ import pc from 'picocolors'
 import fs from 'fs-extra'
 import path from 'path'
 import Bundle from './bundle.js'
-import { type Extension, type ExtensionInfo } from '@paperback/types'
+import { type ExtensionInfo } from '@paperback/types'
 import vm from 'vm'
 import { ApplicationPolyfill } from '@paperback/runtime-polyfills'
 

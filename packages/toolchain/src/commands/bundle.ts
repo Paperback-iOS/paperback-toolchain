@@ -91,8 +91,8 @@ export async function runTests() {
             outdir: bundlesDirPath,
             inject: [path.join(import.meta.dirname, '../shims/buffer.js')],
             minify: !sourcemap,
-            sourcemap: sourcemap ? 'inline' : undefined,
             absWorkingDir: cwd,
+            ...(sourcemap ? { sourcemap: 'inline' } : {}),
           })
 
           fs.writeFileSync(

@@ -9,7 +9,7 @@ import type {
 } from '../Request.js'
 import type { Response, ResponseInterceptor } from '../Response.js'
 import type { Cookie } from '../Cookie.js'
-import type { SelectorID } from './Selector.js'
+import type { SelectorID, SelectorRegistry, KeyOfType } from './Selector.js'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -22,7 +22,8 @@ declare global {
     // Discover Section
     /**
      * @description If sections are registered using this method the app will not call {@link DiscoverSectionProviding.getDiscoverSections} unless {@link Application.invalidateDiscoverSections} is called.
-     * @param selector if provided, the app will call the method, otherwise defaults to {@link DiscoverSectionProviding.getDiscoverSectionItems}
+     * @param section The discover section to register.
+     * @param selector Optional. If provided, the app will call the method, otherwise defaults to {@link DiscoverSectionProviding.getDiscoverSectionItems}
      * @deprecated register sections in {@link DiscoverSectionProviding.getDiscoverSections} by implementing {@link DiscoverSectionProviding}
      */
     function registerDiscoverSection(
@@ -103,5 +104,13 @@ declare global {
     function executeInWebView(
       context: ExecuteInWebViewContext
     ): Promise<WebViewExecutionResult>
+
+    // Selector
+    const SelectorRegistry: SelectorRegistry
+
+    function Selector<T extends object, K>(
+      obj: T,
+      symbol: KeyOfType<T, K>
+    ): SelectorID<K>
   }
 }

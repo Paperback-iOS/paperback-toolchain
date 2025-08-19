@@ -133,7 +133,7 @@ export class URL {
   username?: string
   password?: string
   port?: string
-  queryItems?: Record<string, string | string[]> = {}
+  queryItems?: Record<string, string | string[]> | undefined
   fragment?: string
 
   /**

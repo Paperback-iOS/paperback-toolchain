@@ -18,7 +18,7 @@ export class SourceInfoWrapper implements SourceInfo {
   description: string
   contentRating: ContentRating
   developers: SourceDeveloper[]
-  language?: string | undefined
+  language?: string
   badges: SourceBadge[]
   capabilities: SourceIntents | SourceIntents[]
 
@@ -43,7 +43,9 @@ export class SourceInfoWrapper implements SourceInfo {
     this.developers = [
       {
         name: legacySourceInfo.author,
-        website: legacySourceInfo.authorWebsite,
+        ...(!legacySourceInfo.authorWebsite && {
+          website: legacySourceInfo.authorWebsite,
+        }),
       },
     ]
 
