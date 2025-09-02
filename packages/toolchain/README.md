@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-@paperback/toolchain/1.0.0-alpha.54 darwin-arm64 node-v22.17.1
+@paperback/toolchain/1.0.0-alpha.55 darwin-arm64 node-v22.16.0
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -61,7 +61,7 @@ DESCRIPTION
   Display help for paperback-cli.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.32/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.28/src/commands/help.ts)_
 
 ## `paperback-cli plugins`
 
@@ -84,7 +84,7 @@ EXAMPLES
   $ paperback-cli plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.46/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.38/src/commands/plugins/index.ts)_
 
 ## `paperback-cli plugins add PLUGIN`
 
@@ -158,7 +158,7 @@ EXAMPLES
   $ paperback-cli plugins inspect myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.46/src/commands/plugins/inspect.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.38/src/commands/plugins/inspect.ts)_
 
 ## `paperback-cli plugins install PLUGIN`
 
@@ -207,7 +207,7 @@ EXAMPLES
     $ paperback-cli plugins install someuser/someplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.46/src/commands/plugins/install.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.38/src/commands/plugins/install.ts)_
 
 ## `paperback-cli plugins link PATH`
 
@@ -238,7 +238,7 @@ EXAMPLES
   $ paperback-cli plugins link myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.46/src/commands/plugins/link.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.38/src/commands/plugins/link.ts)_
 
 ## `paperback-cli plugins remove [PLUGIN]`
 
@@ -279,7 +279,7 @@ FLAGS
   --reinstall  Reinstall all plugins after uninstalling.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.46/src/commands/plugins/reset.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.38/src/commands/plugins/reset.ts)_
 
 ## `paperback-cli plugins uninstall [PLUGIN]`
 
@@ -307,7 +307,7 @@ EXAMPLES
   $ paperback-cli plugins uninstall myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.46/src/commands/plugins/uninstall.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.38/src/commands/plugins/uninstall.ts)_
 
 ## `paperback-cli plugins unlink [PLUGIN]`
 
@@ -351,5 +351,5 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.46/src/commands/plugins/update.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.38/src/commands/plugins/update.ts)_
 <!-- commandsstop -->
