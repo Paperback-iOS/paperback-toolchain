@@ -1,4 +1,3 @@
-import {} from '@paperback/types'
 import { MockSelectorRegistry } from './SelectorRegistry.js'
 import { decodeHTMLStrict } from 'entities'
 import { MockRequestManager } from './RequestManager.js'
@@ -134,6 +133,8 @@ export function ApplicationPolyfill(): typeof Application {
     },
 
     isResourceLimited: false,
+    filterAdultTitles: false,
+    filterMatureTitles: false,
 
     Selector: selectorRegistry.Selector.bind(selectorRegistry),
     SelectorRegistry: selectorRegistry,

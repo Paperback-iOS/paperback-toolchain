@@ -21,6 +21,9 @@ export interface ChapterProviding extends MangaProviding {
    * chapter in here
    * @param updateManager the update manager which will be responsible for fetching updates, DO NOT STORE THIS
    * @param lastUpdateDate last time the app successfully fetched updates
+   * 
+   * Notes:
+   * - If your source needs cloudflare bypass throw a {@link CloudflareError} here
    */
   processTitlesForUpdates?(
     updateManager: UpdateManager,
@@ -30,6 +33,7 @@ export interface ChapterProviding extends MangaProviding {
 
 export interface UpdateManager {
   getQueuedItems(): SourceManga[]
+
   setUpdatePriority(
     mangaId: string,
     updatePriority: 'high' | 'low' | 'skip'
@@ -38,6 +42,8 @@ export interface UpdateManager {
   getNumberOfChapters(mangaId: string): Promise<number>
 
   /**
+   * Get all chapters for a title from app db
+   * 
    * This can potentially be a really expensive call, only perform this when you know you'll be saving many requests.
    *
    * In general, avoid doing diffing in the source and let the app handle merging chapters.
@@ -51,7 +57,7 @@ export interface UpdateManager {
    *
    * Note:
    * - if source sets `sortingIndex`, make sure it is set correctly for the new chapters.
-   * - Only use this if it's a more efficient call than `getChapters`
+   * - Only use this if it's a more efficient call than `ChapterProviding.getChapters`
    */
   setNewChapters(
     mangaId: string,

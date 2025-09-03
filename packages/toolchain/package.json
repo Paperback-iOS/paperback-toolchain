@@ -39,17 +39,17 @@
   },
   "files": [
     "/bin",
-    "/dist",
+    "/lib",
     "/oclif.manifest.json"
   ],
   "homepage": "https://github.com/FaizanDurrani/paperback-toolchain",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "name": "@paperback/toolchain",
   "oclif": {
     "bin": "paperback-cli",
     "dirname": "paperback-cli",
-    "commands": "./dist/commands",
+    "commands": "./lib/commands",
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-plugins"
@@ -59,7 +59,7 @@
   "repository": "FaizanDurrani/paperback-toolchain",
   "type": "module",
   "scripts": {
-    "build": "shx rm -rf dist && tsc -b && cp -r src/homepage dist/ && cp -r src/shims dist/",
+    "build": "shx rm -rf lib && tsc -b && cp -r src/homepage lib/ && cp -r src/shims lib/",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "npm run build && oclif manifest && oclif readme",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
@@ -70,7 +70,7 @@
   "keywords": [
     "oclif"
   ],
-  "types": "dist/index.d.ts",
+  "types": "lib/index.d.ts",
   "gitHead": "14158af57f191721407565a300545c36db537a22",
   "ts-node": {
     "esm": true
