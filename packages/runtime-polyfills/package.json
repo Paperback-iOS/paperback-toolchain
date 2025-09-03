@@ -1,6 +1,6 @@
 {
   "name": "@paperback/runtime-polyfills",
-  "version": "1.0.0-alpha.56",
+  "version": "1.0.0-alpha.57",
   "description": "Node runtime polyfills to test Paperback sources",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,7 +13,9 @@
   "license": "ISC",
   "devDependencies": {
     "@paperback/types": "*",
-    "@types/user-agents": "^1.0.4",
+    "@types/user-agents": "^1.0.4"
+  },
+  "dependencies": {
     "entities": "^6.0.1",
     "user-agents": "^1.1.635"
   },
