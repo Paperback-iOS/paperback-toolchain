@@ -8,7 +8,10 @@ import type { SearchResultItem } from '../SearchResultItem.js'
 import type { SortingOption } from '../SortingOption.js'
 import type { SourceManga } from '../SourceManga.js'
 import type { Extension } from './Extension.js'
-import { implementsChapterProviding, type ChapterProviding } from './interfaces/ChapterProviding.js'
+import {
+  implementsChapterProviding,
+  type ChapterProviding,
+} from './interfaces/ChapterProviding.js'
 import type { MangaProviding } from './interfaces/MangaProviding.js'
 import {
   implementsSearchResultsProviding,
@@ -172,16 +175,11 @@ export const registerDefaultTests = function (
     }
   }
 
-
   registerDefaultMangaProvidingSourceTests(suite, extension, testData)
 
   if (sourceCapabilities & SourceIntents.CHAPTER_PROVIDING) {
     if (implementsChapterProviding(extension)) {
-      registerDefaultChapterProvidingSourceTests(
-        suite,
-        extension,
-        testData
-      )
+      registerDefaultChapterProvidingSourceTests(suite, extension, testData)
     } else {
       throw new Error(
         `extension does not implement 'ChapterProviding' but has the 'CHAPTER_PROVIDING' capability`

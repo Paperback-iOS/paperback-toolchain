@@ -1,4 +1,4 @@
-import type { MangaProviding } from "./interfaces/MangaProviding.js"
+import type { MangaProviding } from './interfaces/MangaProviding.js'
 
 interface _Extension {
   initialise(): Promise<void>

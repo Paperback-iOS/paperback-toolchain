@@ -39,7 +39,10 @@ export default class Test extends Command {
     if (args.extension) {
       await new SourceTestRunner(bundlesDir, args.extension).runTests()
     } else {
-      const versioningJson: {sources: (ExtensionInfo & {id: string})[]} = JSON.parse(fs.readFileSync(path.join(bundlesDir, 'versioning.json'), 'utf-8'))
+      const versioningJson: { sources: (ExtensionInfo & { id: string })[] } =
+        JSON.parse(
+          fs.readFileSync(path.join(bundlesDir, 'versioning.json'), 'utf-8')
+        )
       for (const source of versioningJson.sources) {
         await new SourceTestRunner(bundlesDir, source.id).runTests()
       }
@@ -73,9 +76,6 @@ class SourceTestRunner {
       vmContext
     )
 
-    await vm.runInContext(
-      `source.runTests()`,
-      vmContext
-    )
+    await vm.runInContext(`source.runTests()`, vmContext)
   }
 }

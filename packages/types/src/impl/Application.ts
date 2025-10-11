@@ -11,16 +11,15 @@ import type { Response, ResponseInterceptor } from '../Response.js'
 import type { Cookie } from '../Cookie.js'
 import type { SelectorID, SelectorRegistry, KeyOfType } from './Selector.js'
 
-
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Application {
     // Global
     const isResourceLimited: boolean
-    
+
     const filterAdultTitles: boolean
     const filterMatureTitles: boolean
-    
+
     function decodeHTMLEntities(str: string): string
     function sleep(seconds: number): Promise<void>
 

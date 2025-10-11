@@ -207,7 +207,7 @@ export async function runTests() {
       { with: { type: 'json' } }
     )
 
-    let projectInfo;
+    let projectInfo
 
     try {
       projectInfo = await import(path.join(basePath, 'package.json'), {
@@ -219,7 +219,7 @@ export async function runTests() {
           with: { type: 'json' },
         })
       } catch {
-        throw new Error("No package.json or deno.json was found")
+        throw new Error('No package.json or deno.json was found')
       }
     }
 
@@ -230,9 +230,7 @@ export async function runTests() {
         types: commonsInfo.default.version,
       },
       repository: {
-        name:
-          projectInfo.default?.name ??
-          'Paperback Extension Repository',
+        name: projectInfo.default?.name ?? 'Paperback Extension Repository',
         description:
           projectInfo.default?.description ??
           'An extension repository for Paperback',
