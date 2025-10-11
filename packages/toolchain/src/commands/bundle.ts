@@ -206,9 +206,22 @@ export async function runTests() {
       path.join(basePath, 'node_modules/@paperback/types/package.json'),
       { with: { type: 'json' } }
     )
-    const projectInfo = await import(path.join(basePath, 'package.json'), {
-      with: { type: 'json' },
-    })
+
+    let projectInfo;
+
+    try {
+      projectInfo = await import(path.join(basePath, 'package.json'), {
+        with: { type: 'json' },
+      })
+    } catch {
+      try {
+        projectInfo = await import(path.join(basePath, 'deno.json'), {
+          with: { type: 'json' },
+        })
+      } catch {
+        throw new Error("No package.json or deno.json was found")
+      }
+    }
 
     const jsonObject = {
       buildTime: new Date(),
@@ -218,7 +231,7 @@ export async function runTests() {
       },
       repository: {
         name:
-          projectInfo.default?.repositoryName ??
+          projectInfo.default?.name ??
           'Paperback Extension Repository',
         description:
           projectInfo.default?.description ??
