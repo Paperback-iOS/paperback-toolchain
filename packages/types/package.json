@@ -1,25 +1,32 @@
 {
   "name": "@paperback/types",
-  "version": "1.0.0-alpha.57",
-  "description": "TypeScript Types for Paperback",
-  "keywords": [],
+  "description": "TypeScript types to build Paperback extensions",
+  "keywords": [
+    "paperback",
+    "types",
+    "typescript"
+  ],
   "author": "Faizan Durrani",
-  "publishConfig": {
-    "access": "public"
-  },
-  "license": "ISC",
-  "type": "module",
+  "homepage": "https://paperback.moe",
+  "repository": "https://github.com/Paperback-iOS/paperback-toolchain",
+  "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
+  "license": "MIT",
+  "version": "1.0.0-alpha.57",
   "scripts": {
-    "build": "rm -rf lib && tsc",
+    "build": "rm -rf ./lib && tsc",
     "prepack": "npm run build"
   },
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "gitHead": "14158af57f191721407565a300545c36db537a22",
   "dependencies": {
     "chai": "^5.3.1"
   },
   "devDependencies": {
     "@types/chai": "^5.2.2"
-  }
+  },
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "14158af57f191721407565a300545c36db537a22"
 }

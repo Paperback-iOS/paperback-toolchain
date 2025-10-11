@@ -21,7 +21,7 @@ export interface ChapterProviding extends MangaProviding {
    * chapter in here
    * @param updateManager the update manager which will be responsible for fetching updates, DO NOT STORE THIS
    * @param lastUpdateDate last time the app successfully fetched updates
-   * 
+   *
    * Notes:
    * - If your source needs cloudflare bypass throw a {@link CloudflareError} here
    */
@@ -43,7 +43,7 @@ export interface UpdateManager {
 
   /**
    * Get all chapters for a title from app db
-   * 
+   *
    * This can potentially be a really expensive call, only perform this when you know you'll be saving many requests.
    *
    * In general, avoid doing diffing in the source and let the app handle merging chapters.

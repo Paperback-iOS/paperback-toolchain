@@ -1,6 +1,6 @@
 {
-  "name": "paperback-toolchain",
-  "description": "Paperback Toolchain",
+  "name": "paperback-monorepo",
+  "description": "Monorepo for the Paperback toolchain, types and runtime polyfills",
   "private": true,
   "workspaces": [
     "packages/*"
