@@ -1,24 +1,32 @@
 {
   "name": "@paperback/runtime-polyfills",
+  "description": "Node runtime polyfills to test Paperback extensions",
+  "keywords": [
+    "paperback",
+    "runtime",
+    "polyfills"
+  ],
+  "author": "Faizan Durrani",
+  "homepage": "https://paperback.moe",
+  "repository": "https://github.com/Paperback-iOS/paperback-toolchain",
+  "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
+  "license": "MIT",
   "version": "1.0.0-alpha.57",
-  "description": "Node runtime polyfills to test Paperback sources",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "type": "module",
   "scripts": {
     "build": "rm -rf ./lib && npx tsc",
     "prepack": "npm run build"
-  },
-  "author": "Faizan Durrani",
-  "license": "ISC",
-  "devDependencies": {
-    "@paperback/types": "*",
-    "@types/user-agents": "^1.0.4"
   },
   "dependencies": {
     "entities": "^6.0.1",
     "user-agents": "^1.1.635"
   },
+  "devDependencies": {
+    "@paperback/types": "*",
+    "@types/user-agents": "^1.0.4"
+  },
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
