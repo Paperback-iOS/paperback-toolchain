@@ -17,10 +17,10 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "chai": "^5.3.1"
+    "chai": "^6.2.1"
   },
   "devDependencies": {
-    "@types/chai": "^5.2.2"
+    "@types/chai": "^5.2.3"
   },
   "type": "module",
   "main": "./lib/index.js",
