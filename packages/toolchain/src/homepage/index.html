@@ -386,13 +386,13 @@
         getCapabilityBadges(capabilities) {
           const badges = []
           const intents = {
-            MANGA_CHAPTERS: 1,
-            MANGA_PROGRESS: 2,
-            DISCOVER_SECTIONS: 4,
-            COLLECTION_MANAGEMENT: 8,
-            CLOUDFLARE_BYPASS: 16,
-            SETTINGS_UI: 32,
-            MANGA_SEARCH: 64,
+            CHAPTER_PROVIDING: 1,
+            PROGRESS_PROVIDING: 2,
+            DISCOVER_SECTION_PROVIDING: 4,
+            MANAGED_COLLECTION_PROVIDING: 8,
+            CLOUDFLARE_BYPASS_PROVIDING: 16,
+            SETTINGS_FORM_PROVIDING: 32,
+            SEARCH_RESULT_PROVIDING: 64,
           }
 
           // Show badges for capabilities that can be user-facing
