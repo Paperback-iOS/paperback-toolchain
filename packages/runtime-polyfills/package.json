@@ -17,8 +17,8 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "entities": "^6.0.1",
-    "user-agents": "^1.1.635"
+    "entities": "^7.0.0",
+    "user-agents": "^1.1.669"
   },
   "devDependencies": {
     "@paperback/types": "*",

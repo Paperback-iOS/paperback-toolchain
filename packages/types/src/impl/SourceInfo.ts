@@ -9,16 +9,24 @@ export enum SourceIntents {
   CHAPTER_PROVIDING = 1 << 0,
 
   /**
-   * @deprecated use {@link MANGA_PROGRESS_PROVIDING}
+   * @deprecated use {@link PROGRESS_PROVIDING}
    */
   MANGA_PROGRESS = 1 << 1,
+  /**
+   * @deprecated use {@link PROGRESS_PROVIDING}
+   */
   MANGA_PROGRESS_PROVIDING = 1 << 1,
+  PROGRESS_PROVIDING = 1 << 1,
 
   /**
-   * @deprecated use {@link DISCOVER_SECIONS_PROVIDING}
+   * @deprecated use {@link DISCOVER_SECTION_PROVIDING}
    */
   DISCOVER_SECIONS = 1 << 2,
+  /**
+   * @deprecated use {@link DISCOVER_SECTION_PROVIDING}
+   */
   DISCOVER_SECIONS_PROVIDING = 1 << 2,
+  DISCOVER_SECTION_PROVIDING = 1 << 2,
 
   /**
    * @deprecated use {@link MANAGED_COLLECTION_PROVIDING}
@@ -39,10 +47,14 @@ export enum SourceIntents {
   SETTINGS_FORM_PROVIDING = 1 << 5,
 
   /**
-   * @deprecated use {@link SEARCH_RESULTS_PROVIDING}
+   * @deprecated use {@link SEARCH_RESULT_PROVIDING}
    */
   MANGA_SEARCH = 1 << 6,
+  /**
+   * @deprecated use {@link SEARCH_RESULT_PROVIDING}
+   */
   SEARCH_RESULTS_PROVIDING = 1 << 6,
+  SEARCH_RESULT_PROVIDING = 1 << 6,
 }
 
 export interface SourceDeveloper {
