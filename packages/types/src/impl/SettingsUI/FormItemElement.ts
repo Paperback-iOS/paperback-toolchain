@@ -11,7 +11,7 @@ export interface FormItemElement<T> {
 
 type TypedRowElement<T, P> = FormItemElement<T> & P
 
-type LabelRowElement = TypedRowElement<'labelRow', LabelRowProps>
+type LabelRowElement = TypedRowElement<'labelRow', LabelRowProps & {isSelectable: boolean}>
 type OAuthButtonRowElement = TypedRowElement<
   'oauthButtonRow',
   OAuthButtonRowProps
@@ -24,19 +24,16 @@ type InputRowElement = TypedRowElement<'inputRow', InputRowProps>
 type StepperRowElement = TypedRowElement<'stepperRow', StepperRowProps>
 type WebViewRowElement = TypedRowElement<'webViewRow', WebViewRowProps>
 
-type _LabelRowProps = {
+type LabelRowProps = {
   title: string
   subtitle?: string
   value?: string
   isHidden?: boolean
+  onSelect?: SelectorID<() => Promise<void>>
 }
 
-export type LabelRowProps =
-  (_LabelRowProps & { isSelectable: false }) |
-  (_LabelRowProps & { isSelectable: true, onSelect: SelectorID<() => Promise<void>> })
-
 export function LabelRow(id: string, props: LabelRowProps): LabelRowElement {
-  return { ...props, id, type: 'labelRow', isHidden: props.isHidden ?? false }
+  return { ...props, id, type: 'labelRow', isHidden: props.isHidden ?? false, isSelectable: props.onSelect != undefined }
 }
 
 export type InputRowProps = {
