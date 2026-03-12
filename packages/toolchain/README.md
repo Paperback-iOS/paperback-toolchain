@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-@paperback/toolchain/1.0.0-alpha.58 darwin-arm64 node-v24.12.0
+@paperback/toolchain/1.0.0-alpha.59 darwin-arm64 node-v24.12.0
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -31,7 +31,9 @@ USAGE
 # Commands
 
 <!-- commands -->
+* [`paperback-cli bundle`](#paperback-cli-bundle)
 * [`paperback-cli help [COMMAND]`](#paperback-cli-help-command)
+* [`paperback-cli logcat [FILE]`](#paperback-cli-logcat-file)
 * [`paperback-cli plugins`](#paperback-cli-plugins)
 * [`paperback-cli plugins add PLUGIN`](#paperback-cli-plugins-add-plugin)
 * [`paperback-cli plugins:inspect PLUGIN...`](#paperback-cli-pluginsinspect-plugin)
@@ -42,6 +44,28 @@ USAGE
 * [`paperback-cli plugins uninstall [PLUGIN]`](#paperback-cli-plugins-uninstall-plugin)
 * [`paperback-cli plugins unlink [PLUGIN]`](#paperback-cli-plugins-unlink-plugin)
 * [`paperback-cli plugins update`](#paperback-cli-plugins-update)
+* [`paperback-cli serve`](#paperback-cli-serve)
+* [`paperback-cli test [EXTENSION]`](#paperback-cli-test-extension)
+
+## `paperback-cli bundle`
+
+Builds all the sources in the repository and generates a versioning file
+
+```
+USAGE
+  $ paperback-cli bundle [--folder <value>] [-h] [--debug] [--tests]
+
+FLAGS
+  -h, --help            Show CLI help.
+  --debug
+      --folder=<value>  Subfolder to output to
+  --tests
+
+DESCRIPTION
+  Builds all the sources in the repository and generates a versioning file
+```
+
+_See code: [lib/commands/bundle.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.59/lib/commands/bundle.js)_
 
 ## `paperback-cli help [COMMAND]`
 
@@ -62,6 +86,30 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.37/src/commands/help.ts)_
+
+## `paperback-cli logcat [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ paperback-cli logcat [FILE] [--ip <value>] [--port <value>]
+
+ARGUMENTS
+  [FILE]  file to read
+
+FLAGS
+  --ip=<value>    [default: localhost]
+  --port=<value>  [default: 27015]
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ paperback-cli logcat
+```
+
+_See code: [lib/commands/logcat.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.59/lib/commands/logcat.js)_
 
 ## `paperback-cli plugins`
 
@@ -352,4 +400,47 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.58/src/commands/plugins/update.ts)_
+
+## `paperback-cli serve`
+
+Build the sources and start a local server
+
+```
+USAGE
+  $ paperback-cli serve [-h] [-p <value>] [-w]
+
+FLAGS
+  -h, --help          Show CLI help.
+  -p, --port=<value>  [default: 8080]
+  -w, --watch         Watch for file changes and rebuild automatically
+
+DESCRIPTION
+  Build the sources and start a local server
+```
+
+_See code: [lib/commands/serve.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.59/lib/commands/serve.js)_
+
+## `paperback-cli test [EXTENSION]`
+
+describe the command here
+
+```
+USAGE
+  $ paperback-cli test [EXTENSION] [--testCase <value>] [--dryRun]
+
+ARGUMENTS
+  [EXTENSION]  The ID for the extension that should be tested
+
+FLAGS
+  --dryRun            dry run
+  --testCase=<value>  test case
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ paperback-cli test
+```
+
+_See code: [lib/commands/test.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.59/lib/commands/test.js)_
 <!-- commandsstop -->

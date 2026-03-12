@@ -11,7 +11,7 @@
   "repository": "https://github.com/Paperback-iOS/paperback-toolchain",
   "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.58",
+  "version": "1.0.0-alpha.59",
   "scripts": {
     "build": "rm -rf ./lib && npx tsc",
     "prepack": "npm run build"
