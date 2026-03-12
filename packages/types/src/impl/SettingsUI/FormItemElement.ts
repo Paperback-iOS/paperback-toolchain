@@ -24,7 +24,7 @@ type InputRowElement = TypedRowElement<'inputRow', InputRowProps>
 type StepperRowElement = TypedRowElement<'stepperRow', StepperRowProps>
 type WebViewRowElement = TypedRowElement<'webViewRow', WebViewRowProps>
 
-type LabelRowProps = {
+export type LabelRowProps = {
   title: string
   subtitle?: string
   value?: string

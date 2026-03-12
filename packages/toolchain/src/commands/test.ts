@@ -1,5 +1,4 @@
 import { Args, Command, Flags } from '@oclif/core'
-
 import pc from 'picocolors'
 import fs from 'fs-extra'
 import path from 'path'
