@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-@paperback/toolchain/1.0.0-alpha.61 darwin-arm64 node-v24.12.0
+@paperback/toolchain/1.0.0-alpha.62 darwin-arm64 node-v24.12.0
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -65,7 +65,7 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [lib/commands/bundle.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.61/lib/commands/bundle.js)_
+_See code: [lib/commands/bundle.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.62/lib/commands/bundle.js)_
 
 ## `paperback-cli help [COMMAND]`
 
@@ -109,7 +109,7 @@ EXAMPLES
   $ paperback-cli logcat
 ```
 
-_See code: [lib/commands/logcat.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.61/lib/commands/logcat.js)_
+_See code: [lib/commands/logcat.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.62/lib/commands/logcat.js)_
 
 ## `paperback-cli plugins`
 
@@ -418,7 +418,7 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [lib/commands/serve.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.61/lib/commands/serve.js)_
+_See code: [lib/commands/serve.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.62/lib/commands/serve.js)_
 
 ## `paperback-cli test [EXTENSION]`
 
@@ -442,5 +442,5 @@ EXAMPLES
   $ paperback-cli test
 ```
 
-_See code: [lib/commands/test.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.61/lib/commands/test.js)_
+_See code: [lib/commands/test.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.62/lib/commands/test.js)_
 <!-- commandsstop -->
