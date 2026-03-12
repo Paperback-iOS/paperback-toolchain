@@ -11,7 +11,7 @@
   "repository": "https://github.com/Paperback-iOS/paperback-toolchain",
   "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.62",
+  "version": "1.0.0-alpha.63",
   "scripts": {
     "build": "shx rm -rf lib && tsc -b && cp -r src/homepage lib/ && cp -r src/shims lib/",
     "postpack": "shx rm -f oclif.manifest.json",
