@@ -24,12 +24,16 @@ type InputRowElement = TypedRowElement<'inputRow', InputRowProps>
 type StepperRowElement = TypedRowElement<'stepperRow', StepperRowProps>
 type WebViewRowElement = TypedRowElement<'webViewRow', WebViewRowProps>
 
-export type LabelRowProps = {
+type _LabelRowProps = {
   title: string
   subtitle?: string
   value?: string
   isHidden?: boolean
 }
+
+export type LabelRowProps =
+  (_LabelRowProps & { isSelectable: false }) |
+  (_LabelRowProps & { isSelectable: true, onSelect: SelectorID<() => Promise<void>> })
 
 export function LabelRow(id: string, props: LabelRowProps): LabelRowElement {
   return { ...props, id, type: 'labelRow', isHidden: props.isHidden ?? false }
@@ -38,6 +42,7 @@ export function LabelRow(id: string, props: LabelRowProps): LabelRowElement {
 export type InputRowProps = {
   title: string
   value: string
+  isSecureEntry?: boolean
   isHidden?: boolean
   onValueChange: SelectorID<(value: string) => Promise<void>>
 }
@@ -160,20 +165,20 @@ export type OAuthButtonRowProps = {
   >
   authorizeEndpoint: string
   responseType:
-    | {
-        type: 'token'
-      }
-    | {
-        type: 'code'
-        tokenEndpoint: string
-      }
-    | {
-        type: 'pkce'
-        tokenEndpoint: string
-        pkceCodeLength: number
-        pkceCodeMethod: 'S256' | 'plain'
-        formEncodeGrant: boolean
-      }
+  | {
+    type: 'token'
+  }
+  | {
+    type: 'code'
+    tokenEndpoint: string
+  }
+  | {
+    type: 'pkce'
+    tokenEndpoint: string
+    pkceCodeLength: number
+    pkceCodeMethod: 'S256' | 'plain'
+    formEncodeGrant: boolean
+  }
   clientId?: string
   redirectUri?: string
   scopes?: string[]
