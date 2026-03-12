@@ -16,7 +16,6 @@
     "build": "shx rm -rf lib && tsc -b && cp -r src/homepage lib/ && cp -r src/shims lib/",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "npm run build && oclif manifest && oclif readme",
-    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md"
   },
   "dependencies": {
@@ -34,7 +33,6 @@
     "picocolors": "^1.1.1"
   },
   "devDependencies": {
-    "@oclif/test": "^4.1.15",
     "@protobuf-ts/plugin": "^2.11.1",
     "@protobuf-ts/protoc": "^2.11.1",
     "@types/chai": "^5.2.3",
