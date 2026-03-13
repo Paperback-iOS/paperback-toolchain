@@ -18,6 +18,7 @@
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.7.4",
+    "shx": "^0.4.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.2"
   },

@@ -26,7 +26,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "protoc:prepare": "rm -rf ./src/.generated/ && mkdir -p ./src/.generated",
+    "protoc:prepare": "shx rm -rf ./src/.generated/ && shx mkdir -p ./src/.generated",
     "protoc:compile": "protoc --ts_out ./src/.generated --ts_opt client_grpc1,ts_nocheck --proto_path src src/toolchain/logcat/protobuf/*.proto",
     "protoc": "npm run protoc:prepare && npm run protoc:compile",
     "prebuild": "npm run protoc && tsc -p tsconfig.json",
