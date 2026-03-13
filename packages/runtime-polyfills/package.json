@@ -13,7 +13,7 @@
   "license": "MIT",
   "version": "1.0.0-alpha.64",
   "scripts": {
-    "build": "rm -rf ./lib && npx tsc",
+    "build": "shx rm -rf ./lib && npx tsc",
     "prepack": "npm run build"
   },
   "dependencies": {

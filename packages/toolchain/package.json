@@ -13,7 +13,7 @@
   "license": "MIT",
   "version": "1.0.0-alpha.64",
   "scripts": {
-    "build": "shx rm -rf lib && tsc -b && cp -r src/homepage lib/ && cp -r src/shims lib/",
+    "build": "shx rm -rf lib && tsc -b && shx cp -r src/homepage lib/ && shx cp -r src/shims lib/",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "npm run build && oclif manifest && oclif readme",
     "version": "oclif readme && git add README.md"
