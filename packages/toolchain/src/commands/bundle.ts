@@ -203,19 +203,19 @@ export async function runTests() {
       with: { type: 'json' },
     })
     const commonsInfo = await import(
-      path.join(basePath, 'node_modules/@paperback/types/package.json'),
+      `file://${path.join(basePath, 'node_modules/@paperback/types/package.json')}`,
       { with: { type: 'json' } }
     )
 
     let projectInfo
 
     try {
-      projectInfo = await import(path.join(basePath, 'package.json'), {
+      projectInfo = await import(`file://${path.join(basePath, 'package.json')}`, {
         with: { type: 'json' },
       })
     } catch {
       try {
-        projectInfo = await import(path.join(basePath, 'deno.json'), {
+        projectInfo = await import(`file://${path.join(basePath, 'deno.json')}`, {
           with: { type: 'json' },
         })
       } catch {
