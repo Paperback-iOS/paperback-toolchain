@@ -8,23 +8,26 @@
   ],
   "author": "Faizan Durrani",
   "homepage": "https://paperback.moe",
-  "repository": "https://github.com/Paperback-iOS/paperback-toolchain",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Paperback-iOS/paperback-toolchain.git"
+  },
   "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.64",
+  "version": "1.0.0-alpha.67",
   "scripts": {
-    "build": "shx rm -rf lib && tsc -b && cp -r src/homepage lib/ && cp -r src/shims lib/",
-    "postpack": "shx rm -f oclif.manifest.json",
-    "prepack": "npm run build && oclif manifest && oclif readme",
-    "version": "oclif readme && git add README.md"
+    "prepack": "npm run build && npx oclif manifest && npx oclif readme",
+    "build": "rm -rf ./lib && npx tsc -b && cp -r src/homepage lib/ && cp -r src/shims lib/",
+    "postpack": "rm -f ./oclif.manifest.json",
+    "version": "npx oclif readme && git add README.md"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.3",
     "@oclif/core": "^4.8.0",
     "@oclif/plugin-help": "^6.2.36",
     "@oclif/plugin-plugins": "^5.4.54",
-    "@paperback/runtime-polyfills": "*",
-    "@paperback/types": "*",
+    "@paperback/runtime-polyfills": "1.0.0-alpha.67",
+    "@paperback/types": "1.0.0-alpha.67",
     "@protobuf-ts/runtime-rpc": "^2.11.1",
     "buffer": "^6.0.3",
     "esbuild": "^0.27.1",
@@ -50,7 +53,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "paperback-cli": "./bin/run.js"
+    "paperback-cli": "bin/run.js"
   },
   "files": [
     "/bin",

@@ -1,24 +1,36 @@
 import type { SelectorID } from '../Selector.js'
 import type { FormItemElement } from './FormItemElement.js'
 
-export interface FormSectionElement {
+export interface FormSectionElement<T> {
+  type: T
   id: string
   header?: string
   footer?: string
   items: FormItemElement<unknown>[]
 }
 
-export type SectionInfo = {
+export type TagSectionElement = FormSectionElement<'flowSection'>
+export type ListSectionElement = FormSectionElement<'listSection'> & {
+  allowDeletion: boolean
+  allowAddition: boolean
+  allowReorder: boolean
+
+  onReorder?: SelectorID<(srcIndex: number, destIndex: number) => Promise<void>>
+  onDeletion?: SelectorID<(index: number) => Promise<void>>
+  onAddition?: SelectorID<() => Promise<void>> 
+}
+
+export type ListSectionInfo = {
   id: string
   header?: string
   footer?: string
 }
 
 export function Section(
-  params: string | SectionInfo,
+  params: string | ListSectionInfo,
   items: (FormItemElement<unknown> | undefined)[]
-): FormSectionElement {
-  let info: SectionInfo
+): ListSectionElement {
+  let info: ListSectionInfo
   if (typeof params === 'string') {
     info = { id: params }
   } else {
@@ -26,37 +38,60 @@ export function Section(
   }
 
   return {
+    type: 'listSection',
     ...info,
     items: items.filter((x) => x) as FormItemElement<unknown>[],
+    allowAddition: false, allowDeletion: false, allowReorder: false
   }
 }
 
-type ListSectionProps = {
+export type EditSectionInfo = ListSectionInfo & {
   items: (FormItemElement<unknown> | undefined)[]
   
-  allowDeletion: boolean
-  onRemove: SelectorID<() => Promise<void>>
+  allowDeletion?: boolean
+  allowAddition?: boolean
+  allowReorder?: boolean
 
-  allowAddition: boolean
-  onAdd: SelectorID<() => Promise<void>>
-
-  allowReorder: boolean
-  onReorder: SelectorID<() => Promise<void>>
-
-  rowBuilder: (item: unknown) => FormItemElement<unknown>
+  onReorder?: SelectorID<(srcIndex: number, destIndex: number) => Promise<void>>
+  onDeletion?: SelectorID<(index: number) => Promise<void>>
+  onAddition?: SelectorID<() => Promise<void>> 
 }
 
-// function ListSection(id: string, props: ListSectionProps) {
-// ListSection('mySection', {
-//     items: [{ value: 'hello', id: 'world' }],
-//     allowDeletion: true,
-//     onRemove: Application.selector(this, 'myItemDidRemove'),
-//     allowAddition: true,
-//     onAdd: Application.selector(this, 'myItemDidAdd'),
-//     rowBuilder: (element) => InputRow('myRow', {
-//         id: element.id,
-//         value: element.value,
-//         placeholder: 'Foo'
-//     })
-// })
-// }
+export function EditSection(
+  id: string,
+  params: EditSectionInfo,
+): ListSectionElement {
+  return {
+    id, type: 'listSection',
+    header: params.header,
+    footer: params.footer,
+
+    allowAddition: params.onAddition != undefined && !params.allowAddition,
+    allowDeletion: params.onDeletion != undefined && !params.allowDeletion,
+    allowReorder: params.onReorder != undefined && !params.allowReorder,
+
+    onAddition: params.onAddition,
+    onDeletion: params.onDeletion,
+    onReorder: params.onReorder,
+
+    items: params.items.filter((x) => x) as FormItemElement<unknown>[],
+  }
+}
+
+export function FlowSection(
+  params: string | ListSectionInfo,
+  items: (FormItemElement<unknown> | undefined)[]
+): TagSectionElement {
+  let info: ListSectionInfo
+  if (typeof params === 'string') {
+    info = { id: params }
+  } else {
+    info = params
+  }
+
+  return {
+    type: 'flowSection',
+    ...info,
+    items: items.filter((x) => x) as FormItemElement<unknown>[]
+  }
+}

@@ -20,7 +20,7 @@ $ npm install -g @paperback/toolchain
 $ paperback-cli COMMAND
 running command...
 $ paperback-cli (--version)
-@paperback/toolchain/1.0.0-alpha.64 darwin-arm64 node-v24.12.0
+@paperback/toolchain/1.0.0-alpha.67 darwin-arm64 node-v24.12.0
 $ paperback-cli --help [COMMAND]
 USAGE
   $ paperback-cli COMMAND
@@ -65,7 +65,7 @@ DESCRIPTION
   Builds all the sources in the repository and generates a versioning file
 ```
 
-_See code: [lib/commands/bundle.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.64/lib/commands/bundle.js)_
+_See code: [lib/commands/bundle.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.67/lib/commands/bundle.js)_
 
 ## `paperback-cli help [COMMAND]`
 
@@ -85,7 +85,7 @@ DESCRIPTION
   Display help for paperback-cli.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.37/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/6.2.44/src/commands/help.ts)_
 
 ## `paperback-cli logcat [FILE]`
 
@@ -109,7 +109,7 @@ EXAMPLES
   $ paperback-cli logcat
 ```
 
-_See code: [lib/commands/logcat.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.64/lib/commands/logcat.js)_
+_See code: [lib/commands/logcat.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.67/lib/commands/logcat.js)_
 
 ## `paperback-cli plugins`
 
@@ -132,7 +132,7 @@ EXAMPLES
   $ paperback-cli plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.58/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.61/src/commands/plugins/index.ts)_
 
 ## `paperback-cli plugins add PLUGIN`
 
@@ -206,7 +206,7 @@ EXAMPLES
   $ paperback-cli plugins inspect myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.58/src/commands/plugins/inspect.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.61/src/commands/plugins/inspect.ts)_
 
 ## `paperback-cli plugins install PLUGIN`
 
@@ -255,7 +255,7 @@ EXAMPLES
     $ paperback-cli plugins install someuser/someplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.58/src/commands/plugins/install.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.61/src/commands/plugins/install.ts)_
 
 ## `paperback-cli plugins link PATH`
 
@@ -286,7 +286,7 @@ EXAMPLES
   $ paperback-cli plugins link myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.58/src/commands/plugins/link.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.61/src/commands/plugins/link.ts)_
 
 ## `paperback-cli plugins remove [PLUGIN]`
 
@@ -327,7 +327,7 @@ FLAGS
   --reinstall  Reinstall all plugins after uninstalling.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.58/src/commands/plugins/reset.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.61/src/commands/plugins/reset.ts)_
 
 ## `paperback-cli plugins uninstall [PLUGIN]`
 
@@ -355,7 +355,7 @@ EXAMPLES
   $ paperback-cli plugins uninstall myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.58/src/commands/plugins/uninstall.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.61/src/commands/plugins/uninstall.ts)_
 
 ## `paperback-cli plugins unlink [PLUGIN]`
 
@@ -399,7 +399,7 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.58/src/commands/plugins/update.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.61/src/commands/plugins/update.ts)_
 
 ## `paperback-cli serve`
 
@@ -418,7 +418,7 @@ DESCRIPTION
   Build the sources and start a local server
 ```
 
-_See code: [lib/commands/serve.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.64/lib/commands/serve.js)_
+_See code: [lib/commands/serve.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.67/lib/commands/serve.js)_
 
 ## `paperback-cli test [EXTENSION]`
 
@@ -442,5 +442,5 @@ EXAMPLES
   $ paperback-cli test
 ```
 
-_See code: [lib/commands/test.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.64/lib/commands/test.js)_
+_See code: [lib/commands/test.js](https://github.com/Paperback-iOS/paperback-toolchain/blob/v1.0.0-alpha.67/lib/commands/test.js)_
 <!-- commandsstop -->

@@ -8,12 +8,15 @@
   ],
   "author": "Faizan Durrani",
   "homepage": "https://paperback.moe",
-  "repository": "https://github.com/Paperback-iOS/paperback-toolchain",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Paperback-iOS/paperback-toolchain.git"
+  },
   "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.64",
+  "version": "1.0.0-alpha.67",
   "scripts": {
-    "build": "rm -rf ./lib && npx tsc",
+    "build": "rm -rf ./lib && tsc",
     "prepack": "npm run build"
   },
   "dependencies": {
@@ -21,7 +24,7 @@
     "user-agents": "^1.1.669"
   },
   "devDependencies": {
-    "@paperback/types": "*",
+    "@paperback/types": "1.0.0-alpha.67",
     "@types/user-agents": "^1.0.4"
   },
   "type": "module",

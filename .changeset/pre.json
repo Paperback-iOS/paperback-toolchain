@@ -1,0 +1,14 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@paperback/runtime-polyfills": "1.0.0-alpha.64",
+    "@paperback/toolchain": "1.0.0-alpha.64",
+    "@paperback/types": "1.0.0-alpha.64"
+  },
+  "changesets": [
+    "fast-rings-admire",
+    "loose-poets-sort",
+    "lucky-eagles-agree"
+  ]
+}

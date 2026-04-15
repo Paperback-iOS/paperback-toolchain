@@ -11,7 +11,7 @@ export abstract class Form {
     Application.formDidChange(formId)
   }
 
-  abstract getSections(): FormSectionElement[]
+  abstract getSections(): FormSectionElement<unknown>[]
 
   /* Life cycle methods, always called, errors logged but ignored */
   formWillAppear?(): void

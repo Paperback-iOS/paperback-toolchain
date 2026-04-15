@@ -332,7 +332,9 @@ class _CompatWrapper
   }
 }
 
-class _CompatSection implements FormSectionElement {
+class _CompatSection implements FormSectionElement<'listSection'> {
+  type = 'listSection' as const
+
   id: string
   header?: string
   footer?: string
@@ -525,13 +527,13 @@ class _CompatSection implements FormSectionElement {
 }
 
 class _CompatForm extends Form {
-  private sections: FormSectionElement[] = []
+  private sections: FormSectionElement<unknown>[] = []
 
   constructor(private form: DUIForm) {
     super()
   }
 
-  override getSections(): FormSectionElement[] {
+  override getSections(): FormSectionElement<unknown>[] {
     if (this.sections.length == 0) {
       return [
         Section('loading', [
@@ -546,7 +548,7 @@ class _CompatForm extends Form {
   }
 
   reloadSections() {
-    const newSections: FormSectionElement[] = []
+    const newSections: FormSectionElement<unknown>[] = []
     this.sections = newSections
     console.log('reloadForm CALLED FROM reloadSections')
     this.reloadForm()
