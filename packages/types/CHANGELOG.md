@@ -1,5 +1,12 @@
 # @paperback/types
 
+## 1.0.0-alpha.69
+
+### Patch Changes
+
+- version bump
+- moved from oclif to stricli
+
 ## 1.0.0-alpha.67
 
 ### Patch Changes

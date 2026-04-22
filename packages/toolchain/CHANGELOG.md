@@ -1,28 +1,12 @@
 # @paperback/toolchain
 
-## 1.0.0-alpha.67
+## 1.0.0-alpha.69
 
 ### Patch Changes
 
-- fixes
+- version bump
+- moved from oclif to stricli
 - Updated dependencies
-  - @paperback/runtime-polyfills@1.0.0-alpha.67
-  - @paperback/types@1.0.0-alpha.67
-
-## 1.0.0-alpha.66
-
-### Patch Changes
-
-- Type fixes
 - Updated dependencies
-  - @paperback/runtime-polyfills@1.0.0-alpha.66
-  - @paperback/types@1.0.0-alpha.66
-
-## 1.0.0-alpha.65
-
-### Patch Changes
-
-- Add EditSection; cleanup
-- Updated dependencies
-  - @paperback/runtime-polyfills@1.0.0-alpha.65
-  - @paperback/types@1.0.0-alpha.65
+  - @paperback/runtime-polyfills@1.0.0-alpha.69
+  - @paperback/types@1.0.0-alpha.69

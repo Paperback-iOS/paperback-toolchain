@@ -3,8 +3,7 @@
   "description": "Toolchain to build Paperback extensions",
   "keywords": [
     "paperback",
-    "toolchain",
-    "oclif"
+    "toolchain"
   ],
   "author": "Faizan Durrani",
   "homepage": "https://paperback.moe",
@@ -14,64 +13,73 @@
   },
   "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.67",
+  "version": "1.0.0-alpha.69",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "paperback-cli": "./dist/cli.mjs",
+    "__paperback-cli_bash_complete": "./dist/bash-complete.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "prepack": "npm run build && npx oclif manifest && npx oclif readme",
-    "build": "rm -rf ./lib && npx tsc -b && cp -r src/homepage lib/ && cp -r src/shims lib/",
-    "postpack": "rm -f ./oclif.manifest.json",
-    "version": "npx oclif readme && git add README.md"
+    "protoc:prepare": "rm -rf ./src/.generated/ && mkdir -p ./src/.generated",
+    "protoc:compile": "protoc --ts_out ./src/.generated --ts_opt client_grpc1,ts_nocheck --proto_path src src/toolchain/logcat/protobuf/*.proto",
+    "protoc": "npm run protoc:prepare && npm run protoc:compile",
+    "prebuild": "npm run protoc && tsc -p tsconfig.json",
+    "build": "tsdown --silent",
+    "prepublishOnly": "npm run build",
+    "postinstall": "paperback-cli install"
+  },
+  "tsdown": {
+    "deps": {
+      "skipNodeModulesBundle": true
+    },
+    "copy": [
+      {
+        "from": "src/**/*.template.*",
+        "to": "dist/src/",
+        "flatten": false
+      }
+    ],
+    "entry": [
+      "src/bin/cli.ts",
+      "src/bin/bash-complete.ts"
+    ],
+    "exports": true,
+    "format": [
+      "esm"
+    ],
+    "tsconfig": "tsconfig.json",
+    "clean": true,
+    "unbundle": true,
+    "minify": false
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.14.3",
-    "@oclif/core": "^4.8.0",
-    "@oclif/plugin-help": "^6.2.36",
-    "@oclif/plugin-plugins": "^5.4.54",
-    "@paperback/runtime-polyfills": "1.0.0-alpha.67",
-    "@paperback/types": "1.0.0-alpha.67",
-    "@protobuf-ts/runtime-rpc": "^2.11.1",
-    "buffer": "^6.0.3",
-    "esbuild": "^0.27.1",
-    "fs-extra": "^11.3.2",
-    "listr2": "^9.0.5",
+    "@paperback/runtime-polyfills": "1.0.0-alpha.69",
+    "@paperback/types": "1.0.0-alpha.69",
+    "@stricli/auto-complete": "^1.2.6",
+    "@stricli/core": "^1.2.6",
+    "chai": "^6.2.2",
+    "esbuild": "^0.28.0",
+    "listr2": "^10.2.1",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {
+    "@grpc/grpc-js": "^1.14.3",
     "@protobuf-ts/plugin": "^2.11.1",
-    "@protobuf-ts/protoc": "^2.11.1",
-    "@types/fs-extra": "^11.0.4",
-    "@types/listr": "^0.14.10",
-    "@types/node": "^24.1.0",
-    "grpc-tools": "^1.13.1",
-    "oclif": "^4.22.55",
-    "shx": "^0.4.0",
-    "ts-node": "^10.9.2"
+    "@types/chai": "^5.2.3",
+    "@types/node": "24.x",
+    "protoc": "^33.6.0",
+    "tsdown": "^0.21.9",
+    "typescript": "5.6.x"
   },
-  "engines": {
-    "node": ">=24.12.0"
-  },
-  "type": "module",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "bin": {
-    "paperback-cli": "bin/run.js"
-  },
-  "files": [
-    "/bin",
-    "/lib",
-    "/oclif.manifest.json"
-  ],
-  "oclif": {
-    "bin": "paperback-cli",
-    "dirname": "paperback-cli",
-    "commands": "./lib/commands",
-    "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
-    ],
-    "topicSeparator": " "
-  },
-  "ts-node": {
-    "esm": true
-  },
-  "gitHead": "0f1ac163975cd81a2a3a34d97ddad876c89310d9"
+  "exports": {
+    "./bash-complete": "./dist/bash-complete.mjs",
+    "./cli": "./dist/cli.mjs",
+    "./package.json": "./package.json"
+  }
 }
