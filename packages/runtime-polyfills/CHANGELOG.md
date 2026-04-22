@@ -1,5 +1,12 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.74
+
+### Patch Changes
+
+- updated types for base64encode/decode
+  added polyfill for crypto_md5Hash
+
 ## 1.0.0-alpha.73
 
 ## 1.0.0-alpha.72
