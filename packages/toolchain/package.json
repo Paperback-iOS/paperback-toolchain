@@ -13,7 +13,7 @@
   },
   "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.69",
+  "version": "1.0.0-alpha.72",
   "type": "module",
   "files": [
     "dist"
@@ -31,8 +31,7 @@
     "protoc": "npm run protoc:prepare && npm run protoc:compile",
     "prebuild": "npm run protoc && tsc -p tsconfig.json",
     "build": "tsdown --silent",
-    "prepublishOnly": "npm run build",
-    "postinstall": "paperback-cli install"
+    "prepublishOnly": "npm run build"
   },
   "tsdown": {
     "deps": {
@@ -46,8 +45,7 @@
       }
     ],
     "entry": [
-      "src/bin/cli.ts",
-      "src/bin/bash-complete.ts"
+      "src/bin/cli.ts"
     ],
     "exports": true,
     "format": [
@@ -59,8 +57,10 @@
     "minify": false
   },
   "dependencies": {
-    "@paperback/runtime-polyfills": "1.0.0-alpha.69",
-    "@paperback/types": "1.0.0-alpha.69",
+    "@grpc/grpc-js": "^1.14.3",
+    "@protobuf-ts/plugin": "^2.11.1",
+    "@paperback/runtime-polyfills": "1.0.0-alpha.72",
+    "@paperback/types": "1.0.0-alpha.72",
     "@stricli/auto-complete": "^1.2.6",
     "@stricli/core": "^1.2.6",
     "chai": "^6.2.2",
@@ -69,17 +69,13 @@
     "picocolors": "^1.1.1"
   },
   "devDependencies": {
-    "@grpc/grpc-js": "^1.14.3",
-    "@protobuf-ts/plugin": "^2.11.1",
     "@types/chai": "^5.2.3",
     "@types/node": "24.x",
     "protoc": "^33.6.0",
-    "tsdown": "^0.21.9",
-    "typescript": "5.6.x"
+    "tsdown": "^0.21.9"
   },
   "exports": {
-    "./bash-complete": "./dist/bash-complete.mjs",
-    "./cli": "./dist/cli.mjs",
+    ".": "./dist/cli.mjs",
     "./package.json": "./package.json"
   }
 }

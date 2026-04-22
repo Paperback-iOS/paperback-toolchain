@@ -14,7 +14,7 @@
   },
   "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.69",
+  "version": "1.0.0-alpha.72",
   "scripts": {
     "build": "rm -rf ./lib && tsc",
     "prepack": "npm run build"
@@ -31,5 +31,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "0f1ac163975cd81a2a3a34d97ddad876c89310d9"
+  "gitHead": "0f1ac163975cd81a2a3a34d97ddad876c89310d9",
+  "files": [
+    "./lib"
+  ]
 }

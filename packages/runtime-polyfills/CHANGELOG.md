@@ -1,5 +1,19 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.72
+
+### Patch Changes
+
+- fixed npm published files
+
+## 1.0.0-alpha.71
+
+## 1.0.0-alpha.70
+
+### Patch Changes
+
+- moved grpc and protobuf-ts to dep from devdep
+
 ## 1.0.0-alpha.69
 
 ### Patch Changes
