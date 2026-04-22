@@ -7,6 +7,7 @@
     "@paperback/types": "1.0.0-alpha.64"
   },
   "changesets": [
+    "cuddly-bears-itch",
     "fast-rings-admire",
     "large-cows-smile",
     "loose-poets-sort",

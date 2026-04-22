@@ -3,6 +3,7 @@ import { decodeHTMLStrict } from 'entities'
 import { MockRequestManager } from './RequestManager.js'
 import { MockDiscoverSectionManager } from './DiscoverSectionManager.js'
 import { MockSearchFilterManager } from './SearchFilterManager.js'
+import crypto from 'node:crypto'
 
 // This is a function so that a new object can be requested at any time
 // in-case multiple sources are being tested
@@ -138,5 +139,15 @@ export function ApplicationPolyfill(): typeof Application {
 
     Selector: selectorRegistry.Selector.bind(selectorRegistry),
     SelectorRegistry: selectorRegistry,
+
+    crypto_md5Hash: function (value: string | ArrayBuffer) {
+      let data: Uint8Array | string
+      if (typeof value === 'string') {
+        data = value
+      } else {
+        data = new Uint8Array(value)
+      }
+      return crypto.createHash('md5').update(data).digest('hex')
+    }
   }
 }

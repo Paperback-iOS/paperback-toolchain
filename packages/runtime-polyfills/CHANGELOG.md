@@ -1,5 +1,7 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.73
+
 ## 1.0.0-alpha.72
 
 ### Patch Changes

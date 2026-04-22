@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.73
+
+### Patch Changes
+
+- added cryto_md5Hash to Application namespace
+
 ## 1.0.0-alpha.72
 
 ### Patch Changes

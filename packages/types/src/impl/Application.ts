@@ -62,10 +62,26 @@ declare global {
     function arrayBufferToASCIIString(arrayBuffer: ArrayBuffer): string
     function arrayBufferToUTF16String(arrayBuffer: ArrayBuffer): string
 
-    function base64Encode<T extends string | ArrayBuffer>(value: T): T
-    function base64Decode<T extends string | ArrayBuffer>(value: T): T
+    /**
+     * encodes the given input into base64
+     * @param value a string or array buffer to encode
+     * @returns utf8 string if valid (input data was not binary), otherwise array buffer
+     */
+    function base64Encode(value: string | ArrayBuffer): string | ArrayBuffer
 
-    function crypto_md5Hash<T extends string | ArrayBuffer>(value: T): T
+    /**
+     * decodes the given input as base64
+     * @param value a base64 encoded string or array buffer
+     * @returns utf8 string if valid (input data was not binary), otherwise array buffer
+     */
+    function base64Decode(value: string | ArrayBuffer): string | ArrayBuffer
+
+    /**
+     * hashes the given input using md5
+     * @param value an array buffer or string to hash
+     * @returns an md5 hash of the given input
+     */
+    function crypto_md5Hash(value: string | ArrayBuffer): string 
 
     // Search Filters
     /**
