@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.76
+
+### Patch Changes
+
+- added closureSelector, SearchFilterForm for compat
+
 ## 1.0.0-alpha.75
 
 ### Patch Changes

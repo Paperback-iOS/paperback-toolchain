@@ -2,7 +2,6 @@ import { MockSelectorRegistry } from './SelectorRegistry.js'
 import { decodeHTMLStrict } from 'entities'
 import { MockRequestManager } from './RequestManager.js'
 import { MockDiscoverSectionManager } from './DiscoverSectionManager.js'
-import { MockSearchFilterManager } from './SearchFilterManager.js'
 import crypto from 'node:crypto'
 
 // This is a function so that a new object can be requested at any time
@@ -15,8 +14,7 @@ export function ApplicationPolyfill(): typeof Application {
   const discoverSectionManager = new MockDiscoverSectionManager(
     selectorRegistry
   )
-  const searchFilterManager = new MockSearchFilterManager()
-
+  
   return {
     decodeHTMLEntities: decodeHTMLStrict,
 
@@ -42,15 +40,6 @@ export function ApplicationPolyfill(): typeof Application {
       discoverSectionManager.invalidateDiscoverSections.bind(
         discoverSectionManager
       ),
-
-    registerSearchFilter:
-      searchFilterManager.registerSearchFilter.bind(searchFilterManager),
-    unregisterSearchFilter:
-      searchFilterManager.unregisterSearchFilter.bind(searchFilterManager),
-    registeredSearchFilters:
-      searchFilterManager.registeredSearchFilters.bind(searchFilterManager),
-    invalidateSearchFilters:
-      searchFilterManager.invalidateSearchFilters.bind(searchFilterManager),
 
     registerInterceptor:
       requestManager.registerInterceptor.bind(requestManager),

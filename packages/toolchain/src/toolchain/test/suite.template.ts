@@ -198,7 +198,6 @@ export const registerDefaultInitialisationTests = function (
 
 const STATE_KEY = {
   SearchResultsProviding: {
-    getSearchFilters: 'SearchResultsProviding.getSearchFilters',
     getSearchResults: 'SearchResultsProviding.getSearchResults',
     getSortingOptions: 'SearchResultsProviding.getSortingOptions',
   },
@@ -218,24 +217,11 @@ export const registerDefaultSearchResultsProvidingSourceTests = function (
     searchResultsProviding: testData,
   }: Pick<ExtensionTestData, 'searchResultsProviding'>
 ) {
-  suite.test('getSearchFilters', async () => {
-    expect(extension).to.have.property('getSearchFilters')
-
-    const searchFilters = await extension.getSearchFilters()
-
-    expect(searchFilters).to.not.be.undefined
-    suite.state[STATE_KEY.SearchResultsProviding.getSearchFilters] =
-      searchFilters
-  })
-
   if ('getSortingOptions' in extension) {
     suite.test('getSortingOptions', async () => {
       let params = testData?.getSortingOptions
       if (!params) {
-        const searchFilters = suite.state[
-          STATE_KEY.SearchResultsProviding.getSearchFilters
-        ] as SearchFilter[] | undefined
-        params = [{ title: '', filters: searchFilters ?? [] }]
+        params = [{ title: '' }]
       }
 
       const sortingOptions = await extension.getSortingOptions!(...params)
@@ -251,14 +237,11 @@ export const registerDefaultSearchResultsProvidingSourceTests = function (
 
     let params = testData?.getSearchResults
     if (!params) {
-      const searchFilters = suite.state[
-        STATE_KEY.SearchResultsProviding.getSearchFilters
-      ] as SearchFilter[] | undefined
       const sortingOptions = suite.state[
         STATE_KEY.SearchResultsProviding.getSortingOptions
       ] as SortingOption[] | undefined
       params = [
-        { title: '', filters: searchFilters ?? [] },
+        { title: '' },
         undefined,
         sortingOptions?.[0],
       ]

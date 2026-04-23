@@ -1,5 +1,7 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.76
+
 ## 1.0.0-alpha.75
 
 ## 1.0.0-alpha.74

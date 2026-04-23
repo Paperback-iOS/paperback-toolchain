@@ -46,7 +46,7 @@ export interface ChapterUpdatesCarouselItem {
 
 export interface GenresCarouselItem {
   type: 'genresCarouselItem'
-  searchQuery: SearchQuery
+  searchQuery: SearchQuery<Metadata>
   name: string
   metadata?: Metadata
   contentRating?: ContentRating

@@ -11,3 +11,8 @@ export type SelectorRegistry = {
 
   selector<K>(id: SelectorID<K>): K
 }
+
+export function closureSelector<T extends Function>(base: any, closureId: string, closure: T): SelectorID<T> {
+  base["__closure_selector-" + closureId] = closure
+  return Application.Selector(base, "__closure_selector-" + closureId)
+}

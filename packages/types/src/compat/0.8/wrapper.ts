@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  AdvancedSearchForm,
   ButtonRow,
   type Chapter,
   type ChapterDetails,
@@ -21,6 +22,7 @@ import {
   LabelRow,
   type LabelRowProps,
   type MangaProviding,
+  type Metadata,
   NavigationRow,
   OAuthButtonRow,
   type OAuthButtonRowProps,
@@ -28,7 +30,6 @@ import {
   PaperbackInterceptor,
   type Request,
   type Response,
-  type SearchFilter,
   type SearchQuery,
   type SearchResultItem,
   type SearchResultsProviding,
@@ -38,6 +39,11 @@ import {
   type SourceManga,
   ToggleRow,
 } from '../../index.js'
+import {
+  SearchFilterForm,
+  type SearchFilterValue,
+  type SearchFilter
+} from './searchFilters.js'
 
 import {
   type ChapterProviding as LegacyChapterProviding,
@@ -118,17 +124,16 @@ type Source = LegacySource &
 
 class _CompatWrapper
   implements
-    Extension,
-    MangaProviding,
-    SearchResultsProviding,
-    ChapterProviding,
-    DiscoverSectionProviding,
-    SettingsFormProviding,
-    CloudflareBypassRequestProviding
-{
+  Extension,
+  MangaProviding,
+  SearchResultsProviding,
+  ChapterProviding,
+  DiscoverSectionProviding,
+  SettingsFormProviding,
+  CloudflareBypassRequestProviding {
   private cloudflareInterceptor?: CloudflareInterceptor
   private homepageItemCache: Record<string, DiscoverSectionItem[]> = {}
-  constructor(private legacySource: Source) {}
+  constructor(private legacySource: Source) { }
 
   async initialise() {
     if ('getCloudflareBypassRequestAsync' in this.legacySource) {
@@ -242,8 +247,12 @@ class _CompatWrapper
     return searchFilters
   }
 
+  async getAdvancedSearchForm(query: SearchQuery<SearchFilterValue[]>): Promise<AdvancedSearchForm> {
+    return new SearchFilterForm(query.metadata, this.getSearchFilters())
+  }
+
   async getSearchResults(
-    query: SearchQuery,
+    query: SearchQuery<SearchFilterValue[]>,
     metadata: unknown | undefined
   ): Promise<PagedResults<SearchResultItem>> {
     const legacyQuery: LegacySearchRequest = {
@@ -253,7 +262,7 @@ class _CompatWrapper
       parameters: {},
     }
 
-    for (const filter of query.filters) {
+    for (const filter of query.metadata ?? []) {
       if (typeof filter.value === 'string') {
         legacyQuery.parameters[filter.id] = filter.value
       } else {

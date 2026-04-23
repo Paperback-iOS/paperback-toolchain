@@ -1,5 +1,14 @@
 # @paperback/toolchain
 
+## 1.0.0-alpha.76
+
+### Patch Changes
+
+- added closureSelector, SearchFilterForm for compat
+- Updated dependencies
+  - @paperback/types@1.0.0-alpha.76
+  - @paperback/runtime-polyfills@1.0.0-alpha.76
+
 ## 1.0.0-alpha.75
 
 ### Patch Changes
