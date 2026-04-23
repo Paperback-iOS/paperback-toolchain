@@ -2,6 +2,10 @@
   "name": "paperback-monorepo",
   "description": "Monorepo for the Paperback toolchain, types and runtime polyfills",
   "private": true,
+  "scripts": {
+    "changesets": "npx @changesets/cli",
+    "changesets:version": "npx @changesets/cli version"
+  },
   "workspaces": [
     "packages/types",
     "packages/runtime-polyfills",

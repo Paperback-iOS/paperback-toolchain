@@ -4,6 +4,7 @@ import type {
   PagedResults,
   SelectorID,
   SelectorRegistry,
+  Metadata
 } from '@paperback/types'
 
 type DiscoverSectionManager = Pick<
@@ -21,7 +22,7 @@ export class MockDiscoverSectionManager implements DiscoverSectionManager {
     selector?: SelectorID<
       (
         section: DiscoverSection,
-        metadata: unknown | undefined
+        metadata: Metadata
       ) => Promise<PagedResults<DiscoverSectionItem>>
     >
   }[]
@@ -36,7 +37,7 @@ export class MockDiscoverSectionManager implements DiscoverSectionManager {
     selector?: SelectorID<
       (
         section: DiscoverSection,
-        metadata: unknown | undefined
+        metadata: Metadata
       ) => Promise<PagedResults<DiscoverSectionItem>>
     >
   ): void {

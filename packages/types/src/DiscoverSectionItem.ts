@@ -1,3 +1,4 @@
+import type { Metadata } from './Metadata.js'
 import type { SearchQuery } from './SearchQuery.js'
 import type { ContentRating } from './impl/SourceInfo.js'
 
@@ -7,7 +8,7 @@ export interface FeaturedCarouselItem {
   imageUrl: string
   title: string
   supertitle?: string
-  metadata?: unknown
+  metadata?: Metadata
   contentRating?: ContentRating
 }
 
@@ -17,7 +18,7 @@ export interface SimpleCarouselItem {
   imageUrl: string
   title: string
   subtitle?: string
-  metadata?: unknown
+  metadata?: Metadata
   contentRating?: ContentRating
 }
 
@@ -27,7 +28,7 @@ export interface ProminentCarouselItem {
   imageUrl: string
   title: string
   subtitle?: string
-  metadata?: unknown
+  metadata?: Metadata
   contentRating?: ContentRating
 }
 
@@ -39,7 +40,7 @@ export interface ChapterUpdatesCarouselItem {
   title: string
   subtitle?: string
   publishDate?: Date
-  metadata?: unknown
+  metadata?: Metadata
   contentRating?: ContentRating
 }
 
@@ -47,7 +48,7 @@ export interface GenresCarouselItem {
   type: 'genresCarouselItem'
   searchQuery: SearchQuery
   name: string
-  metadata?: unknown
+  metadata?: Metadata
   contentRating?: ContentRating
 }
 

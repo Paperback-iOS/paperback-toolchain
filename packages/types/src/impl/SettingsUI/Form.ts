@@ -19,17 +19,23 @@ export abstract class Form {
   formWillDisappear?(): void
   formDidDisappear?(): void
 
-  // If this returns true, the app will display `Submit` and `Cancel` buttons
-  // and call the relevant methods when they are pressed
-  get requiresExplicitSubmission(): boolean {
-    return false
-  }
+  /**
+   * When this is true, the app enables the `Submit` and `Cancel` buttons
+   * that call {@link Form.formDidSubmit} and {@link Form.formDidCancel} respectively
+   * 
+   * Notes: updating this after the form appears requires a call to {@link Form.reloadForm}
+   */
+  readonly requiresExplicitSubmission: boolean = false
 
-  // The app calls this method when the user presses `Submit`
-  // Throw an error here to halt the dismissal and display an alert popup
+  /**
+   * The app calls this method when the user presses `Submit`.
+   * Throw an error here to halt the dismissal and display an alert popup
+   */
   formDidSubmit?(): Promise<void>
 
-  // The app calls this method when the user presses `Cancel`
-  // Any errors thrown from here are ignored and the dismissal is not blocked
+  /**
+   * The app calls this method when the user presses `Cancel`.
+   * Errors thrown from here are logged without blocking dismissal
+   */
   formDidCancel?(): void
 }

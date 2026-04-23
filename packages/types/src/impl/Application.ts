@@ -10,6 +10,7 @@ import type {
 import type { Response, ResponseInterceptor } from '../Response.js'
 import type { Cookie } from '../Cookie.js'
 import type { SelectorID, SelectorRegistry, KeyOfType } from './Selector.js'
+import type { Metadata } from '../Metadata.js'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -35,7 +36,7 @@ declare global {
       selector?: SelectorID<
         (
           section: DiscoverSection,
-          metadata: unknown | undefined
+          metadata: Metadata
         ) => Promise<PagedResults<DiscoverSectionItem>>
       >
     ): void
@@ -82,17 +83,6 @@ declare global {
      * @returns an md5 hash of the given input
      */
     function crypto_md5Hash(value: string | ArrayBuffer): string 
-
-    // Search Filters
-    /**
-     * @description If search filters are registered using this method the app will not call {@link SearchResultsProviding.getSearchFilters} unless {@link Application.invalidateSearchFilters} is called.
-     * @deprecated register search filters in {@link SearchResultsProviding.getSearchFilters} by implementing {@link SearchResultsProviding}
-     */
-    function registerSearchFilter(searchFilter: SearchFilter): void
-    function unregisterSearchFilter(id: string): void
-    function registeredSearchFilters(): SearchFilter[]
-    /** Invalidate search filter cache (removes all search filters) */
-    function invalidateSearchFilters(): void
 
     // State Manager
     function getSecureState(key: string): unknown | undefined

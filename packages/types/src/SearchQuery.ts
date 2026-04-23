@@ -1,8 +1,6 @@
-import type { SearchFilter } from './SearchFilter.js'
+import type { Metadata } from './Metadata.js'
 
-type SearchFilterValues = Pick<SearchFilter, 'id' | 'value'>
-
-export interface SearchQuery {
+export type SearchQuery<SearchQueryMetadata extends Metadata> = {
   title: string
-  filters: SearchFilterValues[]
+  metadata?: SearchQueryMetadata
 }
