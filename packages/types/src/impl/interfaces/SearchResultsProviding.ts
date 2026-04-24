@@ -1,6 +1,5 @@
 import type { Metadata } from '../../Metadata.js'
 import type { PagedResults } from '../../PagedResults.js'
-import type { SearchFilter } from '../../SearchFilter.js'
 import type { SearchQuery } from '../../SearchQuery.js'
 import type { SearchResultItem } from '../../SearchResultItem.js'
 import type { SortingOption } from '../../SortingOption.js'

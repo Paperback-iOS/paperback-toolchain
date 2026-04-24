@@ -1,7 +1,6 @@
 import type { DiscoverSectionItem } from '../DiscoverSectionItem.js'
 import type { DiscoverSection } from '../HomeSection.js'
 import type { PagedResults } from '../PagedResults.js'
-import type { SearchFilter } from '../SearchFilter.js'
 import type {
   Request,
   RequestInterceptor,

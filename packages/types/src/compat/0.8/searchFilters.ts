@@ -96,19 +96,22 @@ export class SearchFilterForm extends AdvancedSearchForm {
             const selectedOptions = (this.selectedFilterValues[filter.id] ?? filter.value) as (typeof filter.value)
             return FlowSection({ id: filter.id, header: filter.title }, filter.options.map(option => {
               let value: string | undefined
+              let style: { titleColor?: string, subtitleColor?: string, backgroundColor?: string } | undefined
               switch (selectedOptions[option.id]) {
                 case 'included': {
                   value = "✓"
+                  style = { titleColor: "#fff", backgroundColor: "success" }
                   break
                 }
                 case 'excluded': {
                   value = "✕"
+                  style = { titleColor: "#fff", backgroundColor: "error" }
                   break
                 }
               }
 
               return LabelRow(option.id, {
-                title: option.value, value,
+                title: option.value, value, //style,
                 onSelect: closureSelector(this, `${filter.id}#${option.id}`, async () => {
                   let nextState: 'included' | 'excluded' | undefined
                   const currentState = selectedOptions[option.id]

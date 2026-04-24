@@ -9,7 +9,6 @@ import {
   type ExtensionInfo,
   type MangaProviding,
   type PagedResults,
-  type SearchFilter,
   type SearchResultItem,
   type SearchResultsProviding,
   type SortingOption,
