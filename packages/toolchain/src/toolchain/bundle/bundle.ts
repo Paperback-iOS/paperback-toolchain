@@ -73,7 +73,7 @@ export async function bundleSources(folder = '', sourcemap = false, tests = fals
       },
     },
     {
-      title: 'Bundling Extensions',
+      title: 'Generate SourceInfo',
       task: () =>
         new Listr(
           fs
@@ -151,9 +151,7 @@ export async function generateSourceInfo(
   }
 
   const configModule = await import(
-    `data:text/javascript;base64,${Buffer.from(
-      configBundle.outputFiles[0]!.text
-    ).toString('base64')}`
+    `data:text/javascript;base64,${Buffer.from(configBundle.outputFiles[0]!.text).toString('base64')}`
   )
   const config = configModule.default
   config.id = sourceId

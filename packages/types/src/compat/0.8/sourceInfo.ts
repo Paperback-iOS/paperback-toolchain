@@ -20,7 +20,7 @@ export class SourceInfoWrapper implements SourceInfo {
   developers: SourceDeveloper[]
   language?: string
   badges: SourceBadge[]
-  capabilities: SourceIntents | SourceIntents[]
+  capabilities: SourceIntents[]
 
   constructor(legacySourceInfo: LegacySourceInfo) {
     this.version = legacySourceInfo.version
@@ -91,6 +91,6 @@ export class SourceInfoWrapper implements SourceInfo {
     })
 
     // @ts-expect-error bitset shenanigans
-    this.capabilities = legacySourceInfo.intents ?? []
+    this.capabilities = [legacySourceInfo.intents] ?? []
   }
 }

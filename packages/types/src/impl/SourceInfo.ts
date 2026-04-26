@@ -142,5 +142,5 @@ export interface ExtensionInfo {
    */
   readonly badges: SourceBadge[]
 
-  readonly capabilities: SourceIntents[] | SourceIntents
+  readonly capabilities: SourceIntents[]
 }

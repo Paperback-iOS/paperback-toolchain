@@ -5,7 +5,10 @@ export default buildCommand({
   func: test,
   parameters: {
     flags: {
-      generate: { kind: "boolean", brief: "generate default tests" }
+      generate: { kind: "boolean", brief: "generate default tests" },
+      overwrite: { kind: "boolean", brief: "overwrite existing tests", default: false },
+      output: { kind: "parsed", brief: "output file", parse: String, optional: true },
+      console: { kind: "boolean", brief: "display captured console", default: true }
     },
     positional: {
       kind: 'tuple',

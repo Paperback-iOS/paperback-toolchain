@@ -98,7 +98,6 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
   }
 
   cookiesForUrl(urlString: string): Cookie[] {
-    console.log('[COMPAT] COOKIES FOR URL')
     const url = new URL(urlString)
     const hostname = url.hostname
 

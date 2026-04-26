@@ -3,14 +3,14 @@ import vm from 'node:vm'
 import fs from 'node:fs'
 import pc from 'picocolors'
 import { ApplicationPolyfill } from '@paperback/runtime-polyfills'
+import type { Logger } from "./logger.js"
 
-export async function runSourceTests(bundlesDirectory: string, sourceId: string) {
-  const sourceDirectory = path.join(bundlesDirectory, sourceId)
-  const testFilePath = path.join(sourceDirectory, 'test.js')
-
+export async function runSourceTests(logger: Logger, testFilePath: string) {
   const vmContext = vm.createContext({
     Application: ApplicationPolyfill(),
-    console, EventTarget, Event, Buffer
+    console: logger.console(),
+    logger: logger,
+    EventTarget, Event, Buffer, TextEncoder, TextDecoder
   })
 
   // Add main file
@@ -19,7 +19,7 @@ export async function runSourceTests(bundlesDirectory: string, sourceId: string)
     vmContext
   )
 
-  await vm.runInContext(`source.runTests()`, vmContext)
+  await vm.runInContext(`source.runTests(logger)`, vmContext)
 }
 
 export function generateDefaultTests(sourceId: string, testsDirectory: string) {
@@ -32,18 +32,19 @@ export function generateDefaultTests(sourceId: string, testsDirectory: string) {
     )
   }
 
+  const testFilePath = path.join(testsDirectory, `${sourceId}.ts`)
   const defaultTestFile = `
+  import { type TestLogger } from '@paperback/types'
   import { TestSuite, registerDefaultTests } from './suite.js'
   import { ${sourceId} } from '../${sourceId}/main.js'
   import sourceInfo from '../${sourceId}/pbconfig.js'
   
-  export async function runTests() {
-    const suite = new TestSuite('${sourceId} tests')
+  export async function runTests(logger: TestLogger) {
+    const suite = new TestSuite('${sourceId} tests', logger)
     registerDefaultTests(suite, ${sourceId}, sourceInfo)
     
     await suite.run()
   }`
 
-  const testFilePath = path.join(testsDirectory, `${sourceId}.ts`)
   fs.writeFileSync(testFilePath, defaultTestFile)
 }
