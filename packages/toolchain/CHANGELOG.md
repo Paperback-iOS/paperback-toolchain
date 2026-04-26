@@ -1,5 +1,14 @@
 # @paperback/toolchain
 
+## 1.0.0-alpha.77
+
+### Patch Changes
+
+- 41d2527: improve test command
+- Updated dependencies [41d2527]
+  - @paperback/runtime-polyfills@1.0.0-alpha.77
+  - @paperback/types@1.0.0-alpha.77
+
 ## 1.0.0-alpha.76
 
 ### Patch Changes

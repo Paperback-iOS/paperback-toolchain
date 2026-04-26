@@ -1,5 +1,11 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.77
+
+### Patch Changes
+
+- 41d2527: improve test command
+
 ## 1.0.0-alpha.76
 
 ## 1.0.0-alpha.75
