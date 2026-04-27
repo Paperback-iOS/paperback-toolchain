@@ -121,8 +121,8 @@ export async function test(this: LocalContext, flags: TestFlags, sourceId?: stri
       const tests = logData[scope].tests
       output += `${tests.length} Tests:\n`
       for (const test of tests) {
-        const result = test.result == "pass" ? pc.green(test.result) : pc.red(test.result)
-        output += `  ${(test.name)}: ${pc.dim(test.duration + "ms")} ... ${result}\n`
+        const status = test.status == "pass" ? pc.green(test.status) : pc.red(test.status)
+        output += `  ${(test.name)}: ${pc.dim(test.duration + "ms")} ... ${status}\n`
         if ("error" in test) {
           output += `    ${test.error}\n`
           failedTests++
