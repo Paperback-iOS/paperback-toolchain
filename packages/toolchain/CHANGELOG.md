@@ -1,5 +1,14 @@
 # @paperback/toolchain
 
+## 1.0.0-alpha.78
+
+### Patch Changes
+
+- fixed undefined test status
+- Updated dependencies
+  - @paperback/runtime-polyfills@1.0.0-alpha.78
+  - @paperback/types@1.0.0-alpha.78
+
 ## 1.0.0-alpha.77
 
 ### Patch Changes

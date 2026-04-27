@@ -1,5 +1,11 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.78
+
+### Patch Changes
+
+- fixed undefined test status
+
 ## 1.0.0-alpha.77
 
 ### Patch Changes
