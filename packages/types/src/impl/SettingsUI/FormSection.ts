@@ -1,5 +1,6 @@
-import type { SelectorID } from '../Selector.js'
-import type { FormItemElement } from './FormItemElement.js'
+import { closureSelector, type SelectorID } from '../Selector.js'
+import { Form } from './Form.js'
+import { LabelRow, type FormItemElement } from './FormItemElement.js'
 
 export interface FormSectionElement<T> {
   type: T
@@ -9,7 +10,7 @@ export interface FormSectionElement<T> {
   items: FormItemElement<unknown>[]
 }
 
-export type TagSectionElement = FormSectionElement<'flowSection'>
+export type FlowSectionElement = FormSectionElement<'flowSection'>
 export type ListSectionElement = FormSectionElement<'listSection'> & {
   allowDeletion: boolean
   allowAddition: boolean
@@ -17,7 +18,7 @@ export type ListSectionElement = FormSectionElement<'listSection'> & {
 
   onReorder?: SelectorID<(srcIndex: number, destIndex: number) => Promise<void>>
   onDeletion?: SelectorID<(index: number) => Promise<void>>
-  onAddition?: SelectorID<() => Promise<void>> 
+  onAddition?: SelectorID<() => Promise<void>>
 }
 
 export type ListSectionInfo = {
@@ -47,14 +48,14 @@ export function Section(
 
 export type EditSectionInfo = ListSectionInfo & {
   items: (FormItemElement<unknown> | undefined)[]
-  
+
   allowDeletion?: boolean
   allowAddition?: boolean
   allowReorder?: boolean
 
   onReorder?: SelectorID<(srcIndex: number, destIndex: number) => Promise<void>>
   onDeletion?: SelectorID<(index: number) => Promise<void>>
-  onAddition?: SelectorID<() => Promise<void>> 
+  onAddition?: SelectorID<() => Promise<void>>
 }
 
 export function EditSection(
@@ -81,7 +82,7 @@ export function EditSection(
 export function FlowSection(
   params: string | ListSectionInfo,
   items: (FormItemElement<unknown> | undefined)[]
-): TagSectionElement {
+): FlowSectionElement {
   let info: ListSectionInfo
   if (typeof params === 'string') {
     info = { id: params }

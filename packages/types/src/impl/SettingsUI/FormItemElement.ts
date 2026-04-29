@@ -1,7 +1,8 @@
 import type { Cookie } from '../../Cookie.js'
 import type { Request } from '../../Request.js'
-import type { SelectorID } from '../Selector.js'
+import { closureSelector, type SelectorID } from '../Selector.js'
 import { Form } from './Form.js'
+import { FlowSection, Section } from './FormSection.js'
 
 export interface FormItemElement<T> {
   id: string
@@ -11,7 +12,7 @@ export interface FormItemElement<T> {
 
 type TypedRowElement<T, P> = FormItemElement<T> & P
 
-type LabelRowElement = TypedRowElement<'labelRow', LabelRowProps & {isSelectable: boolean}>
+type LabelRowElement = TypedRowElement<'labelRow', LabelRowProps & { isSelectable: boolean }>
 type OAuthButtonRowElement = TypedRowElement<
   'oauthButtonRow',
   OAuthButtonRowProps
@@ -101,6 +102,28 @@ export type SelectRowProps = {
 
 export function SelectRow(id: string, props: SelectRowProps): SelectRowElement {
   return { ...props, id, type: 'selectRow', isHidden: props.isHidden ?? false }
+}
+
+export type TriStateSelectRowProps = {
+  title: string,
+  isHidden?: boolean,
+
+  layout: 'flow' | 'list',
+  value: Record<string, 'included' | 'excluded'>,
+  items: { id: string, title: string }[],
+  allowExclusion: boolean,
+  allowEmptySelection: boolean,
+  maximum?: number,
+  onValueChange: SelectorID<(value: Record<string, 'included' | 'excluded'>) => void>
+}
+
+export function TriStateSelectRow(id: string, props: TriStateSelectRowProps): NavigationRowElement {
+  return NavigationRow(id, {
+    form: new TriStateSelectForm(props.title, props),
+    title: props.title,
+    value: `${Object.keys(props.value).length} items`,
+    isHidden: props.isHidden,
+  })
 }
 
 export type ButtonRowProps = {
@@ -200,4 +223,112 @@ export function DeferredItem<V, T extends FormItemElement<V>>(
   work: () => T | undefined
 ): T | undefined {
   return work()
+}
+
+class TriStateSelectForm extends Form {
+  states: Record<string, 'included' | 'excluded'> = {}
+
+  constructor(
+    public title: string,
+    public params: TriStateSelectRowProps
+  ) {
+    super()
+
+    // Make a copy
+    this.states = { ...params.value }
+  }
+
+  override requiresExplicitSubmission: boolean = true
+
+  override getSections() {
+    const selectedOptionsLength = Object.keys(this.states).length
+
+    return [
+      (this.params.layout == 'flow' ? FlowSection : Section)(
+        { id: 'multiselect', header: this.title },
+        this.params.items.map(item => {
+          const currentState = this.states[item.id]
+
+          let value: string | undefined
+          let style: 'success' | 'error' | undefined
+          switch (currentState) {
+            case 'included': {
+              value = "✓"
+              if (this.params.layout == 'flow') {
+                style = 'success'
+              }
+              break
+            }
+            case 'excluded': {
+              value = "✕"
+              if (this.params.layout == 'flow') {
+                style = 'error'
+              }
+              break
+            }
+            default: {
+              value = undefined
+              style = undefined
+              break
+            }
+          }
+
+          return LabelRow(item.id, {
+            // @ts-expect-error not implemented in the app yet
+            style,
+            title: item.title, value,
+            onSelect: closureSelector(this, item.id, async () => {
+              let nextState: 'included' | 'excluded' | undefined
+              const canSelect = !this.params.maximum || selectedOptionsLength < this.params.maximum
+              const canDeselect = (this.params.allowEmptySelection && selectedOptionsLength == 1) || selectedOptionsLength > 1
+
+              switch (currentState) {
+                case 'included': {
+                  if (this.params.allowExclusion) {
+                    nextState = 'excluded'
+                    break
+                  }
+
+                  if (canDeselect) {
+                    nextState = undefined
+                    break
+                  } else {
+                    return
+                  }
+                }
+                case 'excluded': {
+                  if (canDeselect) {
+                    nextState = undefined
+                    break
+                  } else {
+                    return
+                  }
+                }
+                case undefined: {
+                  if (canSelect) {
+                    nextState = 'included'
+                    break
+                  } else {
+                    return
+                  }
+                }
+              }
+
+              if (nextState == undefined) {
+                delete this.states[item.id]
+              } else {
+                this.states[item.id] = nextState
+              }
+
+              this.reloadForm()
+            })
+          })
+        })
+      )
+    ]
+  }
+
+  override async formDidSubmit(): Promise<void> {
+    Application.SelectorRegistry.selector(this.params.onValueChange)(this.states)
+  }
 }

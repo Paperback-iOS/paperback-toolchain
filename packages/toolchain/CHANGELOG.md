@@ -1,5 +1,15 @@
 # @paperback/toolchain
 
+## 1.0.0-alpha.79
+
+### Patch Changes
+
+- - Added TriStateSelectRow
+  - Fixed --watch command crashing when there are build errors
+- Updated dependencies
+  - @paperback/types@1.0.0-alpha.79
+  - @paperback/runtime-polyfills@1.0.0-alpha.79
+
 ## 1.0.0-alpha.78
 
 ### Patch Changes

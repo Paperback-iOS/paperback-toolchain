@@ -1,5 +1,5 @@
 import { AdvancedSearchForm } from "../../impl/interfaces/SearchResultsProviding.js";
-import { InputRow, LabelRow } from "../../impl/SettingsUI/FormItemElement.js";
+import { InputRow, LabelRow, TriStateSelectRow } from "../../impl/SettingsUI/FormItemElement.js";
 import { FlowSection, Section, type FormSectionElement } from "../../impl/SettingsUI/FormSection.js";
 import { closureSelector, type SelectorID } from "../../impl/Selector.js";
 
@@ -94,75 +94,22 @@ export class SearchFilterForm extends AdvancedSearchForm {
           }
           case "multiselect": {
             const selectedOptions = (this.selectedFilterValues[filter.id] ?? filter.value) as (typeof filter.value)
-            return FlowSection({ id: filter.id, header: filter.title }, filter.options.map(option => {
-              let value: string | undefined
-              let style: { titleColor?: string, subtitleColor?: string, backgroundColor?: string } | undefined
-              switch (selectedOptions[option.id]) {
-                case 'included': {
-                  value = "✓"
-                  style = { titleColor: "#fff", backgroundColor: "success" }
-                  break
-                }
-                case 'excluded': {
-                  value = "✕"
-                  style = { titleColor: "#fff", backgroundColor: "error" }
-                  break
-                }
-              }
 
-              return LabelRow(option.id, {
-                title: option.value, value, //style,
-                onSelect: closureSelector(this, `${filter.id}#${option.id}`, async () => {
-                  let nextState: 'included' | 'excluded' | undefined
-                  const currentState = selectedOptions[option.id]
-                  const selectedOptionsLength = Object.keys(selectedOptions).length
-                  const canSelect = !filter.maximum || selectedOptionsLength < filter.maximum
-                  const canDeselect = (filter.allowEmptySelection && selectedOptionsLength == 1) || selectedOptionsLength > 1
-
-                  switch (currentState) {
-                    case 'included': {
-                      if (filter.allowExclusion) {
-                        nextState = 'excluded'
-                        break
-                      }
-
-                      if (canDeselect) {
-                        nextState = undefined
-                        break
-                      } else {
-                        return
-                      }
-                    }
-                    case 'excluded': {
-                      if (canDeselect) {
-                        nextState = undefined
-                        break
-                      } else {
-                        return
-                      }
-                    }
-                    case undefined: {
-                      if (canSelect) {
-                        nextState = 'included'
-                        break
-                      } else {
-                        return
-                      }
-                    }
-                  }
-
-                  let newValue = selectedOptions
-                  if (nextState != undefined) {
-                    newValue[option.id] = nextState
-                  } else {
-                    delete newValue[option.id]
-                  }
-
-                  this.selectedFilterValues[filter.id] = newValue
-                  this.reloadForm()
-                })
+            return Section({ id: filter.id }, [
+              TriStateSelectRow(filter.id, {
+                  title: filter.title,
+                  layout: "flow",
+                  value: selectedOptions,
+                  items: filter.options.map(x => ({id: x.id, title: x.value})),
+                  allowExclusion: filter.allowExclusion,
+                  allowEmptySelection: filter.allowEmptySelection,
+                  maximum: filter.maximum,
+                  onValueChange: closureSelector(this, filter.id, async (newValue) => {
+                    this.selectedFilterValues[filter.id] = newValue
+                    this.reloadForm()
+                  })
               })
-            }))
+            ])
           }
           case "input": {
             const value = (this.selectedFilterValues[filter.id] ?? filter.value) as (typeof filter.value)

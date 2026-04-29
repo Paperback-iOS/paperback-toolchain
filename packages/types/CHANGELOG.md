@@ -1,5 +1,12 @@
 # @paperback/types
 
+## 1.0.0-alpha.79
+
+### Patch Changes
+
+- - Added TriStateSelectRow
+  - Fixed --watch command crashing when there are build errors
+
 ## 1.0.0-alpha.78
 
 ### Patch Changes
