@@ -96,3 +96,106 @@ export function FlowSection(
     items: items.filter((x) => x) as FormItemElement<unknown>[]
   }
 }
+
+export type TriStateSelectSectionInfo = ListSectionInfo & {
+  layout: 'flow' | 'list',
+  value: Record<string, 'included' | 'excluded'>,
+  items: { id: string, title: string }[],
+  allowExclusion: boolean,
+  allowEmptySelection: boolean,
+  maximum?: number,
+  onValueChange?: SelectorID<() => Promise<void>>
+}
+
+export function TriStateSelectSection(
+  form: Form,
+  params: TriStateSelectSectionInfo
+) {
+  const selectedOptionsLength = Object.keys(params.value).length
+
+  return (params.layout == 'flow' ? FlowSection : Section)(
+    { id: params.id, header: params.header, footer: params.footer },
+    params.items.map(item => {
+      const currentState = params.value[item.id]
+
+      let value: string | undefined
+      let style: 'success' | 'error' | undefined
+      switch (currentState) {
+        case 'included': {
+          value = "✓"
+          if (params.layout == 'flow') {
+            style = 'success'
+          }
+          break
+        }
+        case 'excluded': {
+          value = "✕"
+          if (params.layout == 'flow') {
+            style = 'error'
+          }
+          break
+        }
+        default: {
+          value = undefined
+          style = undefined
+          break
+        }
+      }
+
+      return LabelRow(item.id, {
+        // @ts-expect-error not implemented in the app yet
+        style,
+        title: item.title, value,
+        onSelect: closureSelector(form, `__multiselect_${params.id}#${item.id}`, async () => {
+          let nextState: 'included' | 'excluded' | undefined
+          const canSelect = !params.maximum || selectedOptionsLength < params.maximum
+          const canDeselect = (params.allowEmptySelection && selectedOptionsLength == 1) || selectedOptionsLength > 1
+
+          switch (currentState) {
+            case 'included': {
+              if (params.allowExclusion) {
+                nextState = 'excluded'
+                break
+              }
+
+              if (canDeselect) {
+                nextState = undefined
+                break
+              } else {
+                return
+              }
+            }
+            case 'excluded': {
+              if (canDeselect) {
+                nextState = undefined
+                break
+              } else {
+                return
+              }
+            }
+            case undefined: {
+              if (canSelect) {
+                nextState = 'included'
+                break
+              } else {
+                return
+              }
+            }
+          }
+
+          if (nextState == undefined) {
+            delete params.value[item.id]
+          } else {
+            params.value[item.id] = nextState
+          }
+
+          if (params.onValueChange) {
+            await Application.SelectorRegistry.selector(params.onValueChange)()
+          }
+
+          form.reloadForm()
+        })
+      })
+    })
+  )
+}

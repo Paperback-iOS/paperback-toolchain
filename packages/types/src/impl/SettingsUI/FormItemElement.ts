@@ -2,7 +2,7 @@ import type { Cookie } from '../../Cookie.js'
 import type { Request } from '../../Request.js'
 import { closureSelector, type SelectorID } from '../Selector.js'
 import { Form } from './Form.js'
-import { FlowSection, Section } from './FormSection.js'
+import { FlowSection, Section, TriStateSelectSection } from './FormSection.js'
 
 export interface FormItemElement<T> {
   id: string
@@ -241,90 +241,16 @@ class TriStateSelectForm extends Form {
   override requiresExplicitSubmission: boolean = true
 
   override getSections() {
-    const selectedOptionsLength = Object.keys(this.states).length
-
     return [
-      (this.params.layout == 'flow' ? FlowSection : Section)(
-        { id: 'multiselect', header: this.title },
-        this.params.items.map(item => {
-          const currentState = this.states[item.id]
-
-          let value: string | undefined
-          let style: 'success' | 'error' | undefined
-          switch (currentState) {
-            case 'included': {
-              value = "✓"
-              if (this.params.layout == 'flow') {
-                style = 'success'
-              }
-              break
-            }
-            case 'excluded': {
-              value = "✕"
-              if (this.params.layout == 'flow') {
-                style = 'error'
-              }
-              break
-            }
-            default: {
-              value = undefined
-              style = undefined
-              break
-            }
-          }
-
-          return LabelRow(item.id, {
-            // @ts-expect-error not implemented in the app yet
-            style,
-            title: item.title, value,
-            onSelect: closureSelector(this, item.id, async () => {
-              let nextState: 'included' | 'excluded' | undefined
-              const canSelect = !this.params.maximum || selectedOptionsLength < this.params.maximum
-              const canDeselect = (this.params.allowEmptySelection && selectedOptionsLength == 1) || selectedOptionsLength > 1
-
-              switch (currentState) {
-                case 'included': {
-                  if (this.params.allowExclusion) {
-                    nextState = 'excluded'
-                    break
-                  }
-
-                  if (canDeselect) {
-                    nextState = undefined
-                    break
-                  } else {
-                    return
-                  }
-                }
-                case 'excluded': {
-                  if (canDeselect) {
-                    nextState = undefined
-                    break
-                  } else {
-                    return
-                  }
-                }
-                case undefined: {
-                  if (canSelect) {
-                    nextState = 'included'
-                    break
-                  } else {
-                    return
-                  }
-                }
-              }
-
-              if (nextState == undefined) {
-                delete this.states[item.id]
-              } else {
-                this.states[item.id] = nextState
-              }
-
-              this.reloadForm()
-            })
-          })
-        })
-      )
+      TriStateSelectSection(this, {
+        id: 'multiselect',
+        value: this.states,
+        items: this.params.items,
+        allowExclusion: this.params.allowExclusion,
+        allowEmptySelection: this.params.allowEmptySelection,
+        maximum: this.params.maximum,
+        layout: this.params.layout,
+      })
     ]
   }
 
