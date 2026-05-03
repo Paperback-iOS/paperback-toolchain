@@ -329,6 +329,6 @@ class TriStateSelectForm extends Form {
   }
 
   override async formDidSubmit(): Promise<void> {
-    Application.SelectorRegistry.selector(this.params.onValueChange)(this.states)
+    await Application.SelectorRegistry.selector(this.params.onValueChange)(this.states)
   }
 }
