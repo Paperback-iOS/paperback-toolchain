@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.81
+
+### Patch Changes
+
+- dff013e: Added TriStateSelectSection as an inline alternative to TriStateSelectRow
+
 ## 1.0.0-alpha.80
 
 ### Patch Changes
