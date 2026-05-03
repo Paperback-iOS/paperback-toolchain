@@ -114,7 +114,7 @@ export type TriStateSelectRowProps = {
   allowExclusion: boolean,
   allowEmptySelection: boolean,
   maximum?: number,
-  onValueChange: SelectorID<(value: Record<string, 'included' | 'excluded'>) => void>
+  onValueChange: SelectorID<(value: Record<string, 'included' | 'excluded'>) => Promise<void>>
 }
 
 export function TriStateSelectRow(id: string, props: TriStateSelectRowProps): NavigationRowElement {
