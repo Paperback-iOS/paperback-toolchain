@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.80
+
+### Patch Changes
+
+- 15b4999: Added SearchFilterForm to compat export; Added promise to onValueChange of TriStateSelectRow
+
 ## 1.0.0-alpha.79
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @paperback/toolchain
 
+## 1.0.0-alpha.80
+
+### Patch Changes
+
+- Updated dependencies [15b4999]
+  - @paperback/types@1.0.0-alpha.80
+  - @paperback/runtime-polyfills@1.0.0-alpha.80
+
 ## 1.0.0-alpha.79
 
 ### Patch Changes
