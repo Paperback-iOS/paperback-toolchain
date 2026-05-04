@@ -89,21 +89,34 @@ export function ToggleRow(id: string, props: ToggleRowProps): ToggleRowElement {
   return { ...props, id, type: 'toggleRow', isHidden: props.isHidden ?? false }
 }
 
-export type SelectRowProps = {
+type _SelectRowProps = {
   title: string
   subtitle?: string
 
   layout: 'flow' | 'list',
   value: string[]
-  items: { id: string; title: string }[]
   minItemCount: number
   maxItemCount: number
   isHidden?: boolean
   onValueChange: SelectorID<(value: string[]) => Promise<void>>
 }
 
-export function SelectRow(id: string, props: SelectRowProps): SelectRowElement {
-  return { ...props, id, type: 'selectRow', isHidden: props.isHidden ?? false }
+export type SelectRowProps = (_SelectRowProps & {
+  items: { id: string; title: string }[]
+}) | (_SelectRowProps & {
+  /**
+   * @deprecated Use `items` instead.
+   */
+  options: { id: string; title: string }[]
+})
+
+export function SelectRow(id: string, props: SelectRowProps): NavigationRowElement {
+  return NavigationRow(id, {
+    form: new SelectForm(props.title, props),
+    title: props.title,
+    value: `${Object.keys(props.value).length} items`,
+    isHidden: props.isHidden,
+  })
 }
 
 export type TriStateSelectRowProps = {
@@ -243,12 +256,19 @@ export class SelectForm extends Form {
   override requiresExplicitSubmission: boolean = true
 
   override getSections() {
+    let items: { id: string, title: string }[]
+    if ('items' in this.params) {
+      items = this.params.items
+    } else {
+      items = this.params.options
+    }
+
     return [
       SelectSection(this, {
         id: 'select',
         layout: this.params.layout,
         value: this.states,
-        items: this.params.items,
+        items: items,
         minItemCount: this.params.minItemCount,
         maxItemCount: this.params.maxItemCount,
         isHidden: this.params.isHidden

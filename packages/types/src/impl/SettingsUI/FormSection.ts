@@ -111,26 +111,53 @@ export function SelectSection(
   form: Form,
   params: SelectSectionInfo
 ): FlowSectionElement | ListSectionElement {
+  if (params.maxItemCount < 1) {
+    throw new Error(`[${params.id}] maxItemCount must not be less than one`);
+  }
+
+  if (params.minItemCount < 0) {
+    throw new Error(`[${params.id}] minItemCount must not be less than zero`);
+  }
+
+  if (params.minItemCount >= params.maxItemCount && params.maxItemCount > 1) {
+    throw new Error(`[${params.id}] minItemCount must be less than maxItemCount, or both must be one`);
+  }
+
+  if (params.value.length < params.minItemCount) {
+    throw new Error(`[${params.id}] value count must not be less than minItemCount`);
+  }
+
+  if (!params.value.every((item) => params.items.some((option) => option.id === item))) {
+    throw new Error(`[${params.id}] All provided values must be inside items`);
+  }
+
   const selectedOptionsLength = Object.keys(params.value).length
 
   return (params.layout == 'flow' ? FlowSection : Section)(
     { id: params.id, header: params.header, footer: params.footer },
     params.items.map(item => {
-
-      let isSelected = params.value.indexOf(item.id);
+      const selectedIndex = params.value.indexOf(item.id);
+      const isSelected = selectedIndex !== -1;
 
       return LabelRow(item.id, {
         // @ts-expect-error not implemented in the app yet
         style: undefined,
         title: item.title,
+        value: isSelected ? "✓" : undefined,
         onSelect: closureSelector(form, `__select_${params.id}#${item.id}`, async () => {
-          const canSelect = !params.maxItemCount || selectedOptionsLength < params.maxItemCount
-          const canDeselect = (params.minItemCount == 0 && selectedOptionsLength == 1) || selectedOptionsLength > 1
-
-          if (isSelected === undefined && canSelect) {
-            params.value.push(item.id)
-          } else if (canDeselect) {
-            params.value.splice(isSelected, 1)
+          if (isSelected) {
+            if (selectedOptionsLength > params.minItemCount) {
+              params.value.splice(selectedIndex, 1)
+            }
+          } else {
+            if (params.maxItemCount == 1) {
+              params.value.splice(0, params.value.length, item.id)
+            } else if (selectedOptionsLength < params.maxItemCount) {
+              params.value.push(item.id)
+            } else {
+              // return early, no need to reload the form and trigger the onchange
+              return
+            }
           }
 
           if (params.onValueChange) {
