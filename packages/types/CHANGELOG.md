@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.82
+
+### Patch Changes
+
+- 2ed0661: Converted SelectRow from a special app-handled row to a custom row defined in types
+
 ## 1.0.0-alpha.81
 
 ### Patch Changes
