@@ -1,6 +1,6 @@
 import { closureSelector, type SelectorID } from '../Selector.js'
 import { Form } from './Form.js'
-import { LabelRow, type FormItemElement } from './FormItemElement.js'
+import { LabelRow, SelectRow, type FormItemElement } from './FormItemElement.js'
 
 export interface FormSectionElement<T> {
   type: T
@@ -95,6 +95,53 @@ export function FlowSection(
     ...info,
     items: items.filter((x) => x) as FormItemElement<unknown>[]
   }
+}
+
+export type SelectSectionInfo = ListSectionInfo & {
+  layout: 'flow' | 'list',
+  value: string[],
+  items: { id: string, title: string }[],
+  minItemCount: number
+  maxItemCount: number
+  isHidden?: boolean,
+  onValueChange?: SelectorID<() => Promise<void>>
+}
+
+export function SelectSection(
+  form: Form,
+  params: SelectSectionInfo
+): FlowSectionElement | ListSectionElement {
+  const selectedOptionsLength = Object.keys(params.value).length
+
+  return (params.layout == 'flow' ? FlowSection : Section)(
+    { id: params.id, header: params.header, footer: params.footer },
+    params.items.map(item => {
+
+      let isSelected = params.value.indexOf(item.id);
+
+      return LabelRow(item.id, {
+        // @ts-expect-error not implemented in the app yet
+        style: undefined,
+        title: item.title,
+        onSelect: closureSelector(form, `__select_${params.id}#${item.id}`, async () => {
+          const canSelect = !params.maxItemCount || selectedOptionsLength < params.maxItemCount
+          const canDeselect = (params.minItemCount == 0 && selectedOptionsLength == 1) || selectedOptionsLength > 1
+
+          if (isSelected === undefined && canSelect) {
+            params.value.push(item.id)
+          } else if (canDeselect) {
+            params.value.splice(isSelected, 1)
+          }
+
+          if (params.onValueChange) {
+            await Application.SelectorRegistry.selector(params.onValueChange)()
+          }
+
+          form.reloadForm()
+        })
+      })
+    })
+  )
 }
 
 export type TriStateSelectSectionInfo = ListSectionInfo & {

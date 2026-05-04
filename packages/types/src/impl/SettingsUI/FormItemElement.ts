@@ -2,7 +2,7 @@ import type { Cookie } from '../../Cookie.js'
 import type { Request } from '../../Request.js'
 import { closureSelector, type SelectorID } from '../Selector.js'
 import { Form } from './Form.js'
-import { FlowSection, Section, TriStateSelectSection } from './FormSection.js'
+import { FlowSection, Section, SelectSection, TriStateSelectSection } from './FormSection.js'
 
 export interface FormItemElement<T> {
   id: string
@@ -92,10 +92,12 @@ export function ToggleRow(id: string, props: ToggleRowProps): ToggleRowElement {
 export type SelectRowProps = {
   title: string
   subtitle?: string
+
+  layout: 'flow' | 'list',
   value: string[]
+  items: { id: string; title: string }[]
   minItemCount: number
   maxItemCount: number
-  options: { id: string; title: string }[]
   isHidden?: boolean
   onValueChange: SelectorID<(value: string[]) => Promise<void>>
 }
@@ -223,6 +225,40 @@ export function DeferredItem<V, T extends FormItemElement<V>>(
   work: () => T | undefined
 ): T | undefined {
   return work()
+}
+
+export class SelectForm extends Form {
+  states: string[] = []
+
+  constructor(
+    public title: string,
+    public params: SelectRowProps
+  ) {
+    super()
+
+    // Make a copy
+    this.states = [...params.value]
+  }
+
+  override requiresExplicitSubmission: boolean = true
+
+  override getSections() {
+    return [
+      SelectSection(this, {
+        id: 'select',
+        layout: this.params.layout,
+        value: this.states,
+        items: this.params.items,
+        minItemCount: this.params.minItemCount,
+        maxItemCount: this.params.maxItemCount,
+        isHidden: this.params.isHidden
+      })
+    ]
+  }
+
+  override async formDidSubmit(): Promise<void> {
+    await Application.SelectorRegistry.selector(this.params.onValueChange)(this.states)
+  }
 }
 
 class TriStateSelectForm extends Form {
