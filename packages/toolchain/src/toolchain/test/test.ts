@@ -16,7 +16,7 @@ export async function runSourceTests(logger: Logger, testFilePath: string) {
     TextEncoder,
     TextDecoder,
     SubtleCrypto,
-    crypto
+    crypto,
   })
 
   // Add main file

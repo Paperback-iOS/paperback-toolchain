@@ -1,5 +1,12 @@
 # @paperback/types
 
+## 1.0.0-alpha.84
+
+### Patch Changes
+
+- 41a091e: - updated b64 encode/decode polyfill to accurately reflect app behavior
+  - added styling types to labelrow
+
 ## 1.0.0-alpha.83
 
 ### Patch Changes

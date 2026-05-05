@@ -7,6 +7,7 @@ import {
 import {
   FlowSection,
   Section,
+  SelectSection,
   type FormSectionElement,
 } from '../../impl/SettingsUI/FormSection.js'
 import { closureSelector, type SelectorID } from '../../impl/Selector.js'
@@ -100,25 +101,25 @@ export class SearchFilterForm extends AdvancedSearchForm {
       return this.filters.map((filter) => {
         switch (filter.type) {
           case 'dropdown': {
-            const selectedOptionId = (this.selectedFilterValues[filter.id] ??
-              filter.value) as typeof filter.value
-            return Section(
-              { id: filter.id, header: filter.title },
-              filter.options.map((option) => {
-                return LabelRow(option.id, {
-                  title: option.value,
-                  value: selectedOptionId == option.id ? '✓' : undefined,
-                  onSelect: closureSelector(
-                    this,
-                    `${filter.id}#${option.id}`,
-                    async () => {
-                      this.selectedFilterValues[filter.id] = option.id
-                      this.reloadForm()
-                    }
-                  ),
-                })
-              })
-            )
+            const selectedOptionId = [
+              (this.selectedFilterValues[filter.id] ??
+                filter.value) as typeof filter.value,
+            ]
+            return SelectSection(this, {
+              id: filter.id,
+              header: filter.title,
+              value: selectedOptionId,
+              onValueChange: closureSelector(this, filter.id, async () => {
+                this.selectedFilterValues[filter.id] = selectedOptionId[0]!
+              }),
+              layout: 'list',
+              items: filter.options.map((option) => ({
+                id: option.id,
+                title: option.value,
+              })),
+              minItemCount: 1,
+              maxItemCount: 1,
+            })
           }
           case 'multiselect': {
             const selectedOptions = (this.selectedFilterValues[filter.id] ??

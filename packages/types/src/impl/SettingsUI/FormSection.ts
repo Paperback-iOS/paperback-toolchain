@@ -1,6 +1,11 @@
 import { closureSelector, type SelectorID } from '../Selector.js'
 import { Form } from './Form.js'
-import { LabelRow, SelectRow, type FormItemElement } from './FormItemElement.js'
+import {
+  LabelRow,
+  SelectRow,
+  type FormItemElement,
+  type LabelRowValue,
+} from './FormItemElement.js'
 
 export interface FormSectionElement<T> {
   type: T
@@ -151,10 +156,10 @@ export function SelectSection(
       const isSelected = selectedIndex !== -1
 
       return LabelRow(item.id, {
-        // @ts-expect-error not implemented in the app yet
-        style: undefined,
         title: item.title,
-        value: isSelected ? '✓' : undefined,
+        value: isSelected
+          ? { symbol: 'checkmark', style: 'success' }
+          : undefined,
         onSelect: closureSelector(
           form,
           `__select_${params.id}#${item.id}`,
@@ -209,20 +214,32 @@ export function TriStateSelectSection(
     params.items.map((item) => {
       const currentState = params.value[item.id]
 
-      let value: string | undefined
+      let value: LabelRowValue | undefined
       let style: 'success' | 'error' | undefined
       switch (currentState) {
         case 'included': {
-          value = '✓'
           if (params.layout == 'flow') {
             style = 'success'
+            value = undefined
+          } else {
+            style = undefined
+            value = {
+              symbol: 'checkmark',
+              style: 'success',
+            }
           }
           break
         }
         case 'excluded': {
-          value = '✕'
           if (params.layout == 'flow') {
             style = 'error'
+            value = undefined
+          } else {
+            style = undefined
+            value = {
+              symbol: 'xmark',
+              style: 'error',
+            }
           }
           break
         }
@@ -234,7 +251,6 @@ export function TriStateSelectSection(
       }
 
       return LabelRow(item.id, {
-        // @ts-expect-error not implemented in the app yet
         style,
         title: item.title,
         value,
