@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.83
+
+### Patch Changes
+
+- Made layout optional in SelectRow
+
 ## 1.0.0-alpha.82
 
 ### Patch Changes
