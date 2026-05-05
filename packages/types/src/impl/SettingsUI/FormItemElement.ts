@@ -92,8 +92,6 @@ export function ToggleRow(id: string, props: ToggleRowProps): ToggleRowElement {
 type _SelectRowProps = {
   title: string
   subtitle?: string
-
-  layout: 'flow' | 'list',
   value: string[]
   minItemCount: number
   maxItemCount: number
@@ -102,6 +100,7 @@ type _SelectRowProps = {
 }
 
 export type SelectRowProps = (_SelectRowProps & {
+  layout: 'flow' | 'list',
   items: { id: string; title: string }[]
 }) | (_SelectRowProps & {
   /**
@@ -256,19 +255,12 @@ export class SelectForm extends Form {
   override requiresExplicitSubmission: boolean = true
 
   override getSections() {
-    let items: { id: string, title: string }[]
-    if ('items' in this.params) {
-      items = this.params.items
-    } else {
-      items = this.params.options
-    }
-
     return [
       SelectSection(this, {
         id: 'select',
-        layout: this.params.layout,
         value: this.states,
-        items: items,
+        layout: 'layout' in this.params ? this.params.layout : 'list',
+        items: 'items' in this.params ? this.params.items : this.params.options,
         minItemCount: this.params.minItemCount,
         maxItemCount: this.params.maxItemCount,
         isHidden: this.params.isHidden
