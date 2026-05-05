@@ -1,12 +1,16 @@
 import pc from 'picocolors'
-import path from 'node:path';
+import path from 'node:path'
 import readline from 'node:readline/promises'
-import { bundle, type BundleFlags } from '../bundle/index.js';
-import { clearConsole, prefixTime, startFileWatcher } from '../../toolchain/serve.js'
-import { startServer } from '../../toolchain/http-server.js';
-import type { LocalContext } from "../../context.js";
-import type { FSWatcher } from 'node:fs';
-import type { Server } from 'node:http';
+import { bundle, type BundleFlags } from '../bundle/index.js'
+import {
+  clearConsole,
+  prefixTime,
+  startFileWatcher,
+} from '../../toolchain/serve.js'
+import { startServer } from '../../toolchain/http-server.js'
+import type { LocalContext } from '../../context.js'
+import type { FSWatcher } from 'node:fs'
+import type { Server } from 'node:http'
 
 export interface ServeFlags {
   watch: boolean
@@ -14,7 +18,8 @@ export interface ServeFlags {
 }
 
 const bundleFlags: BundleFlags = {
-  debug: false, tests: false
+  debug: false,
+  tests: false,
 }
 
 let rebuildDebounce: NodeJS.Timeout | undefined
@@ -38,7 +43,9 @@ export async function serve(this: LocalContext, flags: ServeFlags) {
       await bundle.bind(this)(bundleFlags)
 
       server = startServer(flags.port)
-      console.log(`\nFor a list of commands do ${pc.green('h')} or ${pc.green('help')}`)
+      console.log(
+        `\nFor a list of commands do ${pc.green('h')} or ${pc.green('help')}`
+      )
     } catch (e) {
       console.error(e)
     }
@@ -53,43 +60,46 @@ export async function serve(this: LocalContext, flags: ServeFlags) {
   if (flags.watch) {
     const srcDir = path.join(process.cwd(), 'src')
     console.log(pc.yellow(`Watching for changes in ${srcDir}`))
-    watcher = startFileWatcher(srcDir, filename => {
+    watcher = startFileWatcher(srcDir, (filename) => {
       if (isRebuilding) return
 
       console.log(`file: ${filename} changed, scheduling rebuild`)
       rlSignal?.abort()
 
       if (rebuildDebounce != undefined) clearTimeout(rebuildDebounce)
-      rebuildDebounce = setTimeout(rebuildSources, 500);
+      rebuildDebounce = setTimeout(rebuildSources, 500)
     })
   }
 
   // Create readline interface with promises API
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  })
-  // Handle Ctrl-C gracefully
-  .on('SIGINT', () => {
-    if (watcher != undefined) {
-      console.log('\nStopping watcher...')
-      watcher.close()
-    }
+  const rl = readline
+    .createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    })
+    // Handle Ctrl-C gracefully
+    .on('SIGINT', () => {
+      if (watcher != undefined) {
+        console.log('\nStopping watcher...')
+        watcher.close()
+      }
 
-    console.log('\nStopping server...')
-    server?.close()
+      console.log('\nStopping server...')
+      server?.close()
 
-    rl.close()
+      rl.close()
 
-    process.exit(0)
-  })
+      process.exit(0)
+    })
 
   let stopServer = false
   while (!stopServer) {
     rlSignal = new AbortController()
 
     let input: string
-    try { input = await rl.question(prefixTime(''), { signal: rlSignal.signal }) } catch {
+    try {
+      input = await rl.question(prefixTime(''), { signal: rlSignal.signal })
+    } catch {
       continue
     }
 
@@ -97,7 +107,9 @@ export async function serve(this: LocalContext, flags: ServeFlags) {
       console.log(pc.underline(pc.bold('Help')))
       console.log('  h, help - Display this message')
       console.log('  s, stop - Stop the server')
-      console.log('  r, restart - Restart the server, also rebuilds the sources')
+      console.log(
+        '  r, restart - Restart the server, also rebuilds the sources'
+      )
     }
 
     if (input === 's' || input === 'stop') {

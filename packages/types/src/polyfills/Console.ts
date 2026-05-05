@@ -2,14 +2,14 @@
 
 export class Console {
   log(...msg: string[]) {
-    Application.console_log(msg);
+    Application.console_log(msg)
   }
 
   warn(...msg: string[]) {
-    Application.console_warn(msg);
+    Application.console_warn(msg)
   }
 
   error(...msg: string[]) {
-    Application.console_error(msg);
+    Application.console_error(msg)
   }
 }

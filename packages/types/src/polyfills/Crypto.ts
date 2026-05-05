@@ -5,48 +5,48 @@
 // These describe the plain objects that cross the JS↔Swift bridge.
 
 interface CryptoKeyObject {
-  type: 'secret';
-  algorithm: Object;
-  extractable: boolean;
-  usages: string[];
-  _keyData: ArrayBuffer;
+  type: 'secret'
+  algorithm: object
+  extractable: boolean
+  usages: string[]
+  _keyData: ArrayBuffer
 }
 
 interface AesGcmParams {
-  name: 'AES-GCM';
-  iv: BufferSource;
-  additionalData?: BufferSource;
-  tagLength?: number;
+  name: 'AES-GCM'
+  iv: BufferSource
+  additionalData?: BufferSource
+  tagLength?: number
 }
 
 interface AesCbcParams {
-  name: 'AES-CBC';
-  iv: BufferSource;
+  name: 'AES-CBC'
+  iv: BufferSource
 }
 
 interface AesKeyGenParams {
-  name: 'AES-GCM' | 'AES-CBC';
-  length: 128 | 192 | 256;
+  name: 'AES-GCM' | 'AES-CBC'
+  length: 128 | 192 | 256
 }
 
 interface HmacKeyGenParams {
-  name: 'HMAC';
-  hash: 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
-  length?: number;
+  name: 'HMAC'
+  hash: 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512'
+  length?: number
 }
 
 interface HkdfParams {
-  name: 'HKDF';
-  hash: 'SHA-256' | 'SHA-384' | 'SHA-512';
-  salt: BufferSource;
-  info: BufferSource;
+  name: 'HKDF'
+  hash: 'SHA-256' | 'SHA-384' | 'SHA-512'
+  salt: BufferSource
+  info: BufferSource
 }
 
 interface Pbkdf2Params {
-  name: 'PBKDF2';
-  hash: 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
-  salt: BufferSource;
-  iterations: number;
+  name: 'PBKDF2'
+  hash: 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512'
+  salt: BufferSource
+  iterations: number
 }
 
 interface Algorithm {
@@ -62,9 +62,11 @@ interface Algorithm {
  * Always returns a new plain object with at least `{ name: string }`.
  * `name` is upper-cased to match what Swift's `AlgorithmName` enum expects.
  */
-function normaliseAlgorithm<T extends Algorithm>(algorithm: string | T): T & { name: string } {
-  if (typeof algorithm === "string") {
-    return { name: algorithm.toUpperCase() } as T;
+function normaliseAlgorithm<T extends Algorithm>(
+  algorithm: string | T
+): T & { name: string } {
+  if (typeof algorithm === 'string') {
+    return { name: algorithm.toUpperCase() } as T
   }
 
   const newAlg = {
@@ -80,7 +82,7 @@ function normaliseAlgorithm<T extends Algorithm>(algorithm: string | T): T & { n
     newAlg.hash.name = newAlg.hash.name.toUpperCase()
   }
 
-  return newAlg;
+  return newAlg
 }
 
 /**
@@ -89,20 +91,23 @@ function normaliseAlgorithm<T extends Algorithm>(algorithm: string | T): T & { n
  */
 function toArrayBuffer(value: BufferSource | Array<any>): ArrayBuffer {
   if (value instanceof ArrayBuffer) {
-    return value;
+    return value
   }
 
   if (ArrayBuffer.isView(value)) {
-    return value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength);
+    return value.buffer.slice(
+      value.byteOffset,
+      value.byteOffset + value.byteLength
+    )
   }
 
   if (Array.isArray(value)) {
-    return new Uint8Array(value).buffer;
+    return new Uint8Array(value).buffer
   }
 
   throw new TypeError(
-    "Expected BufferSource (ArrayBuffer or TypedArray), got " + typeof value
-  );
+    'Expected BufferSource (ArrayBuffer or TypedArray), got ' + typeof value
+  )
 }
 
 /**
@@ -113,14 +118,17 @@ function toArrayBuffer(value: BufferSource | Array<any>): ArrayBuffer {
  * @param keys   - Field names to coerce (e.g. "iv", "salt", "info").
  * @returns `algObj` with named fields replaced by `ArrayBuffer`s.
  */
-function coerceBufferFields<T extends Algorithm>(algObj: T, ...keys: (keyof T)[]): object {
+function coerceBufferFields<T extends Algorithm>(
+  algObj: T,
+  ...keys: (keyof T)[]
+): object {
   for (const key of keys) {
     if (algObj[key] != null) {
       // @ts-ignore
-      algObj[key] = toArrayBuffer(algObj[key]);
+      algObj[key] = toArrayBuffer(algObj[key])
     }
   }
-  return algObj;
+  return algObj
 }
 
 // ─── CryptoKey ────────────────────────────────────────────────────────────
@@ -134,28 +142,35 @@ function coerceBufferFields<T extends Algorithm>(algObj: T, ...keys: (keyof T)[]
  * that the raw bytes are opaque.
  */
 class CryptoKey {
-  type: 'secret';
-  algorithm: object;
-  extractable: boolean;
-  usages: readonly string[];
-  _keyData!: ArrayBuffer;
+  type: 'secret'
+  algorithm: object
+  extractable: boolean
+  usages: readonly string[]
+  _keyData!: ArrayBuffer
 
-  constructor(keyData: ArrayBuffer, algorithm: object, extractable: boolean, usages: string[]) {
-    this.type = "secret";
-    this.algorithm = Object.freeze(Object.assign({}, algorithm));
-    this.extractable = extractable;
-    this.usages = Object.freeze(usages.slice());
+  constructor(
+    keyData: ArrayBuffer,
+    algorithm: object,
+    extractable: boolean,
+    usages: string[]
+  ) {
+    this.type = 'secret'
+    this.algorithm = Object.freeze(Object.assign({}, algorithm))
+    this.extractable = extractable
+    this.usages = Object.freeze(usages.slice())
 
     // Non-enumerable so it stays hidden from plugin introspection.
-    Object.defineProperty(this, "_keyData", {
+    Object.defineProperty(this, '_keyData', {
       value: keyData,
       writable: false,
       enumerable: false,
       configurable: false,
-    });
+    })
   }
 
-  get [Symbol.toStringTag]() { return "CryptoKey"; }
+  get [Symbol.toStringTag]() {
+    return 'CryptoKey'
+  }
 
   /**
    * Serialises this key to the plain bridge object shape understood by Swift.
@@ -170,7 +185,7 @@ class CryptoKey {
       extractable: this.extractable,
       usages: Array.from(this.usages),
       _keyData: this._keyData,
-    };
+    }
   }
 }
 
@@ -184,9 +199,12 @@ class SubtleCryptoAPI {
    * @param {BufferSource}         data
    * @returns {Promise<ArrayBuffer>}
    */
-  async digest(algorithm: string | { name: string; }, data: BufferSource): Promise<ArrayBuffer> {
-    const alg = normaliseAlgorithm(algorithm);
-    const buf = toArrayBuffer(data);
+  async digest(
+    algorithm: string | { name: string },
+    data: BufferSource
+  ): Promise<ArrayBuffer> {
+    const alg = normaliseAlgorithm(algorithm)
+    const buf = toArrayBuffer(data)
 
     return Application.crypto_digest(alg.name, buf)
   }
@@ -199,8 +217,12 @@ class SubtleCryptoAPI {
    * @param {string[]} keyUsages
    * @returns {Promise<CryptoKey>}
    */
-  async generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams, extractable: boolean, keyUsages: string[]): Promise<CryptoKey> {
-    const alg = normaliseAlgorithm(algorithm);
+  async generateKey(
+    algorithm: AesKeyGenParams | HmacKeyGenParams,
+    extractable: boolean,
+    keyUsages: string[]
+  ): Promise<CryptoKey> {
+    const alg = normaliseAlgorithm(algorithm)
     const key = Application.crypto_generateKey(alg, extractable, keyUsages)
     return cryptoKeyFromBridgeObject(key, alg)
   }
@@ -215,12 +237,27 @@ class SubtleCryptoAPI {
    * @param {string[]}             keyUsages
    * @returns {Promise<CryptoKey>}
    */
-  async importKey(format: 'raw' | 'jwk', keyData: BufferSource | object, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): Promise<CryptoKey> {
-    const alg = normaliseAlgorithm(algorithm);
-    
+  async importKey(
+    format: 'raw' | 'jwk',
+    keyData: BufferSource | object,
+    algorithm: Algorithm,
+    extractable: boolean,
+    keyUsages: string[]
+  ): Promise<CryptoKey> {
+    const alg = normaliseAlgorithm(algorithm)
+
     // "raw" → ArrayBuffer; "jwk" → pass the plain object as-is.
-    const bridgeData = format === "jwk" ? Object.assign({}, keyData) : toArrayBuffer(keyData as BufferSource);
-    const keyObject = await Application.crypto_importKey(format, bridgeData, alg, extractable, keyUsages)
+    const bridgeData =
+      format === 'jwk'
+        ? Object.assign({}, keyData)
+        : toArrayBuffer(keyData as BufferSource)
+    const keyObject = await Application.crypto_importKey(
+      format,
+      bridgeData,
+      alg,
+      extractable,
+      keyUsages
+    )
 
     return cryptoKeyFromBridgeObject(keyObject, alg)
   }
@@ -232,8 +269,12 @@ class SubtleCryptoAPI {
    * @param {CryptoKey}   key
    * @returns {Promise<ArrayBuffer|Object>}
    */
-  async exportKey(format: 'raw' | 'jwk', key: CryptoKey): Promise<ArrayBuffer | object> {
-    if (!(key instanceof CryptoKey)) throw new TypeError("key must be a CryptoKey");
+  async exportKey(
+    format: 'raw' | 'jwk',
+    key: CryptoKey
+  ): Promise<ArrayBuffer | object> {
+    if (!(key instanceof CryptoKey))
+      throw new TypeError('key must be a CryptoKey')
     return Application.crypto_exportKey(format, key._bridgeObject())
   }
 
@@ -245,11 +286,20 @@ class SubtleCryptoAPI {
    * @param {BufferSource}              data
    * @returns {Promise<ArrayBuffer>}
    */
-  async encrypt(algorithm: AesGcmParams | AesCbcParams, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer> {
-    if (!(key instanceof CryptoKey)) throw new TypeError("key must be a CryptoKey");
+  async encrypt(
+    algorithm: AesGcmParams | AesCbcParams,
+    key: CryptoKey,
+    data: BufferSource
+  ): Promise<ArrayBuffer> {
+    if (!(key instanceof CryptoKey))
+      throw new TypeError('key must be a CryptoKey')
 
-    const alg = coerceBufferFields(normaliseAlgorithm(algorithm), "iv", "additionalData" as any);
-    const buf = toArrayBuffer(data);
+    const alg = coerceBufferFields(
+      normaliseAlgorithm(algorithm),
+      'iv',
+      'additionalData' as any
+    )
+    const buf = toArrayBuffer(data)
 
     return Application.crypto_encrypt(alg, key._bridgeObject(), buf)
   }
@@ -262,13 +312,22 @@ class SubtleCryptoAPI {
    * @param {BufferSource}              data
    * @returns {Promise<ArrayBuffer>}
    */
-  async decrypt(algorithm: AesGcmParams | AesCbcParams, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer> {
-    if (!(key instanceof CryptoKey)) throw new TypeError("key must be a CryptoKey");
+  async decrypt(
+    algorithm: AesGcmParams | AesCbcParams,
+    key: CryptoKey,
+    data: BufferSource
+  ): Promise<ArrayBuffer> {
+    if (!(key instanceof CryptoKey))
+      throw new TypeError('key must be a CryptoKey')
 
-    const alg = coerceBufferFields(normaliseAlgorithm(algorithm), "iv", "additionalData" as any);
-    const buf = toArrayBuffer(data);
+    const alg = coerceBufferFields(
+      normaliseAlgorithm(algorithm),
+      'iv',
+      'additionalData' as any
+    )
+    const buf = toArrayBuffer(data)
 
-    return Application.crypto_decrypt(alg, key._bridgeObject(), buf);
+    return Application.crypto_decrypt(alg, key._bridgeObject(), buf)
   }
 
   // ── sign ────────────────────────────────────────────────────────────────
@@ -279,13 +338,18 @@ class SubtleCryptoAPI {
    * @param {BufferSource}         data
    * @returns {Promise<ArrayBuffer>}
    */
-  async sign(algorithm: string | { name: string; }, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer> {
-    if (!(key instanceof CryptoKey)) throw new TypeError("key must be a CryptoKey");
+  async sign(
+    algorithm: string | { name: string },
+    key: CryptoKey,
+    data: BufferSource
+  ): Promise<ArrayBuffer> {
+    if (!(key instanceof CryptoKey))
+      throw new TypeError('key must be a CryptoKey')
 
-    const alg = normaliseAlgorithm(algorithm);
-    const buf = toArrayBuffer(data);
+    const alg = normaliseAlgorithm(algorithm)
+    const buf = toArrayBuffer(data)
 
-    return Application.crypto_sign(alg.name, key._bridgeObject(), buf);
+    return Application.crypto_sign(alg.name, key._bridgeObject(), buf)
   }
 
   // ── verify ──────────────────────────────────────────────────────────────
@@ -297,14 +361,20 @@ class SubtleCryptoAPI {
    * @param {BufferSource}         data
    * @returns {Promise<boolean>}
    */
-  async verify(algorithm: string | { name: string; }, key: CryptoKey, signature: BufferSource, data: BufferSource): Promise<boolean> {
-    if (!(key instanceof CryptoKey)) throw new TypeError("key must be a CryptoKey");
+  async verify(
+    algorithm: string | { name: string },
+    key: CryptoKey,
+    signature: BufferSource,
+    data: BufferSource
+  ): Promise<boolean> {
+    if (!(key instanceof CryptoKey))
+      throw new TypeError('key must be a CryptoKey')
 
-    const alg = normaliseAlgorithm(algorithm);
-    const sig = toArrayBuffer(signature);
-    const buf = toArrayBuffer(data);
+    const alg = normaliseAlgorithm(algorithm)
+    const sig = toArrayBuffer(signature)
+    const buf = toArrayBuffer(data)
 
-    return Application.crypto_verify(alg.name, key._bridgeObject(), sig, buf);
+    return Application.crypto_verify(alg.name, key._bridgeObject(), sig, buf)
   }
 
   // ── deriveBits ──────────────────────────────────────────────────────────
@@ -315,12 +385,21 @@ class SubtleCryptoAPI {
    * @param {number}                  length  - Output bit-length.
    * @returns {Promise<ArrayBuffer>}
    */
-  async deriveBits(algorithm: HkdfParams | Pbkdf2Params, baseKey: CryptoKey, length: number): Promise<ArrayBuffer> {
-    if (!(baseKey instanceof CryptoKey)) throw new TypeError("baseKey must be a CryptoKey");
+  async deriveBits(
+    algorithm: HkdfParams | Pbkdf2Params,
+    baseKey: CryptoKey,
+    length: number
+  ): Promise<ArrayBuffer> {
+    if (!(baseKey instanceof CryptoKey))
+      throw new TypeError('baseKey must be a CryptoKey')
 
-    const alg = coerceBufferFields(normaliseAlgorithm(algorithm), "salt", "info" as any);
+    const alg = coerceBufferFields(
+      normaliseAlgorithm(algorithm),
+      'salt',
+      'info' as any
+    )
 
-    return Application.crypto_deriveBits(alg, baseKey._bridgeObject(), length);
+    return Application.crypto_deriveBits(alg, baseKey._bridgeObject(), length)
   }
 
   // ── deriveKey ───────────────────────────────────────────────────────────
@@ -333,30 +412,55 @@ class SubtleCryptoAPI {
    * @param {string[]}                  keyUsages
    * @returns {Promise<CryptoKey>}
    */
-  async deriveKey(algorithm: HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyAlgorithm: AesKeyGenParams | HmacKeyGenParams, extractable: boolean, keyUsages: string[]): Promise<CryptoKey> {
-    if (!(baseKey instanceof CryptoKey)) throw new TypeError("baseKey must be a CryptoKey");
+  async deriveKey(
+    algorithm: HkdfParams | Pbkdf2Params,
+    baseKey: CryptoKey,
+    derivedKeyAlgorithm: AesKeyGenParams | HmacKeyGenParams,
+    extractable: boolean,
+    keyUsages: string[]
+  ): Promise<CryptoKey> {
+    if (!(baseKey instanceof CryptoKey))
+      throw new TypeError('baseKey must be a CryptoKey')
 
-    const alg = coerceBufferFields(normaliseAlgorithm(algorithm), "salt", "info" as any);
-    const dkAlg = normaliseAlgorithm(derivedKeyAlgorithm);
+    const alg = coerceBufferFields(
+      normaliseAlgorithm(algorithm),
+      'salt',
+      'info' as any
+    )
+    const dkAlg = normaliseAlgorithm(derivedKeyAlgorithm)
 
-    const key = await Application.crypto_deriveKey(alg, baseKey._bridgeObject(), dkAlg, extractable, keyUsages)
+    const key = await Application.crypto_deriveKey(
+      alg,
+      baseKey._bridgeObject(),
+      dkAlg,
+      extractable,
+      keyUsages
+    )
 
     return cryptoKeyFromBridgeObject(key, dkAlg)
   }
 
   // ── wrapKey / unwrapKey (not supported) ─────────────────────────────────
 
-  wrapKey() { return Promise.reject(new Error("wrapKey is not supported")); }
-  unwrapKey() { return Promise.reject(new Error("unwrapKey is not supported")); }
+  wrapKey() {
+    return Promise.reject(new Error('wrapKey is not supported'))
+  }
+  unwrapKey() {
+    return Promise.reject(new Error('unwrapKey is not supported'))
+  }
 
-  get [Symbol.toStringTag]() { return "SubtleCrypto"; }
+  get [Symbol.toStringTag]() {
+    return 'SubtleCrypto'
+  }
 }
 
 // ─── Crypto ───────────────────────────────────────────────────────────────
 
 class CryptoAPI {
-  subtle: SubtleCryptoAPI;
-  constructor() { this.subtle = new SubtleCryptoAPI(); }
+  subtle: SubtleCryptoAPI
+  constructor() {
+    this.subtle = new SubtleCryptoAPI()
+  }
 
   /**
    * Fills `typedArray` with cryptographically random values in-place and
@@ -368,16 +472,21 @@ class CryptoAPI {
    */
   getRandomValues<T>(typedArray: T): T {
     if (!ArrayBuffer.isView(typedArray)) {
-      throw new TypeError("getRandomValues requires a TypedArray");
+      throw new TypeError('getRandomValues requires a TypedArray')
     }
     if (typedArray.byteLength > 65536) {
-      throw new Error("The ArrayBufferView's byte length exceeds the quota (65536)");
+      throw new Error(
+        "The ArrayBufferView's byte length exceeds the quota (65536)"
+      )
     }
     // crypto_getRandomValues is synchronous (JSThrowing) and returns an ArrayBuffer.
-    const randomBuf = Application.crypto_getRandomValues(typedArray.byteLength);
-    new Uint8Array(typedArray.buffer, typedArray.byteOffset, typedArray.byteLength)
-      .set(new Uint8Array(randomBuf));
-    return typedArray;
+    const randomBuf = Application.crypto_getRandomValues(typedArray.byteLength)
+    new Uint8Array(
+      typedArray.buffer,
+      typedArray.byteOffset,
+      typedArray.byteLength
+    ).set(new Uint8Array(randomBuf))
+    return typedArray
   }
 
   /**
@@ -385,15 +494,17 @@ class CryptoAPI {
    * @returns {string}
    */
   randomUUID(): string {
-    const b = new Uint8Array(16);
-    this.getRandomValues(b);
-    b[6] = (b[6]! & 0x0f) | 0x40; // version 4
-    b[8] = (b[8]! & 0x3f) | 0x80; // variant bits
-    const h = Array.from(b, x => x.toString(16).padStart(2, "0"));
-    return `${h.slice(0, 4).join("")}-${h.slice(4, 6).join("")}-${h.slice(6, 8).join("")}-${h.slice(8, 10).join("")}-${h.slice(10).join("")}`;
+    const b = new Uint8Array(16)
+    this.getRandomValues(b)
+    b[6] = (b[6]! & 0x0f) | 0x40 // version 4
+    b[8] = (b[8]! & 0x3f) | 0x80 // variant bits
+    const h = Array.from(b, (x) => x.toString(16).padStart(2, '0'))
+    return `${h.slice(0, 4).join('')}-${h.slice(4, 6).join('')}-${h.slice(6, 8).join('')}-${h.slice(8, 10).join('')}-${h.slice(10).join('')}`
   }
 
-  get [Symbol.toStringTag]() { return "Crypto"; }
+  get [Symbol.toStringTag]() {
+    return 'Crypto'
+  }
 }
 
 // ─── Internal helpers ─────────────────────────────────────────────────────
@@ -408,6 +519,9 @@ class CryptoAPI {
  * @param {Object}          alg  - Normalised algorithm used for this operation.
  * @returns {CryptoKey}
  */
-function cryptoKeyFromBridgeObject(obj: CryptoKeyObject, alg: object): CryptoKey {
-  return new CryptoKey(obj._keyData, alg, obj.extractable, obj.usages);
+function cryptoKeyFromBridgeObject(
+  obj: CryptoKeyObject,
+  alg: object
+): CryptoKey {
+  return new CryptoKey(obj._keyData, alg, obj.extractable, obj.usages)
 }

@@ -1,8 +1,11 @@
 import pc from 'picocolors'
 import { credentials } from '@grpc/grpc-js'
 import { PaperbackLoggerClient } from '../../.generated/toolchain/logcat/protobuf/PDTLogger.grpc-client.js'
-import { LogLine, LogLevel } from '../../.generated/toolchain/logcat/protobuf/PDTLogger.js'
-import type { LocalContext } from "../../context.js";
+import {
+  LogLine,
+  LogLevel,
+} from '../../.generated/toolchain/logcat/protobuf/PDTLogger.js'
+import type { LocalContext } from '../../context.js'
 
 export interface LogcatFlags {
   ip: string

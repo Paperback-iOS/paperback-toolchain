@@ -38,10 +38,9 @@ export class TestSuite {
   private testCases: TestCase[] = []
   private logger: TestLogger
 
-
   constructor(name: string, logger: TestLogger) {
     this.logger = logger
-    this.logger.log("name", name)
+    this.logger.log('name', name)
   }
 
   // Register a test case
@@ -55,24 +54,24 @@ export class TestSuite {
     let passed = 0
     let failed = 0
 
-    const tests = this.logger.list("tests")
+    const tests = this.logger.list('tests')
     for (const testCase of this.testCases) {
       const testStartTime = Date.now()
 
       const testLogger = tests.scope(testCase.name)
       try {
-        const returnValue = await testCase.fn(testLogger.scope("runner"))
+        const returnValue = await testCase.fn(testLogger.scope('runner'))
         const duration = Date.now() - testStartTime
         passed++
-        testLogger.log("status", "pass")
-        testLogger.log("duration", duration)
-        testLogger.log("returnValue", returnValue)
+        testLogger.log('status', 'pass')
+        testLogger.log('duration', duration)
+        testLogger.log('returnValue', returnValue)
       } catch (error) {
         const duration = Date.now() - testStartTime
         failed++
-        testLogger.log("status", "fail")
-        testLogger.log("error", String(error))
-        testLogger.log("duration", duration)
+        testLogger.log('status', 'fail')
+        testLogger.log('error', String(error))
+        testLogger.log('duration', duration)
       }
     }
 
@@ -84,24 +83,36 @@ export class TestSuite {
       duration: totalDuration,
     }
 
-    this.logger.log("summary", suiteResult)
+    this.logger.log('summary', suiteResult)
   }
 }
 
 type ExtensionTestData = {
-  searchResultsProviding?: {
-    getSearchResults: Parameters<SearchResultsProviding['getSearchResults']> | false
-    getSortingOptions?: Parameters<
-      Exclude<SearchResultsProviding['getSortingOptions'], undefined>
-    > | false
-  } | false
-  mangaProviding?: {
-    getMangaDetails: Parameters<MangaProviding['getMangaDetails']> | false
-  } | false
-  chapterProviding?: {
-    getChapters: Parameters<ChapterProviding['getChapters']> | false
-    getChapterDetails: Parameters<ChapterProviding['getChapterDetails']> | false
-  } | false
+  searchResultsProviding?:
+    | {
+        getSearchResults:
+          | Parameters<SearchResultsProviding['getSearchResults']>
+          | false
+        getSortingOptions?:
+          | Parameters<
+              Exclude<SearchResultsProviding['getSortingOptions'], undefined>
+            >
+          | false
+      }
+    | false
+  mangaProviding?:
+    | {
+        getMangaDetails: Parameters<MangaProviding['getMangaDetails']> | false
+      }
+    | false
+  chapterProviding?:
+    | {
+        getChapters: Parameters<ChapterProviding['getChapters']> | false
+        getChapterDetails:
+          | Parameters<ChapterProviding['getChapterDetails']>
+          | false
+      }
+    | false
 }
 
 export const registerDefaultTests = function (
@@ -122,7 +133,10 @@ export const registerDefaultTests = function (
     sourceCapabilities = extensionInfo.capabilities
   }
 
-  if (sourceCapabilities & SourceIntents.SEARCH_RESULT_PROVIDING && testData.searchResultsProviding !== false) {
+  if (
+    sourceCapabilities & SourceIntents.SEARCH_RESULT_PROVIDING &&
+    testData.searchResultsProviding !== false
+  ) {
     if (implementsSearchResultsProviding(extension)) {
       registerDefaultSearchResultsProvidingSourceTests(
         suite,
@@ -144,9 +158,16 @@ export const registerDefaultTests = function (
     )
   }
 
-  if (sourceCapabilities & SourceIntents.CHAPTER_PROVIDING && testData.chapterProviding !== false) {
+  if (
+    sourceCapabilities & SourceIntents.CHAPTER_PROVIDING &&
+    testData.chapterProviding !== false
+  ) {
     if (implementsChapterProviding(extension)) {
-      registerDefaultChapterProvidingSourceTests(suite, extension, testData.chapterProviding)
+      registerDefaultChapterProvidingSourceTests(
+        suite,
+        extension,
+        testData.chapterProviding
+      )
     } else {
       throw new Error(
         `extension does not implement 'ChapterProviding' but has the 'CHAPTER_PROVIDING' capability`
@@ -183,7 +204,10 @@ export const registerDefaultSearchResultsProvidingSourceTests = function (
   extension: Extension & SearchResultsProviding,
   testData: Exclude<ExtensionTestData['searchResultsProviding'], false>
 ) {
-  if ('getSortingOptions' in extension && testData?.getSortingOptions !== false) {
+  if (
+    'getSortingOptions' in extension &&
+    testData?.getSortingOptions !== false
+  ) {
     suite.test('getSortingOptions', async () => {
       let params = testData?.getSortingOptions
       if (!params) {
@@ -207,11 +231,7 @@ export const registerDefaultSearchResultsProvidingSourceTests = function (
         const sortingOptions = suite.state[
           STATE_KEY.SearchResultsProviding.getSortingOptions
         ] as SortingOption[] | undefined
-        params = [
-          { title: '' },
-          undefined,
-          sortingOptions?.[0],
-        ]
+        params = [{ title: '' }, undefined, sortingOptions?.[0]]
       }
 
       const searchResults = await extension.getSearchResults(...params)

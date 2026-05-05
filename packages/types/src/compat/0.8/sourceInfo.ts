@@ -91,6 +91,6 @@ export class SourceInfoWrapper implements SourceInfo {
     })
 
     // @ts-expect-error bitset shenanigans
-    this.capabilities = [legacySourceInfo.intents] ?? []
+    this.capabilities = [legacySourceInfo.intents]
   }
 }

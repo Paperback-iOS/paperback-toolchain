@@ -22,7 +22,9 @@ export interface SearchResultsProviding extends MangaProviding {
   ): Promise<PagedResults<SearchResultItem>>
 
   getSortingOptions?(query: SearchQuery<Metadata>): Promise<SortingOption[]>
-  getAdvancedSearchForm?(query: SearchQuery<Metadata>): Promise<AdvancedSearchForm>
+  getAdvancedSearchForm?(
+    query: SearchQuery<Metadata>
+  ): Promise<AdvancedSearchForm>
 }
 
 export function implementsSearchResultsProviding(
@@ -38,19 +40,19 @@ export abstract class AdvancedSearchForm extends Form {
   /**
    * This is always true
    */
-  override readonly requiresExplicitSubmission: true = true
+  override readonly requiresExplicitSubmission = true as const
 
   /**
    * Build and return a fully qualified SearchQuery based on the user's
    * selection in the form
-   * 
+   *
    * Notes:
    * - This is called after successful {@link AdvancedSearchForm.formDidSubmit}
-   * - Errors thrown from here are logged, dismissal is not blocked, and 
+   * - Errors thrown from here are logged, dismissal is not blocked, and
    *   metadata is reset to undefined in the resulting search query
    */
   abstract getSearchQueryMetadata(): Metadata
 
-  override async formDidSubmit(): Promise<void> { }
-  override formDidCancel(): void { }
+  override async formDidSubmit(): Promise<void> {}
+  override formDidCancel(): void {}
 }

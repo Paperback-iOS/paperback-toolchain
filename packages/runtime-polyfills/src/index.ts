@@ -14,7 +14,7 @@ export function ApplicationPolyfill(): typeof Application {
   const discoverSectionManager = new MockDiscoverSectionManager(
     selectorRegistry
   )
-  
+
   return {
     decodeHTMLEntities: decodeHTMLStrict,
 
@@ -137,6 +137,6 @@ export function ApplicationPolyfill(): typeof Application {
         data = new Uint8Array(value)
       }
       return crypto.createHash('md5').update(data).digest('hex')
-    }
+    },
   }
 }

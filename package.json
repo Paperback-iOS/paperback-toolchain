@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "changesets": "npx @changesets/cli",
-    "changesets:version": "npx @changesets/cli version"
+    "changesets:version": "npx @changesets/cli version",
+    "format": "npx eslint . --fix && npx prettier --write ."
   },
   "workspaces": [
     "packages/types",

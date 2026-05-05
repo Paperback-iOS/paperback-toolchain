@@ -1,4 +1,4 @@
-import type { Metadata } from "./Metadata.js"
+import type { Metadata } from './Metadata.js'
 
 export interface PagedResults<T> {
   items: T[]

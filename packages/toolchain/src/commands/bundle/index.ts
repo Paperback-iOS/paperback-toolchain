@@ -1,7 +1,11 @@
-import { Listr } from "listr2";
-import { bundleSources, generateVersioningFile, generateHomepage } from "../../toolchain/bundle/bundle.js";
-import { color } from "listr2";
-import type { LocalContext } from "../../context.js";
+import { Listr } from 'listr2'
+import {
+  bundleSources,
+  generateVersioningFile,
+  generateHomepage,
+} from '../../toolchain/bundle/bundle.js'
+import { color } from 'listr2'
+import type { LocalContext } from '../../context.js'
 
 export interface BundleFlags {
   debug: boolean
@@ -15,7 +19,8 @@ export async function bundle(this: LocalContext, flags: BundleFlags) {
   const tasks = new Listr(
     [
       {
-        task: async () => await bundleSources(flags.folder, flags.debug, flags.tests),
+        task: async () =>
+          await bundleSources(flags.folder, flags.debug, flags.tests),
         title: 'Bundle Sources',
       },
       {

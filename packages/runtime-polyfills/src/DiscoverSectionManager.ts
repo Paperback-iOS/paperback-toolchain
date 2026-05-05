@@ -4,7 +4,7 @@ import type {
   PagedResults,
   SelectorID,
   SelectorRegistry,
-  Metadata
+  Metadata,
 } from '@paperback/types'
 
 type DiscoverSectionManager = Pick<

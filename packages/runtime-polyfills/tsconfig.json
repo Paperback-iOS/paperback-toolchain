@@ -6,9 +6,7 @@
     "outDir": "./lib",
     "composite": true,
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "NodeNext",
@@ -39,7 +37,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

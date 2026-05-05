@@ -81,7 +81,7 @@ declare global {
      * @param value an array buffer or string to hash
      * @returns an md5 hash of the given input
      */
-    function crypto_md5Hash(value: string | ArrayBuffer): string 
+    function crypto_md5Hash(value: string | ArrayBuffer): string
 
     // State Manager
     function getSecureState(key: string): unknown | undefined

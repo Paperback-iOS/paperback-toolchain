@@ -1,16 +1,20 @@
-import path from "node:path"
+import path from 'node:path'
 import vm from 'node:vm'
 import fs from 'node:fs'
 import pc from 'picocolors'
 import { ApplicationPolyfill } from '@paperback/runtime-polyfills'
-import type { Logger } from "./logger.js"
+import type { Logger } from './logger.js'
 
 export async function runSourceTests(logger: Logger, testFilePath: string) {
   const vmContext = vm.createContext({
     Application: ApplicationPolyfill(),
     console: logger.console(),
     logger: logger,
-    EventTarget, Event, Buffer, TextEncoder, TextDecoder
+    EventTarget,
+    Event,
+    Buffer,
+    TextEncoder,
+    TextDecoder,
   })
 
   // Add main file

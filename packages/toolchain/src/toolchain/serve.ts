@@ -1,7 +1,10 @@
-import pc from "picocolors"
+import pc from 'picocolors'
 import fs from 'node:fs'
 
-export function startFileWatcher(directory: string, onchange: (filename: string) => void) {
+export function startFileWatcher(
+  directory: string,
+  onchange: (filename: string) => void
+) {
   try {
     // Watch the entire src directory recursively
     return fs.watch(directory, { recursive: true }, (eventType, filename) => {

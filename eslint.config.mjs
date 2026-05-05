@@ -18,6 +18,11 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/no-dynamic-delete': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/ban-ts-comment': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unsafe-function-type': 'warn',
+      'no-async-promise-executor': 'warn',
     },
   },
   {

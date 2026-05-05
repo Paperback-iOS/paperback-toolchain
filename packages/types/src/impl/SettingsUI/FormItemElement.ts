@@ -2,7 +2,12 @@ import type { Cookie } from '../../Cookie.js'
 import type { Request } from '../../Request.js'
 import { closureSelector, type SelectorID } from '../Selector.js'
 import { Form } from './Form.js'
-import { FlowSection, Section, SelectSection, TriStateSelectSection } from './FormSection.js'
+import {
+  FlowSection,
+  Section,
+  SelectSection,
+  TriStateSelectSection,
+} from './FormSection.js'
 
 export interface FormItemElement<T> {
   id: string
@@ -12,7 +17,10 @@ export interface FormItemElement<T> {
 
 type TypedRowElement<T, P> = FormItemElement<T> & P
 
-type LabelRowElement = TypedRowElement<'labelRow', LabelRowProps & { isSelectable: boolean }>
+type LabelRowElement = TypedRowElement<
+  'labelRow',
+  LabelRowProps & { isSelectable: boolean }
+>
 type OAuthButtonRowElement = TypedRowElement<
   'oauthButtonRow',
   OAuthButtonRowProps
@@ -34,7 +42,13 @@ export type LabelRowProps = {
 }
 
 export function LabelRow(id: string, props: LabelRowProps): LabelRowElement {
-  return { ...props, id, type: 'labelRow', isHidden: props.isHidden ?? false, isSelectable: props.onSelect != undefined }
+  return {
+    ...props,
+    id,
+    type: 'labelRow',
+    isHidden: props.isHidden ?? false,
+    isSelectable: props.onSelect != undefined,
+  }
 }
 
 export type InputRowProps = {
@@ -99,17 +113,22 @@ type _SelectRowProps = {
   onValueChange: SelectorID<(value: string[]) => Promise<void>>
 }
 
-export type SelectRowProps = (_SelectRowProps & {
-  layout: 'flow' | 'list',
-  items: { id: string; title: string }[]
-}) | (_SelectRowProps & {
-  /**
-   * @deprecated Use `items` instead.
-   */
-  options: { id: string; title: string }[]
-})
+export type SelectRowProps =
+  | (_SelectRowProps & {
+      layout: 'flow' | 'list'
+      items: { id: string; title: string }[]
+    })
+  | (_SelectRowProps & {
+      /**
+       * @deprecated Use `items` instead.
+       */
+      options: { id: string; title: string }[]
+    })
 
-export function SelectRow(id: string, props: SelectRowProps): NavigationRowElement {
+export function SelectRow(
+  id: string,
+  props: SelectRowProps
+): NavigationRowElement {
   return NavigationRow(id, {
     form: new SelectForm(props.title, props),
     title: props.title,
@@ -119,19 +138,24 @@ export function SelectRow(id: string, props: SelectRowProps): NavigationRowEleme
 }
 
 export type TriStateSelectRowProps = {
-  title: string,
-  isHidden?: boolean,
+  title: string
+  isHidden?: boolean
 
-  layout: 'flow' | 'list',
-  value: Record<string, 'included' | 'excluded'>,
-  items: { id: string, title: string }[],
-  allowExclusion: boolean,
-  allowEmptySelection: boolean,
-  maximum?: number,
-  onValueChange: SelectorID<(value: Record<string, 'included' | 'excluded'>) => Promise<void>>
+  layout: 'flow' | 'list'
+  value: Record<string, 'included' | 'excluded'>
+  items: { id: string; title: string }[]
+  allowExclusion: boolean
+  allowEmptySelection: boolean
+  maximum?: number
+  onValueChange: SelectorID<
+    (value: Record<string, 'included' | 'excluded'>) => Promise<void>
+  >
 }
 
-export function TriStateSelectRow(id: string, props: TriStateSelectRowProps): NavigationRowElement {
+export function TriStateSelectRow(
+  id: string,
+  props: TriStateSelectRowProps
+): NavigationRowElement {
   return NavigationRow(id, {
     form: new TriStateSelectForm(props.title, props),
     title: props.title,
@@ -199,20 +223,20 @@ export type OAuthButtonRowProps = {
   >
   authorizeEndpoint: string
   responseType:
-  | {
-    type: 'token'
-  }
-  | {
-    type: 'code'
-    tokenEndpoint: string
-  }
-  | {
-    type: 'pkce'
-    tokenEndpoint: string
-    pkceCodeLength: number
-    pkceCodeMethod: 'S256' | 'plain'
-    formEncodeGrant: boolean
-  }
+    | {
+        type: 'token'
+      }
+    | {
+        type: 'code'
+        tokenEndpoint: string
+      }
+    | {
+        type: 'pkce'
+        tokenEndpoint: string
+        pkceCodeLength: number
+        pkceCodeMethod: 'S256' | 'plain'
+        formEncodeGrant: boolean
+      }
   clientId?: string
   redirectUri?: string
   scopes?: string[]
@@ -263,13 +287,15 @@ export class SelectForm extends Form {
         items: 'items' in this.params ? this.params.items : this.params.options,
         minItemCount: this.params.minItemCount,
         maxItemCount: this.params.maxItemCount,
-        isHidden: this.params.isHidden
-      })
+        isHidden: this.params.isHidden,
+      }),
     ]
   }
 
   override async formDidSubmit(): Promise<void> {
-    await Application.SelectorRegistry.selector(this.params.onValueChange)(this.states)
+    await Application.SelectorRegistry.selector(this.params.onValueChange)(
+      this.states
+    )
   }
 }
 
@@ -298,11 +324,13 @@ class TriStateSelectForm extends Form {
         allowEmptySelection: this.params.allowEmptySelection,
         maximum: this.params.maximum,
         layout: this.params.layout,
-      })
+      }),
     ]
   }
 
   override async formDidSubmit(): Promise<void> {
-    await Application.SelectorRegistry.selector(this.params.onValueChange)(this.states)
+    await Application.SelectorRegistry.selector(this.params.onValueChange)(
+      this.states
+    )
   }
 }

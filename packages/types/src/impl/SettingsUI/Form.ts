@@ -22,7 +22,7 @@ export abstract class Form {
   /**
    * When this is true, the app enables the `Submit` and `Cancel` buttons
    * that call {@link Form.formDidSubmit} and {@link Form.formDidCancel} respectively
-   * 
+   *
    * Notes: updating this after the form appears requires a call to {@link Form.reloadForm}
    */
   readonly requiresExplicitSubmission: boolean = false

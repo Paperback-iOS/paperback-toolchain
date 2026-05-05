@@ -3,9 +3,13 @@ import esbuild from 'esbuild'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import cliInfo from '../../../package.json' with { type: "json" }
+import cliInfo from '../../../package.json' with { type: 'json' }
 
-export async function bundleSources(folder = '', sourcemap = false, tests = false) {
+export async function bundleSources(
+  folder = '',
+  sourcemap = false,
+  tests = false
+) {
   const cwd = process.cwd()
 
   const srcDir = path.join(cwd, 'src')
@@ -45,10 +49,10 @@ export async function bundleSources(folder = '', sourcemap = false, tests = fals
             const testFilePath = path.join(testDir, `${file}.ts`)
             const hasTestFile = fs.existsSync(testFilePath)
             if (hasTestFile) {
-                files.push({
-                  in: testFilePath,
-                  out: path.join(file, 'test'),
-                })
+              files.push({
+                in: testFilePath,
+                out: path.join(file, 'test'),
+              })
             }
           }
         }
@@ -108,14 +112,16 @@ export async function bundleSources(folder = '', sourcemap = false, tests = fals
     },
     {
       title: 'Cleaning up',
-      task() {
-      },
+      task() {},
     },
   ])
 }
 
 export async function generateHomepage(folder = '') {
-  const indexPath = path.join(import.meta.dirname, './pages/homepage.template.html')
+  const indexPath = path.join(
+    import.meta.dirname,
+    './pages/homepage.template.html'
+  )
 
   const basePath = process.cwd()
   const directoryPath = path.join(basePath, 'bundles', folder, 'index.html')

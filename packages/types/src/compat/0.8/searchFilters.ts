@@ -1,41 +1,52 @@
-import { AdvancedSearchForm } from "../../impl/interfaces/SearchResultsProviding.js";
-import { InputRow, LabelRow, TriStateSelectRow } from "../../impl/SettingsUI/FormItemElement.js";
-import { FlowSection, Section, type FormSectionElement } from "../../impl/SettingsUI/FormSection.js";
-import { closureSelector, type SelectorID } from "../../impl/Selector.js";
+import { AdvancedSearchForm } from '../../impl/interfaces/SearchResultsProviding.js'
+import {
+  InputRow,
+  LabelRow,
+  TriStateSelectRow,
+} from '../../impl/SettingsUI/FormItemElement.js'
+import {
+  FlowSection,
+  Section,
+  type FormSectionElement,
+} from '../../impl/SettingsUI/FormSection.js'
+import { closureSelector, type SelectorID } from '../../impl/Selector.js'
 
 type FilterOption = {
-  id: string;
-  value: string;
-};
+  id: string
+  value: string
+}
 
 interface DropdownSearchFilter {
-  type: 'dropdown';
-  id: string;
-  title: string;
-  options: FilterOption[];
-  value: string;
+  type: 'dropdown'
+  id: string
+  title: string
+  options: FilterOption[]
+  value: string
 }
 
 interface SelectSearchFilter {
-  type: 'multiselect';
-  id: string;
-  title: string;
-  options: FilterOption[];
-  value: Record<string, 'included' | 'excluded'>;
-  allowExclusion: boolean;
-  allowEmptySelection: boolean;
-  maximum: number | undefined;
+  type: 'multiselect'
+  id: string
+  title: string
+  options: FilterOption[]
+  value: Record<string, 'included' | 'excluded'>
+  allowExclusion: boolean
+  allowEmptySelection: boolean
+  maximum: number | undefined
 }
 
 interface InputSearchFilter {
-  type: 'input';
-  id: string;
-  title: string;
-  placeholder: string;
-  value: string;
+  type: 'input'
+  id: string
+  title: string
+  placeholder: string
+  value: string
 }
 
-export type SearchFilter = DropdownSearchFilter | SelectSearchFilter | InputSearchFilter;
+export type SearchFilter =
+  | DropdownSearchFilter
+  | SelectSearchFilter
+  | InputSearchFilter
 
 export type SearchFilterValue = {
   id: string
@@ -44,7 +55,10 @@ export type SearchFilterValue = {
 
 export class SearchFilterForm extends AdvancedSearchForm {
   filters?: SearchFilter[] | Error
-  selectedFilterValues: Record<SearchFilterValue['id'], SearchFilterValue['value']>
+  selectedFilterValues: Record<
+    SearchFilterValue['id'],
+    SearchFilterValue['value']
+  >
 
   constructor(
     values: SearchFilterValue[] | undefined,
@@ -59,8 +73,9 @@ export class SearchFilterForm extends AdvancedSearchForm {
 
     if (filters instanceof Promise) {
       this.filters = undefined
-      filters.then(filters => this.filters = filters)
-        .catch(error => this.filters = error)
+      filters
+        .then((filters) => (this.filters = filters))
+        .catch((error) => (this.filters = error))
         .finally(() => this.reloadForm())
     } else {
       this.filters = filters
@@ -70,58 +85,84 @@ export class SearchFilterForm extends AdvancedSearchForm {
   override getSections(): FormSectionElement<unknown>[] {
     if (!this.filters) {
       return [
-        Section('loading', [LabelRow('loading', { title: "Loading Filters" })])
+        Section('loading', [LabelRow('loading', { title: 'Loading Filters' })]),
       ]
     } else if (this.filters instanceof Error) {
       return [
-        Section('error', [LabelRow('error', { title: "Error loading search filters", subtitle: this.filters.message })])
+        Section('error', [
+          LabelRow('error', {
+            title: 'Error loading search filters',
+            subtitle: this.filters.message,
+          }),
+        ]),
       ]
     } else {
-      return this.filters.map(filter => {
+      return this.filters.map((filter) => {
         switch (filter.type) {
-          case "dropdown": {
-            const selectedOptionId = (this.selectedFilterValues[filter.id] ?? filter.value) as (typeof filter.value)
-            return Section({ id: filter.id, header: filter.title }, filter.options.map(option => {
-              return LabelRow(option.id, {
-                title: option.value,
-                value: selectedOptionId == option.id ? "✓" : undefined,
-                onSelect: closureSelector(this, `${filter.id}#${option.id}`, async () => {
-                  this.selectedFilterValues[filter.id] = option.id
-                  this.reloadForm()
+          case 'dropdown': {
+            const selectedOptionId = (this.selectedFilterValues[filter.id] ??
+              filter.value) as typeof filter.value
+            return Section(
+              { id: filter.id, header: filter.title },
+              filter.options.map((option) => {
+                return LabelRow(option.id, {
+                  title: option.value,
+                  value: selectedOptionId == option.id ? '✓' : undefined,
+                  onSelect: closureSelector(
+                    this,
+                    `${filter.id}#${option.id}`,
+                    async () => {
+                      this.selectedFilterValues[filter.id] = option.id
+                      this.reloadForm()
+                    }
+                  ),
                 })
               })
-            }))
+            )
           }
-          case "multiselect": {
-            const selectedOptions = (this.selectedFilterValues[filter.id] ?? filter.value) as (typeof filter.value)
+          case 'multiselect': {
+            const selectedOptions = (this.selectedFilterValues[filter.id] ??
+              filter.value) as typeof filter.value
 
             return Section({ id: filter.id }, [
               TriStateSelectRow(filter.id, {
-                  title: filter.title,
-                  layout: "flow",
-                  value: selectedOptions,
-                  items: filter.options.map(x => ({id: x.id, title: x.value})),
-                  allowExclusion: filter.allowExclusion,
-                  allowEmptySelection: filter.allowEmptySelection,
-                  maximum: filter.maximum,
-                  onValueChange: closureSelector(this, filter.id, async (newValue) => {
+                title: filter.title,
+                layout: 'flow',
+                value: selectedOptions,
+                items: filter.options.map((x) => ({
+                  id: x.id,
+                  title: x.value,
+                })),
+                allowExclusion: filter.allowExclusion,
+                allowEmptySelection: filter.allowEmptySelection,
+                maximum: filter.maximum,
+                onValueChange: closureSelector(
+                  this,
+                  filter.id,
+                  async (newValue) => {
                     this.selectedFilterValues[filter.id] = newValue
                     this.reloadForm()
-                  })
-              })
+                  }
+                ),
+              }),
             ])
           }
-          case "input": {
-            const value = (this.selectedFilterValues[filter.id] ?? filter.value) as (typeof filter.value)
+          case 'input': {
+            const value = (this.selectedFilterValues[filter.id] ??
+              filter.value) as typeof filter.value
             return Section({ id: filter.id, header: filter.title }, [
               InputRow(filter.id, {
                 title: filter.title,
                 value: value,
-                onValueChange: closureSelector(this, filter.id, async (newValue) => {
-                  this.selectedFilterValues[filter.id] = newValue
-                  this.reloadForm()
-                })
-              })
+                onValueChange: closureSelector(
+                  this,
+                  filter.id,
+                  async (newValue) => {
+                    this.selectedFilterValues[filter.id] = newValue
+                    this.reloadForm()
+                  }
+                ),
+              }),
             ])
           }
         }
@@ -131,8 +172,11 @@ export class SearchFilterForm extends AdvancedSearchForm {
 
   override getSearchQueryMetadata(): SearchFilterValue[] {
     if (this.filters && !(this.filters instanceof Error)) {
-      return this.filters.map(filter => {
-        return { id: filter.id, value: this.selectedFilterValues[filter.id] ?? filter.value }
+      return this.filters.map((filter) => {
+        return {
+          id: filter.id,
+          value: this.selectedFilterValues[filter.id] ?? filter.value,
+        }
       })
     } else {
       return []
@@ -141,7 +185,7 @@ export class SearchFilterForm extends AdvancedSearchForm {
 
   override async formDidSubmit(): Promise<void> {
     if (!this.filters) {
-      throw new Error("Search filters are loading")
+      throw new Error('Search filters are loading')
     } else if (this.filters instanceof Error) {
       throw this.filters
     }

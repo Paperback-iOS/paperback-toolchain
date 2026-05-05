@@ -42,7 +42,7 @@ import {
 import {
   SearchFilterForm,
   type SearchFilterValue,
-  type SearchFilter
+  type SearchFilter,
 } from './searchFilters.js'
 
 import {
@@ -124,16 +124,17 @@ type Source = LegacySource &
 
 class _CompatWrapper
   implements
-  Extension,
-  MangaProviding,
-  SearchResultsProviding,
-  ChapterProviding,
-  DiscoverSectionProviding,
-  SettingsFormProviding,
-  CloudflareBypassRequestProviding {
+    Extension,
+    MangaProviding,
+    SearchResultsProviding,
+    ChapterProviding,
+    DiscoverSectionProviding,
+    SettingsFormProviding,
+    CloudflareBypassRequestProviding
+{
   private cloudflareInterceptor?: CloudflareInterceptor
   private homepageItemCache: Record<string, DiscoverSectionItem[]> = {}
-  constructor(private legacySource: Source) { }
+  constructor(private legacySource: Source) {}
 
   async initialise() {
     if ('getCloudflareBypassRequestAsync' in this.legacySource) {
@@ -247,7 +248,9 @@ class _CompatWrapper
     return searchFilters
   }
 
-  async getAdvancedSearchForm(query: SearchQuery<SearchFilterValue[]>): Promise<AdvancedSearchForm> {
+  async getAdvancedSearchForm(
+    query: SearchQuery<SearchFilterValue[]>
+  ): Promise<AdvancedSearchForm> {
     return new SearchFilterForm(query.metadata, this.getSearchFilters())
   }
 

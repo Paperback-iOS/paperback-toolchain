@@ -1,2 +1,2 @@
 import { Buffer } from 'buffer/index.js'
-export { Buffer as "Buffer" }
+export { Buffer as 'Buffer' }

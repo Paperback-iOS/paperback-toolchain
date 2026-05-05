@@ -7,7 +7,6 @@ export * from './MangaProviding.js'
 export * from './SearchResultsProviding.js'
 export * from './SettingsFormProviding.js'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasPropertiesOf<T>(
   properties: (keyof T)[],
   obj: any

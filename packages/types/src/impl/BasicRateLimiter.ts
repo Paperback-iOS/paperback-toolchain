@@ -13,7 +13,9 @@ export class BasicRateLimiter extends PaperbackInterceptor {
   private promise?: Promise<void>
   private currentRequestsMade: number = 0
   private lastReset: number = Date.now()
-  private readonly imageRegex = new RegExp(/\.(avif|gif|jpeg|jpg|jxl|png|webp)(\?|$)/i)
+  private readonly imageRegex = new RegExp(
+    /\.(avif|gif|jpeg|jpg|jxl|png|webp)(\?|$)/i
+  )
 
   constructor(
     id: string,
