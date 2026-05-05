@@ -59,43 +59,51 @@ export function ApplicationPolyfill(): typeof Application {
     arrayBufferToUTF16String: function (arrayBuffer) {
       return new TextDecoder('utf-16').decode(arrayBuffer)
     },
+    base64Encode: function (value: string | ArrayBuffer) {
+      let rawData
 
-    base64Encode: function (value) {
       if (typeof value === 'string') {
-        return Buffer.from(value, 'utf-8').toString('base64') as typeof value
+        rawData = Buffer.from(value, 'utf8')
+      } else if (value instanceof ArrayBuffer) {
+        rawData = Buffer.from(value)
       } else {
-        const bytes = new Uint8Array(value)
-        const binary = bytes.reduce(
-          (str, byte) => str + String.fromCharCode(byte),
-          ''
+        throw new Error('Unable to convert input to raw data')
+      }
+
+      const encodedString = rawData.toString('base64')
+
+      if (encodedString === null || encodedString === undefined) {
+        return rawData.buffer.slice(
+          rawData.byteOffset,
+          rawData.byteOffset + rawData.byteLength
         )
-
-        const base64String = btoa(binary) // Base64-encoded string
-
-        // Now convert that string to an ArrayBuffer (binary representation of base64 string)
-        const base64Buffer = new Uint8Array(base64String.length)
-        for (let i = 0; i < base64String.length; i++) {
-          base64Buffer[i] = base64String.charCodeAt(i)
-        }
-
-        return base64Buffer.buffer as typeof value
       }
+
+      return encodedString
     },
-    base64Decode: function (value) {
+
+    base64Decode: function (value: string | ArrayBuffer) {
+      let decodedData
+
       if (typeof value === 'string') {
-        return Buffer.from(value, 'base64').toString('utf-8') as typeof value
+        decodedData = Buffer.from(value, 'base64')
+      } else if (value instanceof ArrayBuffer) {
+        decodedData = Buffer.from(value)
       } else {
-        const base64Bytes = new Uint8Array(value)
-        const base64String = String.fromCharCode(...base64Bytes)
-
-        const binaryString = atob(base64String)
-        const decodedBytes = new Uint8Array(binaryString.length)
-        for (let i = 0; i < binaryString.length; i++) {
-          decodedBytes[i] = binaryString.charCodeAt(i)
-        }
-
-        return decodedBytes.buffer as typeof value
+        throw new Error('Unable to convert base64 String to decoded Data')
       }
+
+      const decodedString = decodedData.toString('utf8')
+      const reEncoded = Buffer.from(decodedString, 'utf8')
+
+      if (reEncoded.equals(decodedData)) {
+        return decodedString
+      }
+
+      return decodedData.buffer.slice(
+        decodedData.byteOffset,
+        decodedData.byteOffset + decodedData.byteLength
+      )
     },
 
     getSecureState: function (key) {

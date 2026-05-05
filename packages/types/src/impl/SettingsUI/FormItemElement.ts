@@ -1,13 +1,8 @@
 import type { Cookie } from '../../Cookie.js'
 import type { Request } from '../../Request.js'
-import { closureSelector, type SelectorID } from '../Selector.js'
+import { type SelectorID } from '../Selector.js'
 import { Form } from './Form.js'
-import {
-  FlowSection,
-  Section,
-  SelectSection,
-  TriStateSelectSection,
-} from './FormSection.js'
+import { SelectSection, TriStateSelectSection } from './FormSection.js'
 
 export interface FormItemElement<T> {
   id: string
@@ -27,19 +22,30 @@ type OAuthButtonRowElement = TypedRowElement<
 >
 type NavigationRowElement = TypedRowElement<'navigationRow', NavigationRowProps>
 type ButtonRowElement = TypedRowElement<'buttonRow', ButtonRowProps>
-type SelectRowElement = TypedRowElement<'selectRow', SelectRowProps>
 type ToggleRowElement = TypedRowElement<'toggleRow', ToggleRowProps>
 type InputRowElement = TypedRowElement<'inputRow', InputRowProps>
 type StepperRowElement = TypedRowElement<'stepperRow', StepperRowProps>
 type WebViewRowElement = TypedRowElement<'webViewRow', WebViewRowProps>
 
+export type LabelRowValue = { style?: RowStyle } & (
+  | { text: string }
+  | { symbol: string }
+)
+
+export type RowStyle = 'warning' | 'error' | 'success' | 'tinted'
+
 export type LabelRowProps = {
   title: string
   subtitle?: string
-  value?: string
   isHidden?: boolean
   onSelect?: SelectorID<() => Promise<void>>
-}
+} & (
+  | { value?: string }
+  | {
+      value?: LabelRowValue
+      style?: RowStyle
+    }
+)
 
 export function LabelRow(id: string, props: LabelRowProps): LabelRowElement {
   return {

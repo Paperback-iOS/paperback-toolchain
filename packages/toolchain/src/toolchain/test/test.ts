@@ -9,12 +9,14 @@ export async function runSourceTests(logger: Logger, testFilePath: string) {
   const vmContext = vm.createContext({
     Application: ApplicationPolyfill(),
     console: logger.console(),
-    logger: logger,
+    logger,
     EventTarget,
     Event,
     Buffer,
     TextEncoder,
     TextDecoder,
+    SubtleCrypto,
+    crypto
   })
 
   // Add main file
