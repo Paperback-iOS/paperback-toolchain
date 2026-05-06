@@ -1,29 +1,19 @@
 import pc from 'picocolors'
 import path from 'node:path'
 import fs from 'node:fs'
-import { bundle, type BundleFlags } from '../bundle/index.js'
 import {
   runSourceTests,
   generateDefaultTests,
 } from '../../toolchain/test/test.js'
 import type { LocalContext } from '../../context.js'
-import type { ExtensionInfo } from '@paperback/types'
-import { Listr, TestRenderer, color, delay } from 'listr2'
 import esbuild from 'esbuild'
 import { Logger } from '../../toolchain/test/logger.js'
-import { log } from 'node:console'
-import { fail } from 'node:assert'
 
 interface TestFlags {
   generate: boolean
   overwrite: boolean
   output?: string
   console: boolean
-}
-
-const bundleFlags: BundleFlags = {
-  debug: true,
-  tests: true,
 }
 
 export async function test(
@@ -101,7 +91,7 @@ export async function test(
   const promises: Promise<void>[] = []
   for (const { out: extension } of filesToBundle) {
     promises.push(
-      new Promise(async (resolve) => {
+      new Promise((resolve) => (async () => {
         const start = process.hrtime.bigint()
         const extensionLogger = logger.scope(extension)
         try {
@@ -124,8 +114,7 @@ export async function test(
           pc.dim(`${Number(end - start) / 1e6}ms`),
           ` ... ${result}`
         )
-        resolve()
-      })
+      })().then(resolve))
     )
   }
 

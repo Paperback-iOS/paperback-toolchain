@@ -1,7 +1,6 @@
 import path from 'node:path'
 import vm from 'node:vm'
 import fs from 'node:fs'
-import pc from 'picocolors'
 import { ApplicationPolyfill } from '@paperback/runtime-polyfills'
 import type { Logger } from './logger.js'
 
