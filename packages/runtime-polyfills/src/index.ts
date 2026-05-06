@@ -67,7 +67,9 @@ export function ApplicationPolyfill(): typeof Application {
       } else if (value instanceof ArrayBuffer) {
         rawData = Buffer.from(value)
       } else {
-        throw new Error(`Unable to convert input to raw data: ${value} of type ${typeof value} is ArrayBuffer ${value as any instanceof ArrayBuffer}`)
+        throw new Error(
+          `Unable to convert input to raw data: ${value} of type ${typeof value} is ArrayBuffer ${(value as any) instanceof ArrayBuffer}`
+        )
       }
 
       const encodedString = rawData.toString('base64')

@@ -79,7 +79,7 @@ export async function runSourceTests(logger: Logger, testFilePath: string) {
     TextDecoder,
     SubtleCrypto,
     crypto,
-    
+
     // App specific items
     Application: ApplicationPolyfill(),
     console: logger.console(),

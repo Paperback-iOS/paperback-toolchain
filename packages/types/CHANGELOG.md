@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.85
+
+### Patch Changes
+
+- 366dd50: Exported all default JSC globals to tests vm
+
 ## 1.0.0-alpha.84
 
 ### Patch Changes
