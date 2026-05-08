@@ -1,5 +1,5 @@
 import { Listr } from 'listr2'
-import esbuild from 'esbuild'
+import { build, type BuildOptions } from 'rolldown'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
@@ -20,10 +20,9 @@ export async function bundleSources(
     {
       title: 'Transpiling Project',
       async task() {
-        // await fs.remove(tmpDir)
         fs.rmSync(bundlesDirPath, { recursive: true, force: true })
 
-        const files: { in: string; out: string }[] = []
+        const buildSpecs: { entry: string; outFile: string }[] = []
         for (const file of fs.readdirSync(srcDir)) {
           const pbConfigPath = path.join(srcDir, file, 'pbconfig.ts')
           const hasPBConfig = fs.existsSync(pbConfigPath)
@@ -35,9 +34,9 @@ export async function bundleSources(
             continue
           }
 
-          files.push({
-            in: mainFilePath,
-            out: path.join(file, 'index'),
+          buildSpecs.push({
+            entry: mainFilePath,
+            outFile: path.join(bundlesDirPath, file, 'index.js'),
           })
 
           if (tests) {
@@ -47,32 +46,30 @@ export async function bundleSources(
             }
 
             const testFilePath = path.join(testDir, `${file}.ts`)
-            const hasTestFile = fs.existsSync(testFilePath)
-            if (hasTestFile) {
-              files.push({
-                in: testFilePath,
-                out: path.join(file, 'test'),
+            if (fs.existsSync(testFilePath)) {
+              buildSpecs.push({
+                entry: testFilePath,
+                outFile: path.join(bundlesDirPath, file, 'test.js'),
               })
             }
           }
         }
 
-        const result = await esbuild.build({
-          bundle: true,
-          entryPoints: files,
-          format: 'iife',
-          target: 'ES2020',
-          globalName: 'source',
-          metafile: true,
-          outdir: bundlesDirPath,
-          minify: !sourcemap,
-          absWorkingDir: cwd,
-          ...(sourcemap ? { sourcemap: 'inline' } : {}),
-        })
-
-        fs.writeFileSync(
-          path.join(bundlesDirPath, 'metafile.json'),
-          JSON.stringify(result.metafile)
+        await build(
+          buildSpecs.map(
+            ({ entry, outFile }): BuildOptions => ({
+              input: entry,
+              cwd,
+              transform: { target: 'es2020' },
+              output: {
+                file: outFile,
+                format: 'iife',
+                name: 'source',
+                minify: !sourcemap,
+                sourcemap: sourcemap ? 'inline' : false,
+              },
+            })
+          )
         )
       },
     },
@@ -140,24 +137,24 @@ export async function generateSourceInfo(
 
   const configPath = path.join(sourceDirectory, 'pbconfig.ts')
 
-  const configBundle = esbuild.buildSync({
-    bundle: true,
-    entryPoints: [configPath],
-    format: 'esm',
-    write: false,
-    treeShaking: true,
-  })
-
-  if (configBundle.errors.length > 0) {
-    for (const error of configBundle.errors) {
-      console.log(`[ERROR] ${error.text}`)
-    }
-
+  let configBundle
+  try {
+    configBundle = await build({
+      input: configPath,
+      cwd: process.cwd(),
+      treeshake: true,
+      output: { format: 'esm' },
+      write: false,
+    })
+  } catch (error) {
+    console.log(
+      `[ERROR] ${error instanceof Error ? error.message : String(error)}`
+    )
     return
   }
 
   const configModule = await import(
-    `data:text/javascript;base64,${Buffer.from(configBundle.outputFiles[0]!.text).toString('base64')}`
+    `data:text/javascript;base64,${Buffer.from(configBundle.output[0].code).toString('base64')}`
   )
   const config = configModule.default
   config.id = sourceId

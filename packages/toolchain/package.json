@@ -47,7 +47,9 @@
     "entry": [
       "src/bin/cli.ts"
     ],
-    "exports": true,
+    "exports": {
+      "bin": false
+    },
     "format": [
       "esm"
     ],
@@ -67,7 +69,8 @@
     "chai": "^6.2.2",
     "esbuild": "^0.28.0",
     "listr2": "^10.2.1",
-    "picocolors": "^1.1.1"
+    "picocolors": "^1.1.1",
+    "rolldown": "^1.0.0"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
