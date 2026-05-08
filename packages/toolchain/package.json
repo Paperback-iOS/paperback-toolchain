@@ -73,7 +73,7 @@
     "@types/chai": "^5.2.3",
     "@types/node": "24.x",
     "protoc": "^33.6.0",
-    "tsdown": "^0.21.9"
+    "tsdown": "^0.22.0"
   },
   "exports": {
     ".": "./dist/cli.mjs",
