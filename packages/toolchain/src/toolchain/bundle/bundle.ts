@@ -147,38 +147,35 @@ export async function generateVersioningFile(folder = '') {
   // joining path of directory
   const basePath = process.cwd()
   const directoryPath = path.join(basePath, 'bundles', folder)
-  const commonsInfo = await import(
-    path.join(basePath, 'node_modules/@paperback/types/package.json'),
-    { with: { type: 'json' } }
+  const commonsInfo = JSON.parse(
+    fs.readFileSync(
+      path.join(basePath, 'node_modules/@paperback/types/package.json'),
+      'utf8'
+    )
   )
 
-  let projectInfo
+  let projectInfo: { name?: string; description?: string }
 
-  try {
-    projectInfo = await import(path.join(basePath, 'package.json'), {
-      with: { type: 'json' },
-    })
-  } catch {
-    try {
-      projectInfo = await import(path.join(basePath, 'deno.json'), {
-        with: { type: 'json' },
-      })
-    } catch {
-      throw new Error('No package.json or deno.json was found')
-    }
+  const packageJsonPath = path.join(basePath, 'package.json')
+  const denoJsonPath = path.join(basePath, 'deno.json')
+  if (fs.existsSync(packageJsonPath)) {
+    projectInfo = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+  } else if (fs.existsSync(denoJsonPath)) {
+    projectInfo = JSON.parse(fs.readFileSync(denoJsonPath, 'utf8'))
+  } else {
+    throw new Error('No package.json or deno.json was found')
   }
 
   const jsonObject = {
     buildTime: new Date(),
     builtWith: {
       toolchain: cliInfo.version,
-      types: commonsInfo.default.version,
+      types: commonsInfo.version,
     },
     repository: {
-      name: projectInfo.default?.name ?? 'Paperback Extension Repository',
+      name: projectInfo.name ?? 'Paperback Extension Repository',
       description:
-        projectInfo.default?.description ??
-        'An extension repository for Paperback',
+        projectInfo.description ?? 'An extension repository for Paperback',
     },
     sources: [] as unknown[],
   }
@@ -188,10 +185,7 @@ export async function generateVersioningFile(folder = '') {
     const directoryContainsExtensionDefinition = fs.existsSync(infoJsonPath)
     if (!directoryContainsExtensionDefinition) continue
 
-    const infoModule = await import(`file://${infoJsonPath}`, {
-      with: { type: 'json' },
-    })
-    jsonObject.sources.push(infoModule.default)
+    jsonObject.sources.push(JSON.parse(fs.readFileSync(infoJsonPath, 'utf8')))
   }
 
   // Write the JSON payload to file
