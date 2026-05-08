@@ -13,30 +13,36 @@ export async function bundleSources(
   const cwd = process.cwd()
 
   const srcDir = path.join(cwd, 'src')
-  // const tmpDir = path.join(cwd, 'tmp')
   const bundlesDirPath = path.join(cwd, 'bundles', folder)
+
+  fs.rmSync(bundlesDirPath, { recursive: true, force: true })
+
+  const sources = fs.readdirSync(srcDir).filter((file) => {
+    const hasPBConfig = fs.existsSync(path.join(srcDir, file, 'pbconfig.ts'))
+    const hasMainFile = fs.existsSync(path.join(srcDir, file, 'main.ts'))
+    return hasPBConfig && hasMainFile
+  })
+
+  const pbconfigCode = new Map<string, string>()
 
   return new Listr([
     {
       title: 'Transpiling Project',
       async task() {
-        fs.rmSync(bundlesDirPath, { recursive: true, force: true })
+        const buildSpecs: BuildOptions[] = []
 
-        const buildSpecs: { entry: string; outFile: string }[] = []
-        for (const file of fs.readdirSync(srcDir)) {
-          const pbConfigPath = path.join(srcDir, file, 'pbconfig.ts')
-          const hasPBConfig = fs.existsSync(pbConfigPath)
-
-          const mainFilePath = path.join(srcDir, file, 'main.ts')
-          const hasMainFile = fs.existsSync(mainFilePath)
-
-          if (!hasMainFile || !hasPBConfig) {
-            continue
-          }
-
+        for (const file of sources) {
           buildSpecs.push({
-            entry: mainFilePath,
-            outFile: path.join(bundlesDirPath, file, 'index.js'),
+            input: path.join(srcDir, file, 'main.ts'),
+            cwd,
+            transform: { target: 'es2020' },
+            output: {
+              file: path.join(bundlesDirPath, file, 'index.js'),
+              format: 'iife',
+              name: 'source',
+              minify: !sourcemap,
+              sourcemap: sourcemap ? 'inline' : false,
+            },
           })
 
           if (tests) {
@@ -48,68 +54,80 @@ export async function bundleSources(
             const testFilePath = path.join(testDir, `${file}.ts`)
             if (fs.existsSync(testFilePath)) {
               buildSpecs.push({
-                entry: testFilePath,
-                outFile: path.join(bundlesDirPath, file, 'test.js'),
+                input: testFilePath,
+                cwd,
+                transform: { target: 'es2020' },
+                output: {
+                  file: path.join(bundlesDirPath, file, 'test.js'),
+                  format: 'iife',
+                  name: 'source',
+                  minify: !sourcemap,
+                  sourcemap: sourcemap ? 'inline' : false,
+                },
               })
             }
           }
         }
 
-        await build(
-          buildSpecs.map(
-            ({ entry, outFile }): BuildOptions => ({
-              input: entry,
-              cwd,
-              transform: { target: 'es2020' },
-              output: {
-                file: outFile,
-                format: 'iife',
-                name: 'source',
-                minify: !sourcemap,
-                sourcemap: sourcemap ? 'inline' : false,
-              },
-            })
-          )
-        )
+        // pbconfig builds are appended last so we can locate their results by offset.
+        const pbconfigStart = buildSpecs.length
+        for (const file of sources) {
+          buildSpecs.push({
+            input: path.join(srcDir, file, 'pbconfig.ts'),
+            cwd,
+            treeshake: true,
+            output: { format: 'esm' },
+            write: false,
+          })
+        }
+
+        const results = await build(buildSpecs)
+        const resultsArray = Array.isArray(results) ? results : [results]
+        sources.forEach((file, i) => {
+          const result = resultsArray[pbconfigStart + i]
+          if (!result) {
+            throw new Error(`Missing rolldown result for pbconfig ${file}`)
+          }
+          pbconfigCode.set(file, result.output[0].code)
+        })
       },
     },
     {
       title: 'Generate SourceInfo',
       task: () =>
         new Listr(
-          fs
-            .readdirSync(bundlesDirPath)
-            .filter((file) =>
-              fs.existsSync(path.join(bundlesDirPath, file, 'index.js'))
-            )
-            .map((file) => {
-              const sourceDir = path.join(srcDir, file)
-              const bundleDestinationDir = path.join(bundlesDirPath, file)
+          sources.map((file) => {
+            const bundleDestinationDir = path.join(bundlesDirPath, file)
 
-              return {
-                task: async () => {
-                  fs.cpSync(
-                    path.join(srcDir, file, 'static'),
-                    path.join(bundleDestinationDir, 'static'),
-                    { recursive: true }
-                  )
+            return {
+              title: file,
+              task: async () => {
+                fs.mkdirSync(bundleDestinationDir, { recursive: true })
+                fs.cpSync(
+                  path.join(srcDir, file, 'static'),
+                  path.join(bundleDestinationDir, 'static'),
+                  { recursive: true }
+                )
 
-                  // await this.bundleExtension(file, sourceDir, bundleDestinationDir)
-                  await generateSourceInfo(
-                    file,
-                    sourceDir,
-                    bundleDestinationDir
-                  )
-                },
-                title: file,
-              }
-            }),
+                const code = pbconfigCode.get(file)
+                if (code === undefined) {
+                  throw new Error(`Missing pbconfig output for ${file}`)
+                }
+                const configModule = await import(
+                  `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`
+                )
+                const config = configModule.default
+                config.id = file
+
+                fs.writeFileSync(
+                  path.join(bundleDestinationDir, 'info.json'),
+                  JSON.stringify(config)
+                )
+              },
+            }
+          }),
           { concurrent: true }
         ),
-    },
-    {
-      title: 'Cleaning up',
-      task() {},
     },
   ])
 }
@@ -123,47 +141,6 @@ export async function generateHomepage(folder = '') {
   const basePath = process.cwd()
   const directoryPath = path.join(basePath, 'bundles', folder, 'index.html')
   fs.copyFileSync(indexPath, directoryPath)
-}
-
-export async function generateSourceInfo(
-  sourceId: string,
-  sourceDirectory: string,
-  directoryPath: string
-) {
-  const directoryContainsExtensionDefinition = fs.existsSync(
-    path.join(sourceDirectory, 'pbconfig.ts')
-  )
-  if (!directoryContainsExtensionDefinition) return
-
-  const configPath = path.join(sourceDirectory, 'pbconfig.ts')
-
-  let configBundle
-  try {
-    configBundle = await build({
-      input: configPath,
-      cwd: process.cwd(),
-      treeshake: true,
-      output: { format: 'esm' },
-      write: false,
-    })
-  } catch (error) {
-    console.log(
-      `[ERROR] ${error instanceof Error ? error.message : String(error)}`
-    )
-    return
-  }
-
-  const configModule = await import(
-    `data:text/javascript;base64,${Buffer.from(configBundle.output[0].code).toString('base64')}`
-  )
-  const config = configModule.default
-  config.id = sourceId
-
-  // Write the JSON payload to file
-  fs.writeFileSync(
-    path.join(directoryPath, 'info.json'),
-    JSON.stringify(config)
-  )
 }
 
 export async function generateVersioningFile(folder = '') {
