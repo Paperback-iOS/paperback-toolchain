@@ -6,7 +6,7 @@ import {
   generateDefaultTests,
 } from '../../toolchain/test/test.js'
 import type { LocalContext } from '../../context.js'
-import esbuild from 'esbuild'
+import { build } from 'rolldown'
 import { Logger } from '../../toolchain/test/logger.js'
 
 interface TestFlags {
@@ -68,17 +68,22 @@ export async function test(
 
   console.log(pc.underline(pc.blue('Building Tests')))
   const buildStartTime = process.hrtime.bigint()
-  await esbuild.build({
-    bundle: true,
-    entryPoints: filesToBundle,
-    format: 'iife',
-    target: 'ES2020',
-    globalName: 'source',
-    outdir: testOutputDirectory,
-    minify: false,
-    absWorkingDir: cwd,
-    sourcemap: 'linked',
-  })
+  await Promise.all(
+    filesToBundle.map(({ in: entry, out: name }) =>
+      build({
+        input: entry,
+        cwd,
+        transform: { target: 'es2020' },
+        output: {
+          file: path.join(testOutputDirectory, `${name}.js`),
+          format: 'iife',
+          name: 'source',
+          minify: false,
+          sourcemap: true,
+        },
+      })
+    )
+  )
   const buildEndTime = process.hrtime.bigint()
   console.log(
     `  Finished in`,
@@ -91,30 +96,32 @@ export async function test(
   const promises: Promise<void>[] = []
   for (const { out: extension } of filesToBundle) {
     promises.push(
-      new Promise((resolve) => (async () => {
-        const start = process.hrtime.bigint()
-        const extensionLogger = logger.scope(extension)
-        try {
-          await runSourceTests(
-            extensionLogger,
-            path.join(testOutputDirectory, `${extension}.js`)
-          )
-        } catch (error) {
-          extensionLogger.log('error', String(error))
-        }
-        const end = process.hrtime.bigint()
+      new Promise((resolve) =>
+        (async () => {
+          const start = process.hrtime.bigint()
+          const extensionLogger = logger.scope(extension)
+          try {
+            await runSourceTests(
+              extensionLogger,
+              path.join(testOutputDirectory, `${extension}.js`)
+            )
+          } catch (error) {
+            extensionLogger.log('error', String(error))
+          }
+          const end = process.hrtime.bigint()
 
-        const data: any = extensionLogger.raw()
-        const result =
-          !('error' in data) && data['summary']?.failed == false
-            ? pc.green('pass')
-            : pc.red('fail')
-        console.log(
-          `  ${pc.yellow(extension)}:`,
-          pc.dim(`${Number(end - start) / 1e6}ms`),
-          ` ... ${result}`
-        )
-      })().then(resolve))
+          const data: any = extensionLogger.raw()
+          const result =
+            !('error' in data) && data['summary']?.failed == false
+              ? pc.green('pass')
+              : pc.red('fail')
+          console.log(
+            `  ${pc.yellow(extension)}:`,
+            pc.dim(`${Number(end - start) / 1e6}ms`),
+            ` ... ${result}`
+          )
+        })().then(resolve)
+      )
     )
   }
 

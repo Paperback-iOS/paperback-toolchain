@@ -16,7 +16,7 @@
   "license": "MIT",
   "version": "1.0.0-alpha.85",
   "scripts": {
-    "build": "rm -rf ./lib && tsc",
+    "build": "shx rm -rf ./lib && tsc",
     "prepack": "npm run build"
   },
   "dependencies": {
