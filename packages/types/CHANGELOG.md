@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.86
+
+### Patch Changes
+
+- cc9dc23: Added captureConsoleLog to webview; Fixed an issue with edit flags in EditSection
+
 ## 1.0.0-alpha.85
 
 ### Patch Changes
