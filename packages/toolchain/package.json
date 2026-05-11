@@ -67,7 +67,6 @@
     "@stricli/core": "^1.2.6",
     "buffer": "^6.0.3",
     "chai": "^6.2.2",
-    "esbuild": "^0.28.0",
     "listr2": "^10.2.1",
     "picocolors": "^1.1.1",
     "rolldown": "^1.0.0"

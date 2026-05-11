@@ -105,6 +105,7 @@ declare global {
       }
       inject: string
       storage: { cookies: Cookie[] }
+      captureConsoleLog?: boolean
     }
 
     type WebViewExecutionResult = {

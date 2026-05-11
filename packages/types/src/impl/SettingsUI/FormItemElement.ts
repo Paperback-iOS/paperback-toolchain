@@ -135,16 +135,28 @@ export function SelectRow(
   id: string,
   props: SelectRowProps
 ): NavigationRowElement {
+  const selectedItemsCount = Object.keys(props.value).length
+
   return NavigationRow(id, {
     form: new SelectForm(props.title, props),
     title: props.title,
-    value: `${Object.keys(props.value).length} items`,
+    subtitle: props.subtitle,
+    value:
+      selectedItemsCount == 1
+        ? `${
+            ('items' in props
+              ? props.items.find((x) => x.id == props.value[0])?.title
+              : props.options.find((x) => x.id == props.value[0])?.title) ??
+            '1 item'
+          }`
+        : `${Object.keys(props.value).length} items`,
     isHidden: props.isHidden,
   })
 }
 
 export type TriStateSelectRowProps = {
   title: string
+  subtitle?: string
   isHidden?: boolean
 
   layout: 'flow' | 'list'
@@ -165,6 +177,7 @@ export function TriStateSelectRow(
   return NavigationRow(id, {
     form: new TriStateSelectForm(props.title, props),
     title: props.title,
+    subtitle: props.subtitle,
     value: `${Object.keys(props.value).length} items`,
     isHidden: props.isHidden,
   })

@@ -75,9 +75,9 @@ export function EditSection(
     header: params.header,
     footer: params.footer,
 
-    allowAddition: params.onAddition != undefined && !params.allowAddition,
-    allowDeletion: params.onDeletion != undefined && !params.allowDeletion,
-    allowReorder: params.onReorder != undefined && !params.allowReorder,
+    allowAddition: params.onAddition != undefined && params.allowAddition == true,
+    allowDeletion: params.onDeletion != undefined && params.allowDeletion == true,
+    allowReorder: params.onReorder != undefined && params.allowReorder == true,
 
     onAddition: params.onAddition,
     onDeletion: params.onDeletion,

@@ -20,8 +20,8 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "entities": "^7.0.0",
-    "user-agents": "^1.1.669"
+    "entities": "^8.0.0",
+    "user-agents": "^2.1.56"
   },
   "devDependencies": {
     "@paperback/types": "1.0.0-alpha.85",
