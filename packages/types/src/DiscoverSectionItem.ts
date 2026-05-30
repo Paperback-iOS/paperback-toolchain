@@ -8,6 +8,15 @@ export interface FeaturedCarouselItem {
   imageUrl: string
   title: string
   supertitle?: string
+  summary?: string
+  author?: string
+  
+  /** Rating is 0-1, 0 being the lowest, 1 being the highest */
+  rating?: number
+
+  /** Number of chapters available, may be a rough estimation */
+  chapters?: number
+  
   metadata?: Metadata
   contentRating?: ContentRating
 }

@@ -7,6 +7,10 @@ export interface MangaInfo {
   primaryTitle: string
   secondaryTitles: string[]
   contentRating: ContentRating
+  /** 
+   * Defaults to 'comic'
+   * */ 
+  contentType?: 'comic' | 'novel'
 
   status?: string
   artist?: string

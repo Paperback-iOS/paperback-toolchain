@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.88
+
+### Patch Changes
+
+- added title content type, updated featured discover item
+
 ## 1.0.0-alpha.86
 
 ### Patch Changes
