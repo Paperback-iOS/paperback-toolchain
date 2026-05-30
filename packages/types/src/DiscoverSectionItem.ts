@@ -2,6 +2,11 @@ import type { Metadata } from './Metadata.js'
 import type { SearchQuery } from './SearchQuery.js'
 import type { ContentRating } from './impl/SourceInfo.js'
 
+type InfoItem = {
+  symbol: string
+  text: string
+}
+
 export interface FeaturedCarouselItem {
   type: 'featuredCarouselItem'
   mangaId: string
@@ -9,14 +14,7 @@ export interface FeaturedCarouselItem {
   title: string
   supertitle?: string
   summary?: string
-  author?: string
-  
-  /** Rating is 0-1, 0 being the lowest, 1 being the highest */
-  rating?: number
-
-  /** Number of chapters available, may be a rough estimation */
-  chapters?: number
-  
+  infoItems?: [InfoItem] | [InfoItem, InfoItem]
   metadata?: Metadata
   contentRating?: ContentRating
 }
