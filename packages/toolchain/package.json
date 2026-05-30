@@ -13,7 +13,7 @@
   },
   "bugs": "https://github.com/Paperback-iOS/paperback-toolchain/issues",
   "license": "MIT",
-  "version": "1.0.0-alpha.88",
+  "version": "1.0.0-alpha.89",
   "type": "module",
   "files": [
     "dist"
@@ -60,8 +60,8 @@
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.3",
-    "@paperback/runtime-polyfills": "1.0.0-alpha.88",
-    "@paperback/types": "1.0.0-alpha.88",
+    "@paperback/runtime-polyfills": "1.0.0-alpha.89",
+    "@paperback/types": "1.0.0-alpha.89",
     "@protobuf-ts/plugin": "^2.11.1",
     "@stricli/auto-complete": "^1.2.6",
     "@stricli/core": "^1.2.6",

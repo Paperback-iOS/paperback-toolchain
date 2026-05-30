@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.89
+
+### Patch Changes
+
+- 59b3a7c: refined featured discover section
+
 ## 1.0.0-alpha.88
 
 ### Patch Changes
