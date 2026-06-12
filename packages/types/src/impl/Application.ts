@@ -102,6 +102,7 @@ declare global {
         baseUrl: string
         loadCSS: boolean
         loadImages: boolean
+        userAgent?: string
       }
       inject: string
       storage: { cookies: Cookie[] }

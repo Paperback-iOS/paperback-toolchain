@@ -13,6 +13,8 @@ import type { FSWatcher } from 'node:fs'
 import type { Server } from 'node:http'
 
 export interface ServeFlags {
+  ['device-ip']?: string
+  ['device-port']: number
   watch: boolean
   port: number
 }
@@ -67,7 +69,9 @@ export async function serve(this: LocalContext, flags: ServeFlags) {
       rlSignal?.abort()
 
       if (rebuildDebounce != undefined) clearTimeout(rebuildDebounce)
-      rebuildDebounce = setTimeout(rebuildSources, 500)
+      rebuildDebounce = setTimeout(async () => {
+        await rebuildSources()
+      }, 500)
     })
   }
 

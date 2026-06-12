@@ -12,6 +12,20 @@ export default buildCommand({
         default: '8080',
       },
       watch: { kind: 'boolean', brief: 'rebuild on file change' },
+      'device-ip': {
+        kind: 'parsed',
+        parse: String,
+        brief:
+          'device ip to reinstall extensions on, only applies in watch mode',
+        optional: true,
+      },
+      'device-port': {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'device port to reinstall extensions on, only applies in watch mode',
+        default: '27015',
+      },
     },
   },
   docs: {

@@ -1,5 +1,12 @@
 import type { Cookie } from '../../Cookie.js'
 
 export interface CloudflareBypassRequestProviding {
-  saveCloudflareBypassCookies(cookies: Cookie[]): Promise<void>
+  /** @deprecated use {@link cloudflareBypassCompleted} instead */
+  saveCloudflareBypassCookies?(cookies: Cookie[]): Promise<void>
+
+  cloudflareBypassCompleted?(
+    request: Request,
+    cookies: Cookie[],
+    localStorage: Record<string, string>
+  ): Promise<void>
 }

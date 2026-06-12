@@ -1,5 +1,17 @@
 # @paperback/types
 
+## 1.0.0-alpha.91
+
+### Patch Changes
+
+- Fixed saveCloudflareBypassCookies being a required method
+
+## 1.0.0-alpha.90
+
+### Patch Changes
+
+- 149ab8e: Added cloudflareBypassCompleted, Deprecated saveCloudflareBypassCookies, Added userAgent to webviewcontext source
+
 ## 1.0.0-alpha.89
 
 ### Patch Changes
