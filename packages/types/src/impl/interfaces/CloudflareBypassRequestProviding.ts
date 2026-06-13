@@ -1,4 +1,5 @@
 import type { Cookie } from '../../Cookie.js'
+import type { Request } from '../../Request.js'
 
 export interface CloudflareBypassRequestProviding {
   /** @deprecated use {@link cloudflareBypassCompleted} instead */
