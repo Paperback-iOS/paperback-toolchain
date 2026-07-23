@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import {
   implementsChapterProviding,
   implementsSearchResultsProviding,
@@ -214,8 +213,8 @@ export const registerDefaultSearchResultsProvidingSourceTests = function (
         params = [{ title: '' }]
       }
 
-      const sortingOptions = await extension.getSortingOptions!(...params)
-      expect(sortingOptions).not.empty
+      const sortingOptions = await extension.getSortingOptions?.(...params)
+      void expect(sortingOptions).not.empty
 
       suite.state[STATE_KEY.SearchResultsProviding.getSortingOptions] =
         sortingOptions
@@ -235,8 +234,8 @@ export const registerDefaultSearchResultsProvidingSourceTests = function (
       }
 
       const searchResults = await extension.getSearchResults(...params)
-      expect(searchResults).not.empty
-      expect(searchResults.items).not.be.empty
+      void expect(searchResults).not.empty
+      void expect(searchResults.items).not.be.empty
 
       suite.state[STATE_KEY.SearchResultsProviding.getSearchResults] =
         searchResults
@@ -268,8 +267,8 @@ export const registerDefaultMangaProvidingSourceTests = function (
       }
 
       const mangaDetails = await extension.getMangaDetails(...params)
-      expect(mangaDetails).to.not.be.undefined
-      expect(mangaDetails.mangaInfo).to.not.be.undefined
+      void expect(mangaDetails).to.not.be.undefined
+      void expect(mangaDetails.mangaInfo).to.not.be.undefined
 
       suite.state[STATE_KEY.MangaProviding.getMangaDetails] = mangaDetails
     })
@@ -301,7 +300,7 @@ export const registerDefaultChapterProvidingSourceTests = function (
       }
 
       const chapters = await extension.getChapters(...params)
-      expect(chapters).to.not.be.empty
+      void expect(chapters).to.not.be.empty
 
       suite.state[STATE_KEY.ChapterProviding.getChapters] = chapters
     })
@@ -327,7 +326,7 @@ export const registerDefaultChapterProvidingSourceTests = function (
       }
 
       const chapterDetails = await extension.getChapterDetails(...params)
-      expect(chapterDetails).to.not.be.undefined
+      void expect(chapterDetails).to.not.be.undefined
 
       suite.state[STATE_KEY.ChapterProviding.getChapterDetails] = chapterDetails
     })

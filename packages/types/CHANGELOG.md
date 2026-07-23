@@ -1,5 +1,11 @@
 # @paperback/types
 
+## 1.0.0-alpha.92
+
+### Patch Changes
+
+- Fixed reqeust type in CloudflareBypassRequestProviding
+
 ## 1.0.0-alpha.91
 
 ### Patch Changes
