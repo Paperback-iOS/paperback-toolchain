@@ -171,4 +171,9 @@ export async function test(
   )
   console.log('    Passed:', pc.green(passedTests))
   console.log('    Failed:', pc.red(failedTests))
+
+  // Set rather than call process.exit(), so stdout and the --output file flush first.
+  if (failedTests > 0) {
+    process.exitCode = 1
+  }
 }
