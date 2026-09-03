@@ -14,8 +14,13 @@ const cookieStateKey = 'cookie_store_cookies'
 export class CookieStorageInterceptor extends PaperbackInterceptor {
   private _cookies: Record<string, Cookie> = {}
 
-  get cookies(): Readonly<Cookie[]> {
-    return Object.freeze(Object.values(this._cookies))
+  get cookies(): ReadonlyArray<Readonly<Cookie>> {
+    return Object.values(this._cookies).map(cookie => ({
+      ...cookie,
+      expires: cookie.expires
+        ? new Date(cookie.expires)
+        : undefined,
+    }))
   }
 
   set cookies(newValue: Cookie[]) {
@@ -40,9 +45,6 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
 
   async interceptRequest(request: Request): Promise<Request> {
     request.cookies = {
-      // Already set cookies
-      ...(request.cookies ?? {}),
-
       // Inject all the cookies as { name: value }
       ...this.cookiesForUrl(request.url).reduce(
         (v, c) => {
@@ -51,6 +53,9 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
         },
         {} as Record<string, string>
       ),
+
+      // Request cookies take precedence
+      ...(request.cookies ?? {}),
     }
 
     return request
@@ -84,17 +89,20 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
   }
 
   setCookie(cookie: Cookie) {
-    // If the cookie is already expired, skip
+    const identifier = this.cookieIdentifier(cookie)
+    
     if (this.isCookieExpired(cookie)) {
-      return
+      delete this._cookies[identifier]
+    } else {
+      this._cookies[identifier] = cookie
     }
 
-    this._cookies[this.cookieIdentifier(cookie)] = cookie
     this.saveCookiesToStorage()
   }
 
   deleteCookie(cookie: Cookie) {
     delete this._cookies[this.cookieIdentifier(cookie)]
+    this.saveCookiesToStorage()
   }
 
   cookiesForUrl(urlString: string): Cookie[] {
@@ -107,7 +115,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
 
     const matchedCookies: Record<
       string,
-      { cookie: Cookie; pathMatches: number }
+      { cookie: Cookie; pathLength: number }
     > = {}
 
     const pathname = url.path.startsWith('/') ? url.path : `/${url.path}`
@@ -116,10 +124,12 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
     const splitUrlPath = pathname.split('/')
     splitUrlPath.shift()
 
+    let needsSaveToStorage = false
     const cookies = this.cookies
     for (const cookie of cookies) {
       if (this.isCookieExpired(cookie)) {
         delete this._cookies[this.cookieIdentifier(cookie)]
+        needsSaveToStorage = true
         continue
       }
 
@@ -150,43 +160,40 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
       }
 
       const cookiePath = this.cookieSanitizedPath(cookie)
-      const splitCookiePath = cookiePath.split('/')
-      splitCookiePath.shift()
 
-      let pathMatches = 0
-      if (pathname === cookiePath) {
-        pathMatches = Number.MAX_SAFE_INTEGER
-      } else if (splitCookiePath.length === 0 || cookiePath === '/') {
-        pathMatches = 1
-      } else if (
-        pathname.startsWith(cookiePath) &&
-        splitUrlPath.length >= splitCookiePath.length
-      ) {
-        for (let i = 0; i < splitCookiePath.length; i++) {
-          if (splitCookiePath[i] === splitUrlPath[i]) {
-            pathMatches += 1
-          } else {
-            break
-          }
-        }
-      }
+      const pathMatches = pathname === cookiePath || (
+        pathname.startsWith(cookiePath) && (
+          cookiePath.endsWith('/') ||
+          pathname[cookiePath.length] === '/'
+        )
+      )
 
-      if (pathMatches <= 0) {
+      if (!pathMatches) {
         continue
       }
 
-      if ((matchedCookies[cookie.name]?.pathMatches ?? 0) < pathMatches) {
-        matchedCookies[cookie.name] = { cookie, pathMatches }
+      const previous = matchedCookies[cookie.name]
+
+      if (!previous || cookiePath.length > previous.pathLength) {
+        matchedCookies[cookie.name] = {
+          cookie,
+          pathLength: cookiePath.length,
+        }
       }
+    }
+
+    if (needsSaveToStorage) {
+      this.saveCookiesToStorage()
     }
 
     return Object.values(matchedCookies).map((x) => x.cookie)
   }
 
   private cookieIdentifier(cookie: Cookie): string {
-    return `${cookie.name}-${this.cookieSanitizedDomain(
-      cookie
-    )}-${this.cookieSanitizedPath(cookie)}`
+    const cookieSanitizedDomain = this.cookieSanitizedDomain(cookie)
+    const cookieSanitizedPath = this.cookieSanitizedPath(cookie)
+
+    return `${cookie.name}-${cookieSanitizedDomain}-${cookieSanitizedPath}`
   }
 
   private cookieSanitizedPath(cookie: Cookie): string {
