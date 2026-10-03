@@ -22,6 +22,11 @@ export default buildCommand({
         brief: 'display captured console',
         default: true,
       },
+      ignoreErrors: {
+        kind: 'boolean',
+        brief: 'ignore test failures and exit with code 0',
+        default: false,
+      },
     },
     positional: {
       kind: 'tuple',

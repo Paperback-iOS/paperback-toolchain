@@ -14,6 +14,7 @@ interface TestFlags {
   overwrite: boolean
   output?: string
   console: boolean
+  ignoreErrors: boolean
 }
 
 export async function test(
@@ -171,4 +172,7 @@ export async function test(
   )
   console.log('    Passed:', pc.green(passedTests))
   console.log('    Failed:', pc.red(failedTests))
+  if (failedTests > 0 && !flags.ignoreErrors) {
+    process.exitCode = 1
+  }
 }
