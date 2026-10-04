@@ -1,9 +1,12 @@
 import {
+  CloudflareError,
   implementsChapterProviding,
   implementsSearchResultsProviding,
   SourceIntents,
   type Chapter,
   type ChapterProviding,
+  type CloudflareBypassRequestProviding,
+  type Cookie,
   type Extension,
   type ExtensionInfo,
   type MangaProviding,
@@ -180,7 +183,7 @@ export const registerDefaultInitialisationTests = function (
   extension: Extension
 ) {
   suite.test('initialisation', async () => {
-    await extension.initialise()
+    await runRequest(extension, () => extension.initialise())
   })
 }
 
@@ -213,7 +216,9 @@ export const registerDefaultSearchResultsProvidingSourceTests = function (
         params = [{ title: '' }]
       }
 
-      const sortingOptions = await extension.getSortingOptions?.(...params)
+      const sortingOptions = await runRequest(extension, () =>
+        extension.getSortingOptions!(...params)
+      )
       void expect(sortingOptions).not.empty
 
       suite.state[STATE_KEY.SearchResultsProviding.getSortingOptions] =
@@ -233,7 +238,9 @@ export const registerDefaultSearchResultsProvidingSourceTests = function (
         params = [{ title: '' }, undefined, sortingOptions?.[0]]
       }
 
-      const searchResults = await extension.getSearchResults(...params)
+      const searchResults = await runRequest(extension, () =>
+        extension.getSearchResults(...params)
+      )
       void expect(searchResults).not.empty
       void expect(searchResults.items).not.be.empty
 
@@ -266,7 +273,9 @@ export const registerDefaultMangaProvidingSourceTests = function (
         }
       }
 
-      const mangaDetails = await extension.getMangaDetails(...params)
+      const mangaDetails = await runRequest(extension, () =>
+        extension.getMangaDetails(...params)
+      )
       void expect(mangaDetails).to.not.be.undefined
       void expect(mangaDetails.mangaInfo).to.not.be.undefined
 
@@ -299,7 +308,9 @@ export const registerDefaultChapterProvidingSourceTests = function (
         }
       }
 
-      const chapters = await extension.getChapters(...params)
+      const chapters = await runRequest(extension, () =>
+        extension.getChapters(...params)
+      )
       void expect(chapters).to.not.be.empty
 
       suite.state[STATE_KEY.ChapterProviding.getChapters] = chapters
@@ -325,10 +336,74 @@ export const registerDefaultChapterProvidingSourceTests = function (
         }
       }
 
-      const chapterDetails = await extension.getChapterDetails(...params)
+      const chapterDetails = await runRequest(extension, () =>
+        extension.getChapterDetails(...params)
+      )
       void expect(chapterDetails).to.not.be.undefined
 
       suite.state[STATE_KEY.ChapterProviding.getChapterDetails] = chapterDetails
     })
+  }
+}
+
+declare const flaresolverr: string | undefined
+
+async function runRequest<T>(
+  extension: Extension & CloudflareBypassRequestProviding,
+  request: () => Promise<T>
+): Promise<T> {
+  try {
+    return await request()
+  } catch (error) {
+    if (
+      !flaresolverr ||
+      !extension.cloudflareBypassCompleted ||
+      !(error instanceof CloudflareError)
+    )
+      throw error
+
+    try {
+      const { cookies, userAgent } = await solveWithFlareSolverr(
+        flaresolverr,
+        error.resolutionRequest.url
+      )
+      Application.getDefaultUserAgent = async () => userAgent
+      await extension.cloudflareBypassCompleted(
+        error.resolutionRequest,
+        cookies,
+        {}
+      )
+
+      return await request()
+    } catch (bypassError) {
+      throw new CloudflareError(
+        error.resolutionRequest,
+        `Cloudflare bypass failed: ${String(bypassError)}`
+      )
+    }
+  }
+}
+
+async function solveWithFlareSolverr(flaresolverrUri: string, url: string) {
+  const response = await globalThis.fetch(flaresolverrUri, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ cmd: 'request.get', url }),
+  })
+  const result = (await response.json()) as {
+    status: string
+    message: string
+    solution: { cookies: Cookie[]; userAgent: string }
+  }
+  if (result.status !== 'ok') throw new Error(result.message)
+
+  return {
+    userAgent: result.solution.userAgent,
+    cookies: result.solution.cookies.map(({ name, value, domain, path }) => ({
+      name,
+      value,
+      domain,
+      path,
+    })),
   }
 }

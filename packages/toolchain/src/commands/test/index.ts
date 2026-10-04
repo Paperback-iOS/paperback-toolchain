@@ -3,6 +3,7 @@ import path from 'node:path'
 import fs from 'node:fs'
 import {
   runSourceTests,
+  generateDefaultSuite,
   generateDefaultTests,
 } from '../../toolchain/test/test.js'
 import type { LocalContext } from '../../context.js'
@@ -15,6 +16,7 @@ interface TestFlags {
   output?: string
   console: boolean
   ignoreErrors: boolean
+  flaresolverr?: string
 }
 
 export async function test(
@@ -34,6 +36,9 @@ export async function test(
   const testsDirectory = path.join(srcDirectory, 'tests')
   if (flags.generate) {
     console.log(pc.underline(pc.blue('Generating Tests')))
+    if (generateDefaultSuite(testsDirectory, flags.overwrite)) {
+      console.log(`  ${pc.yellow('suite.ts')}: ${pc.green('generated')}`)
+    }
   }
 
   const sourcesToTest = sourceId ? [sourceId] : fs.readdirSync(srcDirectory)
@@ -104,7 +109,8 @@ export async function test(
           try {
             await runSourceTests(
               extensionLogger,
-              path.join(testOutputDirectory, `${extension}.js`)
+              path.join(testOutputDirectory, `${extension}.js`),
+              flags.flaresolverr
             )
           } catch (error) {
             extensionLogger.log('error', String(error))
