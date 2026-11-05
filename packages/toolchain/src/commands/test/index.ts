@@ -16,6 +16,7 @@ interface TestFlags {
   output?: string
   console: boolean
   ignoreErrors: boolean
+  ignoreCloudflareErrors: boolean
   flaresolverr?: string
 }
 
@@ -138,6 +139,7 @@ export async function test(
   const logData: any = logger.raw()
   let passedTests = 0
   let failedTests = 0
+  let ignoredTests = 0
   let output = ''
   for (const scope in logData) {
     output += `\n------ ${pc.yellow(scope)} ------\n\n`
@@ -147,10 +149,12 @@ export async function test(
       for (const test of tests) {
         const status =
           test.status == 'pass' ? pc.green(test.status) : pc.red(test.status)
-        output += `  ${test.name}: ${pc.dim(test.duration + 'ms')} ... ${status}\n`
+        const cloudflare = test.cloudflare ? pc.dim(' (cloudflare)') : ''
+        output += `  ${test.name}: ${pc.dim(test.duration + 'ms')} ... ${status}${cloudflare}\n`
         if ('error' in test) {
           output += `    ${test.error}\n`
           failedTests++
+          if (test.cloudflare && flags.ignoreCloudflareErrors) ignoredTests++
         } else {
           passedTests++
         }
@@ -178,7 +182,8 @@ export async function test(
   )
   console.log('    Passed:', pc.green(passedTests))
   console.log('    Failed:', pc.red(failedTests))
-  if (failedTests > 0 && !flags.ignoreErrors) {
-    return new Error(`${failedTests} test(s) failed`)
+  if (ignoredTests > 0) console.log('   Ignored:', pc.dim(ignoredTests))
+  if (failedTests > ignoredTests && !flags.ignoreErrors) {
+    return new Error(`${failedTests - ignoredTests} test(s) failed`)
   }
 }

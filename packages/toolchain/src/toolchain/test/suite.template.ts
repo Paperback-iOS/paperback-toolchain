@@ -55,6 +55,8 @@ export class TestSuite {
     const startTime = Date.now()
     let passed = 0
     let failed = 0
+    // Once Cloudflare blocks a test, later failures likely depend on it
+    let cloudflareBlocked = false
 
     const tests = this.logger.list('tests')
     for (const testCase of this.testCases) {
@@ -74,6 +76,8 @@ export class TestSuite {
         testLogger.log('status', 'fail')
         testLogger.log('error', String(error))
         testLogger.log('duration', duration)
+        cloudflareBlocked ||= error instanceof CloudflareError
+        if (cloudflareBlocked) testLogger.log('cloudflare', true)
       }
     }
 

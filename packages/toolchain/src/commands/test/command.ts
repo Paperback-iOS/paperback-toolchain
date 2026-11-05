@@ -27,6 +27,11 @@ export default buildCommand({
         brief: 'ignore test failures and exit with code 0',
         default: false,
       },
+      ignoreCloudflareErrors: {
+        kind: 'boolean',
+        brief: 'ignore test failures caused by Cloudflare',
+        default: false,
+      },
       flaresolverr: {
         kind: 'parsed',
         brief:
