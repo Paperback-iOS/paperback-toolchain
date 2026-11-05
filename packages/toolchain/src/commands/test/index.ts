@@ -23,7 +23,7 @@ export async function test(
   this: LocalContext,
   flags: TestFlags,
   sourceId?: string
-) {
+): Promise<void | Error> {
   const cwd = this.process.cwd()
   console.clear()
 
@@ -179,6 +179,6 @@ export async function test(
   console.log('    Passed:', pc.green(passedTests))
   console.log('    Failed:', pc.red(failedTests))
   if (failedTests > 0 && !flags.ignoreErrors) {
-    process.exitCode = 1
+    return new Error(`${failedTests} test(s) failed`)
   }
 }
