@@ -1,38 +1,4 @@
 {
   "mode": "pre",
-  "tag": "alpha",
-  "initialVersions": {
-    "@paperback/runtime-polyfills": "1.0.0-alpha.64",
-    "@paperback/toolchain": "1.0.0-alpha.64",
-    "@paperback/types": "1.0.0-alpha.64"
-  },
-  "changesets": [
-    "breezy-taxis-remain",
-    "busy-ghosts-take",
-    "chatty-oranges-burn",
-    "cuddly-bears-itch",
-    "dry-cameras-sort",
-    "early-bugs-clean",
-    "early-parrots-pay",
-    "eleven-rules-rhyme",
-    "fast-rings-admire",
-    "floppy-points-tickle",
-    "large-cows-smile",
-    "lazy-taxes-stand",
-    "loose-poets-sort",
-    "lucky-eagles-agree",
-    "metal-breads-happen",
-    "open-tables-tie",
-    "petite-waves-cry",
-    "pretty-jars-win",
-    "proud-trains-end",
-    "salty-beans-stare",
-    "silent-peaches-remain",
-    "slow-gifts-relax",
-    "strong-socks-drive",
-    "tidy-toes-swim",
-    "wise-shoes-pump",
-    "witty-turkeys-greet",
-    "young-weeks-repair"
-  ]
+  "tag": "alpha"
 }

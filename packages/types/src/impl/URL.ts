@@ -80,7 +80,9 @@ export function parseURL(url: string): URLComponents {
     const pairs = match[4].split('&')
     for (const pair of pairs) {
       if (!pair) continue
-      const [rawKey, rawValue = ''] = pair.split('=')
+      // Values may contain '=', so only split on the first one
+      const [rawKey, ...rawValueParts] = pair.split('=')
+      const rawValue = rawValueParts.join('=')
       if (rawKey === undefined) continue // Skip if no key found
       const key = decodeURIComponent(rawKey)
       const value = decodeURIComponent(rawValue)

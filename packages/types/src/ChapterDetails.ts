@@ -1,4 +1,4 @@
-import type { Request } from "./Request.js"
+import type { Request } from './Request.js'
 
 type ChapterDetailsInfo = {
   id: string

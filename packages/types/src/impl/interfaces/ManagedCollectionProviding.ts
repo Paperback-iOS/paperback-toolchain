@@ -1,37 +1,65 @@
 import type { SourceManga } from '../../SourceManga.js'
 
 export interface ManagedCollectionProviding {
-  getManagedLibraryCollections(): Promise<ManagedCollection[]>
+  getManagedCollections(): Promise<ManagedCollection[]>
 
-  commitManagedCollectionChanges(
-    changeset: ManagedCollectionChangeset
-  ): Promise<void>
+  /**
+   * The current contents of each requested collection, in one call, so a
+   * tracker can fetch its library once and split it by collection.
+   */
+  getManagedCollectionItems(
+    collections: ManagedCollection[]
+  ): Promise<ManagedCollectionItems[]>
 
-  getSourceMangaInManagedCollection(
-    managedCollection: ManagedCollection
-  ): Promise<SourceManga[]>
-}
-
-export interface PartialLibraryItem {
-  id: string
-  primarySource: SourceManga
-  secondarySources: SourceManga[]
-  trackedSources: SourceManga[]
-}
-
-export interface LibraryItemSourceLinkProposal {
-  sourceManga: SourceManga
-  libraryItem: PartialLibraryItem
+  /**
+   * Applies every change the user approved for this extension. Return the
+   * changes that failed; throw only when none of them were applied.
+   */
+  applyManagedCollectionChanges(
+    changes: ManagedCollectionChange[]
+  ): Promise<ManagedCollectionChangeFailure[]>
 }
 
 export interface ManagedCollection {
   id: string
   title: string
+
+  /**
+   * Collections with the same group are mutually exclusive: a title is in at
+   * most one of them. An `add` or `move` into one of them takes the title out
+   * of the others and keeps its data.
+   */
+  exclusiveGroup?: string
 }
 
-export interface ManagedCollectionChangeset {
-  collection: ManagedCollection
+export interface ManagedCollectionItems {
+  collectionId: string
+  items: SourceManga[]
+}
 
-  additions: SourceManga[]
-  deletions: SourceManga[]
+export type ManagedCollectionChange =
+  | {
+      id: string
+      type: 'add'
+      to: ManagedCollection
+      sourceManga: SourceManga
+    }
+  | {
+      id: string
+      type: 'remove'
+      from: ManagedCollection
+      sourceManga: SourceManga
+    }
+  | {
+      id: string
+      type: 'move'
+      from: ManagedCollection
+      to: ManagedCollection
+      sourceManga: SourceManga
+    }
+
+export interface ManagedCollectionChangeFailure {
+  /** The `id` of the change that failed. */
+  changeId: string
+  reason: string
 }

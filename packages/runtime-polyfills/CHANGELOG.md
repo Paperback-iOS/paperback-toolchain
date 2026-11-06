@@ -1,5 +1,23 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.93
+
+### Patch Changes
+
+- improve test command
+- updated types for base64encode/decode
+  added polyfill for crypto_md5Hash
+- fixed undefined test status
+- Type fixes
+- version bump
+- fixes
+- Add EditSection; cleanup
+- - updated b64 encode/decode polyfill to accurately reflect app behavior
+  - added styling types to labelrow
+- moved from oclif to stricli
+- fixed npm published files
+- moved grpc and protobuf-ts to dep from devdep
+
 ## 1.0.0-alpha.92
 
 ## 1.0.0-alpha.91

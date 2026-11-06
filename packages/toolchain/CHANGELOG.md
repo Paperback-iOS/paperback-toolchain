@@ -1,5 +1,53 @@
 # @paperback/toolchain
 
+## 1.0.0-alpha.93
+
+### Patch Changes
+
+- improve test command
+- fixed undefined test status
+- Type fixes
+- added closureSelector, SearchFilterForm for compat
+- version bump
+- fixes
+- Add EditSection; cleanup
+- removed postinstall script for autocomplete
+- moved from oclif to stricli
+- - Added TriStateSelectRow
+  - Fixed --watch command crashing when there are build errors
+- fixed npm published files
+- moved grpc and protobuf-ts to dep from devdep
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @paperback/types@1.0.0-alpha.93
+  - @paperback/runtime-polyfills@1.0.0-alpha.93
+
 ## 1.0.0-alpha.92
 
 ### Patch Changes

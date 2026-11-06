@@ -135,23 +135,26 @@ export class MockRequestManager implements RequestManager {
     const responseCookies: Cookie[] = []
     for (const cookieString of fetchResponse.headers.getSetCookie()) {
       const properties = cookieString.split(';')
-      const [name, value] = properties.shift()!.split('=')
+      // Values may contain '=' (e.g. base64 padding), so only split on the first one
+      const [name, ...valueParts] = properties.shift()!.split('=')
+      const value = valueParts.join('=')
       let domain: string | undefined
       let path: string | undefined
       let expires: Date | undefined
       for (const str of properties) {
-        const [name, value] = str.split('=')
-        switch (name!.toLowerCase()) {
+        const [attributeName, ...attributeValueParts] = str.split('=')
+        const attributeValue = attributeValueParts.join('=')
+        switch (attributeName!.trim().toLowerCase()) {
           case 'expires': {
-            expires = new Date(value!)
+            expires = new Date(attributeValue)
             continue
           }
           case 'max-age': {
-            expires = new Date(Date.now() + Number(value!) * 1000)
+            expires = new Date(Date.now() + Number(attributeValue) * 1000)
             continue
           }
           case 'domain': {
-            domain = value!
+            domain = attributeValue
             continue
           }
           default: {
@@ -162,7 +165,7 @@ export class MockRequestManager implements RequestManager {
 
       responseCookies.push({
         name: name!,
-        value: value!,
+        value,
         domain: domain ?? parseURL(fetchResponse.url).hostname!,
         path: path ?? '/',
         expires: expires ?? new Date(),

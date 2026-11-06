@@ -15,11 +15,9 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
   private _cookies: Record<string, Cookie> = {}
 
   get cookies(): ReadonlyArray<Readonly<Cookie>> {
-    return Object.values(this._cookies).map(cookie => ({
+    return Object.values(this._cookies).map((cookie) => ({
       ...cookie,
-      expires: cookie.expires
-        ? new Date(cookie.expires)
-        : undefined,
+      expires: cookie.expires ? new Date(cookie.expires) : undefined,
     }))
   }
 
@@ -90,7 +88,7 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
 
   setCookie(cookie: Cookie) {
     const identifier = this.cookieIdentifier(cookie)
-    
+
     if (this.isCookieExpired(cookie)) {
       delete this._cookies[identifier]
     } else {
@@ -161,12 +159,10 @@ export class CookieStorageInterceptor extends PaperbackInterceptor {
 
       const cookiePath = this.cookieSanitizedPath(cookie)
 
-      const pathMatches = pathname === cookiePath || (
-        pathname.startsWith(cookiePath) && (
-          cookiePath.endsWith('/') ||
-          pathname[cookiePath.length] === '/'
-        )
-      )
+      const pathMatches =
+        pathname === cookiePath ||
+        (pathname.startsWith(cookiePath) &&
+          (cookiePath.endsWith('/') || pathname[cookiePath.length] === '/'))
 
       if (!pathMatches) {
         continue

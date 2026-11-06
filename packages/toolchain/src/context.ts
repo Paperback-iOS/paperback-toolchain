@@ -5,7 +5,8 @@ import os from 'node:os'
 import path from 'node:path'
 
 export interface LocalContext
-  extends CommandContext, StricliAutoCompleteContext {
+  extends CommandContext,
+    StricliAutoCompleteContext {
   readonly process: NodeJS.Process
   // ...
 }

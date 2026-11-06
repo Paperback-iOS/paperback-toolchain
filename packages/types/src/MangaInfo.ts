@@ -7,10 +7,15 @@ export interface MangaInfo {
   primaryTitle: string
   secondaryTitles: string[]
   contentRating: ContentRating
-  /** 
+  /**
    * Defaults to 'comic'
-   * */ 
+   * */
   contentType?: 'comic' | 'novel'
+  /**
+   * true: the title is a webtoon. The reader scrolls vertically with no page
+   * padding unless the user set those on the title. Defaults to false.
+   */
+  isWebtoon?: boolean
 
   status?: string
   artist?: string
