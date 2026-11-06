@@ -1,5 +1,11 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.94
+
+### Patch Changes
+
+- update deps
+
 ## 1.0.0-alpha.93
 
 ### Patch Changes
