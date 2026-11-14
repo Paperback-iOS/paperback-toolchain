@@ -1,5 +1,14 @@
 # @paperback/types
 
+## 1.0.0-alpha.95
+
+### Patch Changes
+
+- - Added extras field in MangaInfo
+  - Added flaresolverr support
+  - Added Menu form row
+  - Added isDisabled field to all form rows
+
 ## 1.0.0-alpha.94
 
 ### Patch Changes

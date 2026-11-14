@@ -1,5 +1,9 @@
 # @paperback/runtime-polyfills
 
+## 1.0.0-alpha.95
+
+No changes in this release.
+
 ## 1.0.0-alpha.94
 
 ### Patch Changes
