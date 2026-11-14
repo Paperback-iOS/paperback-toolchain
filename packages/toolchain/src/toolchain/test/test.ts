@@ -4,7 +4,11 @@ import fs from 'node:fs'
 import { ApplicationPolyfill } from '@paperback/runtime-polyfills'
 import type { Logger } from './logger.js'
 
-export async function runSourceTests(logger: Logger, testFilePath: string) {
+export async function runSourceTests(
+  logger: Logger,
+  testFilePath: string,
+  flaresolverr?: string
+) {
   const vmContext = vm.createContext({
     // Default JSC exports
     NaN,
@@ -83,6 +87,7 @@ export async function runSourceTests(logger: Logger, testFilePath: string) {
     Application: ApplicationPolyfill(),
     console: logger.console(),
     logger,
+    flaresolverr,
   })
 
   // Add main file
@@ -94,16 +99,22 @@ export async function runSourceTests(logger: Logger, testFilePath: string) {
   await vm.runInContext(`source.runTests(logger)`, vmContext)
 }
 
-export function generateDefaultTests(sourceId: string, testsDirectory: string) {
+// Copies the default suite into the tests directory, returns whether it did
+export function generateDefaultSuite(
+  testsDirectory: string,
+  overwrite: boolean
+) {
   const defaultSuitePath = path.join(testsDirectory, 'suite.ts')
-  const hasDefaultSuite = fs.existsSync(defaultSuitePath)
-  if (!hasDefaultSuite) {
-    fs.cpSync(
-      path.join(import.meta.dirname, './suite.template.ts'),
-      path.join(testsDirectory, './suite.ts')
-    )
-  }
+  if (fs.existsSync(defaultSuitePath) && !overwrite) return false
 
+  fs.cpSync(
+    path.join(import.meta.dirname, './suite.template.ts'),
+    defaultSuitePath
+  )
+  return true
+}
+
+export function generateDefaultTests(sourceId: string, testsDirectory: string) {
   const testFilePath = path.join(testsDirectory, `${sourceId}.ts`)
   const defaultTestFile = `
   import { type TestLogger } from '@paperback/types'

@@ -22,6 +22,23 @@ export default buildCommand({
         brief: 'display captured console',
         default: true,
       },
+      ignoreErrors: {
+        kind: 'boolean',
+        brief: 'ignore test failures and exit with code 0',
+        default: false,
+      },
+      ignoreCloudflareErrors: {
+        kind: 'boolean',
+        brief: 'ignore test failures caused by Cloudflare',
+        default: false,
+      },
+      flaresolverr: {
+        kind: 'parsed',
+        brief:
+          'full URI of the flaresolverr endpoint (e.g. http://localhost:8191/v1) to use to try and bypass Cloudflare challenges',
+        parse: String,
+        optional: true,
+      },
     },
     positional: {
       kind: 'tuple',
@@ -35,6 +52,6 @@ export default buildCommand({
     },
   },
   docs: {
-    brief: 'stream logs from a paperback instance',
+    brief: 'run the paperback test suite',
   },
 })

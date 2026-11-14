@@ -3,6 +3,7 @@ import path from 'node:path'
 import fs from 'node:fs'
 import {
   runSourceTests,
+  generateDefaultSuite,
   generateDefaultTests,
 } from '../../toolchain/test/test.js'
 import type { LocalContext } from '../../context.js'
@@ -14,13 +15,16 @@ interface TestFlags {
   overwrite: boolean
   output?: string
   console: boolean
+  ignoreErrors: boolean
+  ignoreCloudflareErrors: boolean
+  flaresolverr?: string
 }
 
 export async function test(
   this: LocalContext,
   flags: TestFlags,
   sourceId?: string
-) {
+): Promise<void | Error> {
   const cwd = this.process.cwd()
   console.clear()
 
@@ -33,6 +37,9 @@ export async function test(
   const testsDirectory = path.join(srcDirectory, 'tests')
   if (flags.generate) {
     console.log(pc.underline(pc.blue('Generating Tests')))
+    if (generateDefaultSuite(testsDirectory, flags.overwrite)) {
+      console.log(`  ${pc.yellow('suite.ts')}: ${pc.green('generated')}`)
+    }
   }
 
   const sourcesToTest = sourceId ? [sourceId] : fs.readdirSync(srcDirectory)
@@ -103,7 +110,8 @@ export async function test(
           try {
             await runSourceTests(
               extensionLogger,
-              path.join(testOutputDirectory, `${extension}.js`)
+              path.join(testOutputDirectory, `${extension}.js`),
+              flags.flaresolverr
             )
           } catch (error) {
             extensionLogger.log('error', String(error))
@@ -131,6 +139,7 @@ export async function test(
   const logData: any = logger.raw()
   let passedTests = 0
   let failedTests = 0
+  let ignoredTests = 0
   let output = ''
   for (const scope in logData) {
     output += `\n------ ${pc.yellow(scope)} ------\n\n`
@@ -140,10 +149,12 @@ export async function test(
       for (const test of tests) {
         const status =
           test.status == 'pass' ? pc.green(test.status) : pc.red(test.status)
-        output += `  ${test.name}: ${pc.dim(test.duration + 'ms')} ... ${status}\n`
+        const cloudflare = test.cloudflare ? pc.dim(' (cloudflare)') : ''
+        output += `  ${test.name}: ${pc.dim(test.duration + 'ms')} ... ${status}${cloudflare}\n`
         if ('error' in test) {
           output += `    ${test.error}\n`
           failedTests++
+          if (test.cloudflare && flags.ignoreCloudflareErrors) ignoredTests++
         } else {
           passedTests++
         }
@@ -171,4 +182,8 @@ export async function test(
   )
   console.log('    Passed:', pc.green(passedTests))
   console.log('    Failed:', pc.red(failedTests))
+  if (ignoredTests > 0) console.log('   Ignored:', pc.dim(ignoredTests))
+  if (failedTests > ignoredTests && !flags.ignoreErrors) {
+    return new Error(`${failedTests - ignoredTests} test(s) failed`)
+  }
 }
