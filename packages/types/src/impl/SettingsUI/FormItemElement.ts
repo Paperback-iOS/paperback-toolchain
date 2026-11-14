@@ -8,6 +8,7 @@ export interface FormItemElement<T> {
   id: string
   type: T
   isHidden: boolean
+  isDisabled: boolean
 }
 
 type TypedRowElement<T, P> = FormItemElement<T> & P
@@ -26,6 +27,7 @@ type ToggleRowElement = TypedRowElement<'toggleRow', ToggleRowProps>
 type InputRowElement = TypedRowElement<'inputRow', InputRowProps>
 type StepperRowElement = TypedRowElement<'stepperRow', StepperRowProps>
 type WebViewRowElement = TypedRowElement<'webViewRow', WebViewRowProps>
+type MenuRowElement = TypedRowElement<'menuRow', MenuRowProps>
 
 export type LabelRowValue = { style?: RowStyle } & (
   | { text: string }
@@ -38,6 +40,8 @@ export type LabelRowProps = {
   title: string
   subtitle?: string
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
   onSelect?: SelectorID<() => Promise<void>>
 } & (
   | { value?: string }
@@ -53,6 +57,7 @@ export function LabelRow(id: string, props: LabelRowProps): LabelRowElement {
     id,
     type: 'labelRow',
     isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
     isSelectable: props.onSelect != undefined,
   }
 }
@@ -62,11 +67,19 @@ export type InputRowProps = {
   value: string
   isSecureEntry?: boolean
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
   onValueChange: SelectorID<(value: string) => Promise<void>>
 }
 
 export function InputRow(id: string, props: InputRowProps): InputRowElement {
-  return { ...props, id, type: 'inputRow', isHidden: props.isHidden ?? false }
+  return {
+    ...props,
+    id,
+    type: 'inputRow',
+    isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
+  }
 }
 
 export type StepperRowProps = {
@@ -81,6 +94,8 @@ export type StepperRowProps = {
   loopOver: boolean
 
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
 
   onValueChange: SelectorID<(value: number) => Promise<void>>
 }
@@ -94,6 +109,7 @@ export function StepperRow(
     id,
     type: 'stepperRow',
     isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
   }
 }
 
@@ -102,11 +118,19 @@ export type ToggleRowProps = {
   subtitle?: string
   value: boolean
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
   onValueChange: SelectorID<(value: boolean) => Promise<void>>
 }
 
 export function ToggleRow(id: string, props: ToggleRowProps): ToggleRowElement {
-  return { ...props, id, type: 'toggleRow', isHidden: props.isHidden ?? false }
+  return {
+    ...props,
+    id,
+    type: 'toggleRow',
+    isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
+  }
 }
 
 type _SelectRowProps = {
@@ -116,6 +140,8 @@ type _SelectRowProps = {
   minItemCount: number
   maxItemCount: number
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
   onValueChange: SelectorID<(value: string[]) => Promise<void>>
 }
 
@@ -151,6 +177,7 @@ export function SelectRow(
           }`
         : `${Object.keys(props.value).length} items`,
     isHidden: props.isHidden,
+    isDisabled: props.isDisabled,
   })
 }
 
@@ -158,6 +185,8 @@ export type TriStateSelectRowProps = {
   title: string
   subtitle?: string
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
 
   layout: 'flow' | 'list'
   value: Record<string, 'included' | 'excluded'>
@@ -180,23 +209,64 @@ export function TriStateSelectRow(
     subtitle: props.subtitle,
     value: `${Object.keys(props.value).length} items`,
     isHidden: props.isHidden,
+    isDisabled: props.isDisabled,
   })
 }
 
 export type ButtonRowProps = {
   title: string
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
   onSelect: SelectorID<() => Promise<void>>
 }
 
 export function ButtonRow(id: string, props: ButtonRowProps): ButtonRowElement {
-  return { ...props, id, type: 'buttonRow', isHidden: props.isHidden ?? false }
+  return {
+    ...props,
+    id,
+    type: 'buttonRow',
+    isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
+  }
+}
+
+export type MenuRowProps = {
+  title: string
+  subtitle?: string
+  /** The options listed in the menu. */
+  items: { id: string; title: string }[]
+  /**
+   * The id of the currently chosen item. When set, the item's title is shown
+   * on the row and it is checked in the menu. Leave it out for a menu of
+   * plain actions.
+   */
+  value?: string
+  isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
+  onSelect: SelectorID<(itemId: string) => Promise<void>>
+}
+
+/**
+ * A row that opens a pull-down menu when tapped.
+ */
+export function MenuRow(id: string, props: MenuRowProps): MenuRowElement {
+  return {
+    ...props,
+    id,
+    type: 'menuRow',
+    isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
+  }
 }
 
 export type WebViewRowProps = {
   title: string
   request: Request
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
   onComplete: SelectorID<(cookies: Cookie[]) => Promise<void>>
   onCancel: SelectorID<() => Promise<void>>
 }
@@ -210,6 +280,7 @@ export function WebViewRow(
     id,
     type: 'webViewRow',
     isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
   }
 }
 
@@ -218,6 +289,8 @@ export type NavigationRowProps = {
   subtitle?: string
   value?: string
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
   form: Form
 }
 
@@ -230,6 +303,7 @@ export function NavigationRow(
     id,
     type: 'navigationRow',
     isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
   }
 }
 
@@ -261,6 +335,8 @@ export type OAuthButtonRowProps = {
   scopes?: string[]
 
   isHidden?: boolean
+  /** Keeps the row visible, but dimmed and unresponsive. */
+  isDisabled?: boolean
 }
 
 export function OAuthButtonRow(
@@ -272,6 +348,7 @@ export function OAuthButtonRow(
     id,
     type: 'oauthButtonRow',
     isHidden: props.isHidden ?? false,
+    isDisabled: props.isDisabled ?? false,
   }
 }
 
